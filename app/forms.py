@@ -33,6 +33,7 @@ class ReporteForm(forms.ModelForm):
         ('Santa Cecília', 'Santa Cecília')
     )
     sucursal = forms.ChoiceField(choices=SUCURSALES, label='Estado')
+    fecha = forms.DateField(widget=forms.DateInput(attrs={'type': 'date' , 'class': 'form-control'}))
 
     CLASIFICACIONES = (
         ('Energía', 'Energía'),
