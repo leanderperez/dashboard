@@ -20,6 +20,18 @@
                             <form class="requires-validation" novalidate method="post">
                                 {% csrf_token %}
 
+                                {% if form.errors %}
+                                    <div class="alert alert-danger">
+                                        <ul>
+                                            {% for field in form %}
+                                                {% for error in field.errors %}
+                                                    <li>{{ error }}</li>
+                                                {% endfor %}
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                {% endif %}
+
                                 
                                 <div class="col-md-12">
                                     {{ form.fecha}}
@@ -63,28 +75,20 @@
                                     <label class="mb-3 mr-1" for="Coordinador">Coordinador: </label>
 
                                     {% for coordinador in form.coordinador %}
-                                        <input type="radio" class="btn-check" name="coordinador" id="{{coordinador.choice_label}}" autocomplete="off" required>
+                                        <input type="radio" class="btn-check" name="coordinador", value="{{coordinador.choice_label}}" id="{{coordinador.choice_label}}" autocomplete="off" required>
                                         <label class="btn btn-sm btn-outline-secondary" for="{{coordinador.choice_label}}">{{coordinador.choice_label}}</label>
                                     {% endfor %}
 
                                     <div class="valid-feedback mv-up"></div>
                                     <div class="invalid-feedback mv-up">Seleccione un coordinador</div>
                                 </div>
-
-                                <div class="col-md-12">
-                                    {{form.estatus}}
-                                    <div class="valid-feedback"></div>
-                                    <div class="invalid-feedback">¿Cuál es el Reporte?</div>
+ 
+                                <!--
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="invalidCheck">
+                                    <label class="form-check-label">Caso Cerrado</label>
                                 </div>
-
-                           <!-- 
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="invalidCheck">
-                                <label class="form-check-label">Caso Cerrado</label>
-                            </div>
-                            -->
-
-                    
+                                -->
 
                                 <div class="form-button mt-3">
                                     <button id="submit" type="submit" class="btn btn-primary">Registrar</button>

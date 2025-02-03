@@ -4,7 +4,7 @@ from .models import Reporte
 class ReporteForm(forms.ModelForm):
     class Meta:
         model = Reporte
-        fields = ['fecha', 'sucursal', 'clasificacion', 'equipo', 'reporte', 'falla', 'coordinador', 'estatus']  # Campos que puede rellenar el usuario
+        fields = ['fecha', 'sucursal', 'clasificacion', 'equipo', 'reporte', 'falla', 'coordinador']  # Campos que puede rellenar el usuario
     
     SUCURSALES = (
         ('', 'Sucursal'),
@@ -58,6 +58,21 @@ class ReporteForm(forms.ModelForm):
         ('Iriana', 'Iriana'),
         ('Leander', 'Leander'),
     )
+    EQUIPOS = (
+        ('', 'Equipo'),
+        ('Generador', 'Generador'),
+        ('Panel Solar', 'Panel Solar'),
+        ('Nevera', 'Nevera'),
+        ('Congelador', 'Congelador'),
+        ('Aire Acondicionado', 'Aire Acondicionado'),
+        ('Ventilador', 'Ventilador'),
+        ('Microscopio', 'Microscopio'),
+        ('Centrífuga', 'Centrífuga'),
+        ('Lavadora', 'Lavadora'),
+        ('Secadora', 'Secadora'),
+        ('Camión', 'Camión'),
+        ('Montacargas', 'Montacargas')
+    )
 
     fecha = forms.DateField(label='Sucursal',
         widget=forms.DateInput(attrs={'type': 'date', 
@@ -74,7 +89,7 @@ class ReporteForm(forms.ModelForm):
                                           'class': 'form-select mt-3', 
                                           'id': 'classification'}))
     
-    equipo = forms.ChoiceField(choices=[('', 'Equipo')], label='Equipo', 
+    equipo = forms.ChoiceField(choices=EQUIPOS, label='Equipo', 
                              widget=forms.Select(attrs={
                                  'class': 'form-select mt-3', 
                                  'id': 'equipment'}))
@@ -92,11 +107,6 @@ class ReporteForm(forms.ModelForm):
                                     widget=forms.RadioSelect(attrs={
                                         'class': 'btn-check', 'autocomplete': 'off'}), 
                                     required=True)
-    
-    estatus = forms.CharField(label='Estatus', 
-                              widget=forms.TextInput(attrs={
-                                  'class': 'form-control', 
-                                  'id': 'estatus'}))
 
 
 class ReporteAdminForm(forms.ModelForm):
