@@ -4,7 +4,7 @@ from .models import Reporte
 class ReporteForm(forms.ModelForm):
     class Meta:
         model = Reporte
-        fields = ['fecha', 'sucursal', 'clasificacion', 'equipo', 'reporte', 'falla', 'coordinador']  # Campos que puede rellenar el usuario
+        fields = ['fecha', 'sucursal', 'clasificacion', 'equipo', 'reporte', 'falla', 'coordinador', 'estatus']  # Campos que puede rellenar el usuario
     
     SUCURSALES = (
         ('', 'Sucursal'),
@@ -97,7 +97,8 @@ class ReporteForm(forms.ModelForm):
     reporte = forms.CharField(label='Reporte', 
                               widget=forms.TextInput(attrs={
                                   'class': 'form-control', 
-                                  'id': 'reporte'}))
+                                  'id': 'reporte',
+                                  'placeholder': 'Reporte'}))
     
     falla = forms.ChoiceField(choices=FALLAS, label='Falla o Motivo de Visita', 
                               widget=forms.Select(attrs={
@@ -107,6 +108,11 @@ class ReporteForm(forms.ModelForm):
                                     widget=forms.RadioSelect(attrs={
                                         'class': 'btn-check', 'autocomplete': 'off'}), 
                                     required=True)
+    
+    estatus = forms.BooleanField(label='Estatus', 
+                                 widget=forms.CheckboxInput(attrs={
+                                     'class': 'form-check-input', 
+                                     'id': 'estatus'}))
 
 
 class ReporteAdminForm(forms.ModelForm):

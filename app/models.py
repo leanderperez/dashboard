@@ -11,7 +11,7 @@ class Reporte(models.Model):
     reporte = models.CharField(max_length=50)
     falla = models.CharField(max_length=50)
     coordinador = models.CharField(max_length=50)
-    estatus = models.CharField(max_length=50, blank=True, null=True)
+    estatus = models.BooleanField(default=False)
 
     # Campos para ser llenados por un administrador
     referencia = models.CharField(max_length=50, blank=True, null=True)
