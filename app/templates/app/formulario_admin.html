@@ -1,15 +1,105 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <title>Registro de Reportes</title>
+  <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css'>
+  <link rel="stylesheet" href="{% static 'app/style.css' %}">
 </head>
 <body>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Guardar</button>
-    </form>
+
+<div class="container-fluid form-body">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="form-holder">
+                    <div class="form-content">
+                        <div class="form-items">
+                            <h3>Registro de Reportes GEI</h3>
+                            <p>Formulario de Registro de Reportes</p>
+                            <form class="requires-validation" novalidate method="post">
+                                {% csrf_token %}
+
+                                {% if form.errors %}
+                                    <div class="alert alert-danger">
+                                        <ul>
+                                            {% for field in form %}
+                                                {% for error in field.errors %}
+                                                    <li>{{ error }}</li>
+                                                {% endfor %}
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                {% endif %}
+
+                                
+                                <div class="col-md-12">
+                                    {{ form.fecha}}
+                                    <div class="valid-feedback"></div>
+                                    <div class="invalid-feedback">¿En qué fecha ocurrió el reporte?</div>
+                                </div>
+                                
+                                <div class="col-md-12">
+                                    {{form.sucursal}}
+                                    <div class="valid-feedback"></div>
+                                    <div class="invalid-feedback">Seleccione una sucursal</div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    {{form.clasificacion}}
+                                    <div class="valid-feedback"></div>
+                                    <div class="invalid-feedback">Debe clasificar su reporte</div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    {{form.equipo}}
+                                    <div class="valid-feedback"></div>
+                                    <div class="invalid-feedback">Seleccione un equipo</div>
+                                </div>
+
+
+                                <div class="col-md-12">
+                                    {{form.reporte}}
+                                    <div class="valid-feedback"></div>
+                                    <div class="invalid-feedback">¿Cuál es el Reporte?</div>
+                                </div>
+
+                                <div class="col-md-12">
+                                        {{form.falla}}
+                                        <div class="valid-feedback"></div>
+                                        <div class="invalid-feedback">Seleccione un motivo de visita</div>
+                                </div>
+
+
+                                <div class="col-md-12 mt-3">
+                                    <label class="mb-3 mr-1" for="Coordinador">Coordinador: </label>
+
+                                    {% for coordinador in form.coordinador %}
+                                        <input type="radio" class="btn-check" name="coordinador", value="{{coordinador.choice_label}}" id="{{coordinador.choice_label}}" autocomplete="off" required>
+                                        <label class="btn btn-sm btn-outline-secondary" for="{{coordinador.choice_label}}">{{coordinador.choice_label}}</label>
+                                    {% endfor %}
+
+                                    <div class="valid-feedback mv-up"></div>
+                                    <div class="invalid-feedback mv-up">Seleccione un coordinador</div>
+                                </div>
+ 
+                                <div class="form-check">
+                                    {{form.estatus}}
+                                    <label class="form-check-label">Caso Cerrado</label>
+                                </div>
+
+                                <div class="form-button mt-3">
+                                    <button id="submit" type="submit" class="btn btn-primary">Registrar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'app/script.js' %}"></script>
+
 </body>
 </html>
