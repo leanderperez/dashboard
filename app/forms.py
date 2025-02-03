@@ -86,13 +86,17 @@ class ReporteForm(forms.ModelForm):
     
     falla = forms.ChoiceField(choices=FALLAS, label='Falla o Motivo de Visita', 
                               widget=forms.Select(attrs={
-                                  'class': 'form-select mt-3', 
-                                  'id': 'falla'}))
+                                  'class': 'form-select mt-3', 'id': 'falla'}))
     
     coordinador = forms.ChoiceField(choices=COORDINADORES, label='Coordinador', 
                                     widget=forms.RadioSelect(attrs={
                                         'class': 'btn-check', 'autocomplete': 'off'}), 
                                     required=True)
+    
+    estatus = forms.CharField(label='Estatus', 
+                              widget=forms.TextInput(attrs={
+                                  'class': 'form-control', 
+                                  'id': 'estatus'}))
 
 
 class ReporteAdminForm(forms.ModelForm):

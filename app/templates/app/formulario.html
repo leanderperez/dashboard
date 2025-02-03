@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="{% static 'app/style.css' %}">
 </head>
 <body>
-<!-- partial:index.partial.html -->
+
 <div class="container-fluid form-body">
         <div class="row justify-content-center">
             <div class="col-md-8">
@@ -17,7 +17,8 @@
                         <div class="form-items">
                             <h3>Registro de Reportes GEI</h3>
                             <p>Formulario de Registro de Reportes</p>
-                            <form class="requires-validation" novalidate>
+                            <form class="requires-validation" novalidate method="post">
+                                {% csrf_token %}
 
                                 
                                 <div class="col-md-12">
@@ -38,49 +39,51 @@
                                     <div class="invalid-feedback">Debe clasificar su reporte</div>
                                 </div>
 
-                            <div class="col-md-12">
-                                {{form.equipo}}
-                                <div class="valid-feedback"></div>
-                                <div class="invalid-feedback">Seleccione un equipo</div>
-                            </div>
-
-
-                            <div class="col-md-12">
-                                {{form.reporte}}
-                                <div class="valid-feedback"></div>
-                                <div class="invalid-feedback">¿Cuál es el Reporte?</div>
-                            </div>
-
-                            <div class="col-md-12">
-                                    {{form.falla}}
+                                <div class="col-md-12">
+                                    {{form.equipo}}
                                     <div class="valid-feedback"></div>
-                                    <div class="invalid-feedback">Seleccione un motivo de visita</div>
-                            </div>
+                                    <div class="invalid-feedback">Seleccione un equipo</div>
+                                </div>
 
 
-                            <div class="col-md-12 mt-3">
-                                <label class="mb-3 mr-1" for="Coordinador">Coordinador: </label>
+                                <div class="col-md-12">
+                                    {{form.reporte}}
+                                    <div class="valid-feedback"></div>
+                                    <div class="invalid-feedback">¿Cuál es el Reporte?</div>
+                                </div>
 
-                                <input type="radio" class="btn-check" name="Coordinador" id="Cesar" autocomplete="off" required>
-                                <label class="btn btn-sm btn-outline-secondary" for="Cesar">Cesar</label>
+                                <div class="col-md-12">
+                                        {{form.falla}}
+                                        <div class="valid-feedback"></div>
+                                        <div class="invalid-feedback">Seleccione un motivo de visita</div>
+                                </div>
 
-                                <input type="radio" class="btn-check" name="Coordinador" id="Edicson" autocomplete="off" required>
-                                <label class="btn btn-sm btn-outline-secondary" for="Edicson">Edicson</label>
 
-                                <input type="radio" class="btn-check" name="Coordinador" id="Iriana" autocomplete="off" required>
-                                <label class="btn btn-sm btn-outline-secondary" for="Iriana">Iriana</label>
+                                <div class="col-md-12 mt-3">
+                                    <label class="mb-3 mr-1" for="Coordinador">Coordinador: </label>
 
-                                <input type="radio" class="btn-check" name="Coordinador" id="Leander" autocomplete="off" required>
-                                <label class="btn btn-sm btn-outline-secondary" for="Leander">Leander</label>
-                                
-                                <div class="valid-feedback mv-up"></div>
-                                <div class="invalid-feedback mv-up">Seleccione un coordinador</div>
-                            </div>
+                                    {% for coordinador in form.coordinador %}
+                                        <input type="radio" class="btn-check" name="coordinador" id="{{coordinador.choice_label}}" autocomplete="off" required>
+                                        <label class="btn btn-sm btn-outline-secondary" for="{{coordinador.choice_label}}">{{coordinador.choice_label}}</label>
+                                    {% endfor %}
 
+                                    <div class="valid-feedback mv-up"></div>
+                                    <div class="invalid-feedback mv-up">Seleccione un coordinador</div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    {{form.estatus}}
+                                    <div class="valid-feedback"></div>
+                                    <div class="invalid-feedback">¿Cuál es el Reporte?</div>
+                                </div>
+
+                           <!-- 
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="invalidCheck">
                                 <label class="form-check-label">Caso Cerrado</label>
                             </div>
+                            -->
+
                     
 
                                 <div class="form-button mt-3">
@@ -94,8 +97,7 @@
         </div>
     </div>
 
-<!-- partial -->
-<script src="{% static 'app/script.js' %}"></script>
+    <script src="{% static 'app/script.js' %}"></script>
 
 </body>
 </html>
