@@ -7,6 +7,7 @@ class ReporteForm(forms.ModelForm):
         fields = ['fecha', 'sucursal', 'clasificacion', 'equipo', 'reporte', 'falla', 'coordinador', 'estatus']  # Campos que puede rellenar el usuario
     
     SUCURSALES = (
+        ('', 'Sucursal'),
         ('Acarigua', 'Acarigua'),
         ('Barquisimeto', 'Barquisimeto'),
         ('Cagua', 'Cagua'),
@@ -33,6 +34,7 @@ class ReporteForm(forms.ModelForm):
         ('Santa Cecília', 'Santa Cecília')
     )
     CLASIFICACIONES = (
+        ('', 'Clasificación'),
         ('Energía', 'Energía'),
         ('Refrigeración', 'Refrigeración'),
         ('Climatización', 'Climatización'),
@@ -41,6 +43,7 @@ class ReporteForm(forms.ModelForm):
         ('Carga y Transporte', 'Carga y Transporte'),
     )
     FALLAS = (
+        ('', 'Falla o Motivo de Visita'),
         ('Falso Reporte', 'Falso Reporte'),
         ('Operación', 'Operación'),
         ('Mecánica', 'Mecánica'),
@@ -56,24 +59,41 @@ class ReporteForm(forms.ModelForm):
         ('Leander', 'Leander'),
     )
 
-    fecha = forms.DateField(widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control', 'id': 'fecha'}))
-    sucursal = forms.ChoiceField(choices=SUCURSALES, label='Sucursal', widget=forms.Select(attrs={'class': 'form-control', 'id': 'sucursal'}))
-    clasificacion = forms.ChoiceField(choices=CLASIFICACIONES, label='Clasificación', widget=forms.Select(attrs={'class': 'form-control', 'id': 'clasificacion'}))
-    falla = forms.ChoiceField(choices=FALLAS, label='Falla o Motivo de Visita', widget=forms.Select(attrs={'class': 'form-control', 'id': 'falla'}))
-    coordinador = forms.ChoiceField(choices=COORDINADORES, label='Coordinador', widget=forms.RadioSelect(attrs={'class': 'form-check-input', 'id': 'coordinador'}))
+    fecha = forms.DateField(label='Sucursal',
+        widget=forms.DateInput(attrs={'type': 'date', 
+                                      'class': 'form-control', 
+                                      'id': 'fecha'}))
+    
+    sucursal = forms.ChoiceField(choices=SUCURSALES, label='Sucursal', 
+                                 widget=forms.Select(attrs={
+                                     'class': 'form-select mt-3', 
+                                     'id': 'sucursal'}))
+    
+    clasificacion = forms.ChoiceField(choices=CLASIFICACIONES, label='Clasificación', 
+                                      widget=forms.Select(attrs={
+                                          'class': 'form-select mt-3', 
+                                          'id': 'classification'}))
+    
+    equipo = forms.ChoiceField(choices=[('', 'Equipo')], label='Equipo', 
+                             widget=forms.Select(attrs={
+                                 'class': 'form-select mt-3', 
+                                 'id': 'equipment'}))
+    
+    reporte = forms.CharField(label='Reporte', 
+                              widget=forms.TextInput(attrs={
+                                  'class': 'form-control', 
+                                  'id': 'reporte'}))
+    
+    falla = forms.ChoiceField(choices=FALLAS, label='Falla o Motivo de Visita', 
+                              widget=forms.Select(attrs={
+                                  'class': 'form-select mt-3', 
+                                  'id': 'falla'}))
+    
+    coordinador = forms.ChoiceField(choices=COORDINADORES, label='Coordinador', 
+                                    widget=forms.RadioSelect(attrs={
+                                        'class': 'btn-check', 'autocomplete': 'off'}), 
+                                    required=True)
 
-    def __init__(self, *args, **kwargs):
-        super(ReporteForm, self).__init__(*args, **kwargs)
-        self.fields['fecha'].widget.attrs.update({'class': 'form-control date-input'})
-        self.fields['sucursal'].widget.attrs.update({'class': 'form-control select-input'})
-        self.fields['clasificacion'].widget.attrs.update({'class': 'form-control select-input'})
-        self.fields['falla'].widget.attrs.update({'class': 'form-control select-input'})
-        self.fields['coordinador'].widget.attrs.update({'class': 'form-check-input btn-outline-secondary'})
-        
-        # Actualizar las clases de los labels
-        for field_name, field in self.fields.items():
-            field.widget.attrs.update({'class': 'form-control'})  # Actualiza la clase de los inputs
-            field.label_tag = lambda label, attrs=None, label_suffix=None: f'<label class="form-label" for="{field.widget.attrs.get("id", field_name)}">{label}</label>'
 
 class ReporteAdminForm(forms.ModelForm):
     class Meta:
