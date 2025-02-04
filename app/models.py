@@ -15,7 +15,7 @@ class Reporte(models.Model):
 
     # Campos para ser llenados por un administrador
     referencia = models.CharField(max_length=50, blank=True, null=True)
-    ejecutor = models.CharField(max_length=50, blank=True, null=True)
+    personal = models.CharField(max_length=50, blank=True, null=True)
     encargado = models.CharField(max_length=50, blank=True, null=True)
     fecha_cierre = models.DateField(blank=True, null=True)
     costo = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)

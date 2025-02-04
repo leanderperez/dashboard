@@ -1,3 +1,4 @@
+// Script para mostrar el equipo segun la clasificacion
 document.addEventListener('DOMContentLoaded', function() {
   const classificationSelect = document.getElementById('classification');
   const equipmentSelect = document.getElementById('equipment');
@@ -21,6 +22,31 @@ document.addEventListener('DOMContentLoaded', function() {
       optionElement.value = option;
       optionElement.textContent = option;
       equipmentSelect.appendChild(optionElement);
+    });
+  });
+});
+
+// Script para mostrar el encargado segun el personal seleccionado
+document.addEventListener('DOMContentLoaded', function() {
+  const personalSelect = document.getElementById('personal');
+  const encargadoSelect = document.getElementById('encargado');
+
+  const encargadoOptions = {
+    'Contratista': ['Tecnonorte', 'Somago', 'JCF', 'KTM', 'Tecnoembalaje'],
+    'Técnico de Cuadrilla': ['Tec. Oscar', 'Tec. Jean', 'Tec. Starlyn', 'Tec. Juan', 'Tec. Luis', 'Tec. Gustavo'],
+    'Técnico de Infraestructura': ['Supervisor de Infraestructura']
+  };
+
+  personalSelect.addEventListener('change', function() {
+    const selectedpersonal = personalSelect.value;
+    const options = encargadoOptions[selectedpersonal] || [];
+
+    encargadoSelect.innerHTML = '<option selected disabled value="">Encargado</option>';
+    options.forEach(function(option) {
+      const optionElement = document.createElement('option');
+      optionElement.value = option;
+      optionElement.textContent = option;
+      encargadoSelect.appendChild(optionElement);
     });
   });
 });

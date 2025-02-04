@@ -34,7 +34,7 @@
 
                                 
                                 <div class="col-md-12">
-                                    {{ form.fecha}}
+                                    {{form.fecha}}
                                     <div class="valid-feedback"></div>
                                     <div class="invalid-feedback">¿En qué fecha ocurrió el reporte?</div>
                                 </div>
@@ -87,6 +87,44 @@
                                     {{form.estatus}}
                                     <label class="form-check-label">Caso Cerrado</label>
                                 </div>
+
+                                <div class="col-md-12">
+                                    {{form.referencia}}
+                                    <div class="valid-feedback"></div>
+                                    <div class="invalid-feedback">Indique la referencia del caso</div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    {{form.personal}}
+                                    <div class="valid-feedback"></div>
+                                    <div class="invalid-feedback">¿Qué tipo de personal atendió el reporte?</div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    {{form.encargado}}
+                                    <div class="valid-feedback"></div>
+                                    <div class="invalid-feedback">¿Quién es el responsable de la actividad?</div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    {{form.fecha_cierre}}
+                                    <div class="valid-feedback"></div>
+                                    <div class="invalid-feedback">Indique una fecha sólo si el reporte está cerrado</div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    {{form.costo}}
+                                    <div class="valid-feedback"></div>
+                                    <div class="invalid-feedback">Costo del trabajo o coosto estimado si se realizó con personal propio</div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    {{form.ods_pdf}}
+                                    <div class="valid-feedback"></div>
+                                    <div class="invalid-feedback">Cargue el PDF de la Orden de Servicio</div>
+                                </div>
+
+
 
                                 <div class="form-button mt-3">
                                     <button id="submit" type="submit" class="btn btn-primary">Registrar</button>

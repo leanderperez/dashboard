@@ -68,6 +68,27 @@ EQUIPOS = (
     ('Camión', 'Camión'),
     ('Montacargas', 'Montacargas')
 )
+PERSONAL = (
+    ('', 'Personal'),
+    ('Contratista', 'Contratista'),
+    ('Técnico de Cuadrilla', 'Técnico de Cuadrilla'),
+    ('Técnico de Infraestructura', 'Técnico de Infraestructura')
+    )
+ENCARGADOS = (
+    ('', 'Encargado'),
+    ('Tecnonorte', 'Tecnonorte'),
+    ('Somago', 'Somago'),
+    ('JCF', 'JCF'),
+    ('KTM', 'KTM'),
+    ('Tecnoembalaje', 'Tecnoembalaje'),
+    ('Tec. Oscar', 'Tec. Oscar'),
+    ('Tec. Jean', 'Tec. Jean'),
+    ('Tec. Starlyn', 'Tec. Starlyn'),
+    ('Tec. Juan', 'Tec. Juan'),
+    ('Tec. Luis', 'Tec. Luis'),
+    ('Tec. Gustavo', 'Tec. Gustavo'),
+    ('Supervisor de Infraestructura', 'Supervisor de Infraestructura')
+    )
 
 class ReporteForm(forms.ModelForm):
     class Meta:
@@ -115,12 +136,11 @@ class ReporteForm(forms.ModelForm):
                                      'class': 'form-check-input', 
                                      'id': 'estatus'}))
 
-
 class ReporteAdminForm(forms.ModelForm):
     class Meta:
         model = Reporte
-        #fields = '__all__'  # Todos los campos para el administrador
-        fields = ['fecha', 'sucursal', 'clasificacion', 'equipo', 'reporte', 'falla', 'coordinador', 'estatus']
+        fields = '__all__'  # Todos los campos para el administrador
+        #fields = ['fecha', 'sucursal', 'clasificacion', 'equipo', 'reporte', 'falla', 'coordinador', 'estatus']
 
     fecha = forms.DateField(label='Sucursal',
         widget=forms.DateInput(attrs={'type': 'date', 
@@ -162,3 +182,35 @@ class ReporteAdminForm(forms.ModelForm):
                                  widget=forms.CheckboxInput(attrs={
                                      'class': 'form-check-input', 
                                      'id': 'estatus'}))
+    
+    referencia = forms.CharField(label='Referencia', 
+                                 widget=forms.TextInput(attrs={
+                                  'class': 'form-control', 
+                                  'id': 'referencia',
+                                  'placeholder': 'Referencia'}))
+    
+    personal = forms.ChoiceField(choices=PERSONAL, label='Personal',
+                                 widget=forms.Select(attrs={
+                                     'class': 'form-select mt-3', 
+                                     'id': 'personal'}))
+    
+    encargado = forms.ChoiceField(choices=ENCARGADOS, label='Encargado',
+                                    widget=forms.Select(attrs={
+                                        'class': 'form-select mt-3', 
+                                        'id': 'encargado'}))
+    
+    fecha_cierre = forms.DateField(label='Fecha de Cierre',
+        widget=forms.DateInput(attrs={'type': 'date', 
+                                      'class': 'form-select mt-3', 
+                                      'id': 'fecha_cierre'}))
+    
+    costo = forms.DecimalField(label='Costo',
+                                widget=forms.NumberInput(attrs={
+                                    'class': 'form-select mt-3', 
+                                    'id': 'costo',
+                                    'placeholder': 'Costo'}))
+    
+    ods_pdf = forms.FileField(label='ODS PDF',
+                                widget=forms.FileInput(attrs={
+                                    'class': 'form-select mt-3', 
+                                    'id': 'ods_pdf'}))
