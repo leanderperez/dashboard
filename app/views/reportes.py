@@ -1,8 +1,6 @@
-from django.shortcuts import render
-
 from django.shortcuts import render, redirect
-from .forms import ReporteForm, ReporteAdminForm
-from .models import Reporte
+from app.forms import ReporteForm, ReporteAdminForm
+from app.models import Reporte
 
 def crear_reporte(request):
     if request.method == 'POST':
