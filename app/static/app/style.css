@@ -10,7 +10,7 @@
 
 html, body {
     height: 100%;
-    margin: 0;
+    margin: 20px;
     background-color: #152733;
     overflow: hidden;
 }
