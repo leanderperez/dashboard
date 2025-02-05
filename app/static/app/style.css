@@ -10,7 +10,7 @@
 
 html, body {
     height: 100%;
-    margin: 20px;
+    margin: 0px;
     background-color: #152733;
     overflow: hidden;
 }
@@ -37,7 +37,7 @@ html, body {
     justify-content: center;
     -webkit-align-items: center;
     align-items: center;
-    padding: 60px;
+    padding: 0px;
 }
 
 .form-content .form-items {
@@ -153,7 +153,7 @@ html, body {
     height: 100vh;
     overflow-y: auto;
     display: flex;
-    align-items: center;
+    align-items: normal;
     justify-content: center;
 }
 
