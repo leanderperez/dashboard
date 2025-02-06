@@ -1,4 +1,7 @@
 new DataTable('#datatable', {
+    paging: false,
+        scrollCollapse: true,
+        scrollY: '60vh',
     layout: {
         topStart : 'search',
         bottomStart: 'pageLength',
@@ -8,6 +11,6 @@ new DataTable('#datatable', {
         },
         language: {
             url: 'dataTables.german.json',
-        },
+        }
     }
 });
