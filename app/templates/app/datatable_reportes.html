@@ -5,17 +5,19 @@
     <title>Tabla de Reportes</title>
     <link rel="stylesheet" href="{% static 'app/dataTables.css' %}">
 </head>
-<body style="width:80%">
+<body style="width:90%">
     <h3>Tabla de Reportes</h3>
     <table id="datatable" class="display">
         <thead>
             <tr>
+                <th>Referencia</th>
                 <th>Fecha</th>
                 <th>Sucursal</th>
                 <th>Clasificación</th>
                 <th>Equipo</th>
                 <th>Reporte</th>
                 <th>Falla</th>
+                <th>Personal</th>
                 <th>Coordinador</th>
                 <th>Estatus</th>
             </tr>
@@ -23,12 +25,15 @@
         <tbody>
             {% for reporte in reportes %}
                 <tr>
+                    
+                    <td><a href="{% url 'modificar_reporte' reporte.id %}">{{ reporte.referencia }}</a></td>
                     <td>{{ reporte.fecha }}</td>
                     <td>{{ reporte.sucursal }}</td>
                     <td>{{ reporte.clasificacion }}</td>
                     <td>{{ reporte.equipo }}</td>
                     <td>{{ reporte.reporte }}</td>
                     <td>{{ reporte.falla }}</td>
+                    <td>{{ reporte.personal }}</td>
                     <td>{{ reporte.coordinador }}</td>
                     <td>{{ reporte.estatus }}</td>
                 </tr>
@@ -36,12 +41,14 @@
         </tbody>
         <tfoot>
             <tr>
+                <th>Referencia</th>
                 <th>Fecha</th>
                 <th>Sucursal</th>
                 <th>Clasificación</th>
                 <th>Equipo</th>
                 <th>Reporte</th>
                 <th>Falla</th>
+                <th>Personal</th>
                 <th>Coordinador</th>
                 <th>Estatus</th>
             </tr>
