@@ -10,7 +10,8 @@
 
 html, body {
     height: 100%;
-    margin: 20px;
+    margin: 5px;
+    padding: 0;
     background-color: #152733;
     overflow: hidden;
 }
@@ -22,7 +23,6 @@ h3 {
     font-weight: 600;
     margin-bottom: 5px;
 }
-
 
 
 :root {
@@ -807,5 +807,6 @@ html.dark .dt-container .dt-paging .dt-paging-button:active {
     -webkit-transition: all 0.4s ease;
     transition: all 0.4s ease;
     box-sizing: border-box;
+    font-size: 14px;
 }
 

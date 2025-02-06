@@ -17,7 +17,7 @@
                 <th>Equipo</th>
                 <th>Reporte</th>
                 <th>Falla</th>
-                <th>Personal</th>
+                <th>Encargado</th>
                 <th>Coordinador</th>
                 <th>Estatus</th>
             </tr>
@@ -25,15 +25,14 @@
         <tbody>
             {% for reporte in reportes %}
                 <tr>
-                    
                     <td><a href="{% url 'modificar_reporte' reporte.id %}">{{ reporte.referencia }}</a></td>
-                    <td>{{ reporte.fecha }}</td>
+                    <td><a href="{% url 'modificar_reporte' reporte.id %}">{{ reporte.fecha }}</a></td>
                     <td>{{ reporte.sucursal }}</td>
                     <td>{{ reporte.clasificacion }}</td>
                     <td>{{ reporte.equipo }}</td>
                     <td>{{ reporte.reporte }}</td>
                     <td>{{ reporte.falla }}</td>
-                    <td>{{ reporte.personal }}</td>
+                    <td>{{ reporte.encargado }}</td>
                     <td>{{ reporte.coordinador }}</td>
                     <td>{{ reporte.estatus }}</td>
                 </tr>
@@ -48,7 +47,7 @@
                 <th>Equipo</th>
                 <th>Reporte</th>
                 <th>Falla</th>
-                <th>Personal</th>
+                <th>Encargado</th>
                 <th>Coordinador</th>
                 <th>Estatus</th>
             </tr>
