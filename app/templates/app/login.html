@@ -1,0 +1,41 @@
+{% extends 'app/base.html' %}
+
+{% block title %}Ingreso de Sesión{% endblock %}
+
+{% block content %}
+
+    <div class="container-fluid form-body">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="form-holder">
+                    <div class="form-content">
+                        <div class="form-items">
+                            <h3>Ingreso de Sesión</h3>
+                            <p>Ingrese su usuario y contraseña</p>
+                            <form action="{% url 'login' %}" class="requires-validation" novalidate method="post">
+                                {% csrf_token %}
+
+                                <div class="col-md-12">
+                                    {{ form.username}}
+                                    <div class="valid-feedback"></div>
+                                    <div class="invalid-feedback">Inserte su nombre de usuario</div>
+                                </div>
+                                
+                                <div class="col-md-12">
+                                    {{form.password}}
+                                    <div class="valid-feedback"></div>
+                                    <div class="invalid-feedback">Inserte su contraseña</div>
+                                </div>
+
+                                <div class="form-button mt-3">
+                                    <button id="submit" type="submit" class="btn btn-primary">Iniciar sesión</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

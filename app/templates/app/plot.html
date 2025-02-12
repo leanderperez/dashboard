@@ -1,0 +1,33 @@
+{% extends 'app/base.html' %}
+
+{%block title%}Crear Gráfico{%endblock%}
+{% block content %}
+    <section class="plot">
+        
+        <div class="form-content">
+            <div class="form-items">
+                <div>
+                    <form class="requires-validation" method="post">
+                        {% csrf_token %}
+                        <label for="temperaturas">Temperaturas (separadas por comas)<br>Use punto "." como separador decimal:</label>
+                        <input type="text" name="temperaturas" id="temperaturas" placeholder="Ej: -15.1, -12.8, -10.0, -15.3, etc..." required><br><br>
+                
+                        <label for="horas">Horas (separadas por comas):</label>
+                        <input type="text" name="horas" id="horas" placeholder="Ej: 8:00am, 9:00am, 10:30am, 12:30pm, 1:30pm" required><br><br>
+                
+                        <label for="setpoint">Temperatura Setpoint:</label>
+                        <input type="number" name="setpoint" id="setpoint" placeholder="-15.0" required><br><br>
+                
+                        <button type="submit">Generar Gráfico</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+                    
+        <div>
+            {% if plot_div %}
+                {{ plot_div|safe }}
+            {% endif %}
+        </div>
+    </section> 
+{% endblock %}

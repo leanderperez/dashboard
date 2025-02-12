@@ -1,0 +1,85 @@
+{% extends 'app/base.html' %}
+{%block title%}Registro de Reportes GEI{%endblock%}
+
+
+{% block content %}
+    <div class="container-fluid form-body">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="form-holder">
+                    <div class="form-content">
+                        <div class="form-items">
+                            <h3>Registro de Reportes</h3>
+                            <p>Formulario de Registro de Reportes</p>
+                            <form class="requires-validation" novalidate method="post">
+                                {% csrf_token %}
+                                
+                                <div class="col-md-12">
+                                    {{ form.fecha}}
+                                    <div class="valid-feedback"></div>
+                                    <div class="invalid-feedback">¿En qué fecha ocurrió el reporte?</div>
+                                </div>
+                                
+                                <div class="col-md-12">
+                                    {{form.sucursal}}
+                                    <div class="valid-feedback"></div>
+                                    <div class="invalid-feedback">Seleccione una sucursal</div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    {{form.clasificacion}}
+                                    <div class="valid-feedback"></div>
+                                    <div class="invalid-feedback">Debe clasificar su reporte</div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    {{form.equipo}}
+                                    <div class="valid-feedback"></div>
+                                    <div class="invalid-feedback">Seleccione un equipo</div>
+                                </div>
+
+
+                                <div class="col-md-12">
+                                    {{form.reporte}}
+                                    <div class="valid-feedback"></div>
+                                    <div class="invalid-feedback">¿Cuál es el Reporte?</div>
+                                </div>
+
+                                <div class="col-md-12">
+                                        {{form.falla}}
+                                        <div class="valid-feedback"></div>
+                                        <div class="invalid-feedback">Seleccione un motivo de visita</div>
+                                </div>
+
+
+                                <div class="col-md-12 mt-3">
+                                    <label class="mb-3 mr-1" for="Coordinador">Coordinador: </label>
+
+                                    {% for coordinador in form.coordinador %}
+                                        <input type="radio" class="btn-check" name="coordinador", value="{{coordinador.choice_label}}" id="{{coordinador.choice_label}}" autocomplete="off" required>
+                                        <label class="btn btn-sm btn-outline-secondary" for="{{coordinador.choice_label}}">{{coordinador.choice_label}}</label>
+                                    {% endfor %}
+
+                                    <div class="valid-feedback mv-up"></div>
+                                    <div class="invalid-feedback mv-up">Seleccione un coordinador</div>
+                                </div>
+ 
+                                <div class="form-check">
+                                    {{form.estatus}}
+                                    <label class="form-check-label">Caso Cerrado</label>
+                                </div>
+
+                                {% block admin_form %}
+                                {% endblock %}
+
+                                <div class="form-button mt-3">
+                                    <button id="submit" type="submit" class="btn btn-primary">Registrar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
