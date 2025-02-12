@@ -1,5 +1,5 @@
 from django.urls import path
-from app.views import reportes, datatable, login, plot
+from app.views import reportes, datatable, login, plot, pendientes
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
@@ -9,5 +9,6 @@ urlpatterns = [
     path('crear/', reportes.crear_reporte, name='crear_reporte'),
     path('modificar/<int:pk>/', reportes.modificar_reporte, name='modificar_reporte'),
     path('datatable/', datatable.datatable, name='datatable'),
-    path('plot/', plot.crear_plot, name='plot')
+    path('plot/', plot.crear_plot, name='plot'),
+    path('pendientes/', pendientes.pendientes, name='pendientes')
 ]

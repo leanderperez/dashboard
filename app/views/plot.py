@@ -1,10 +1,8 @@
 from django.shortcuts import render
-from django.http import HttpResponse
 import plotly.graph_objects as go
 from plotly.offline import plot
-import numpy as np
 
-def generar_grafico(temperaturas, horas, setpoint):
+def generar_grafico(temperaturas, horas, setpoint, equipo):
     # Crear el gráfico
     fig = go.Figure()
 
@@ -26,10 +24,11 @@ def generar_grafico(temperaturas, horas, setpoint):
 
 
     # Layout del gráfico
-    fig.update_layout(title='Variación de Temperaturas',
+    fig.update_layout(title=f'Variación de Temperaturas<Br>{equipo}',
                       xaxis_title='Hora',
                       yaxis_title='Temperatura (°C)',
                       yaxis_range=[setpoint - 6, setpoint + 6],
+                      template='plotly',
                       legend=dict(
                           x=0.70,
                           y=1.00,
@@ -52,8 +51,9 @@ def crear_plot(request):
         temperaturas = [float(t) for t in request.POST['temperaturas'].split(',')]
         horas = [str(h) for h in request.POST['horas'].split(',')]
         setpoint = float(request.POST['setpoint'])
+        equipo = str(request.POST['equipo'])
 
-        plot_div = generar_grafico(temperaturas, horas, setpoint)
+        plot_div = generar_grafico(temperaturas, horas, setpoint, equipo)
         return render(request, 'app/plot.html', {'plot_div': plot_div})
 
     return render(request, 'app/plot.html')

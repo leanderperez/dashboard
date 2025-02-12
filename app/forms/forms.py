@@ -1,5 +1,6 @@
 from django import forms
 from ..models import Reporte
+from django.contrib.auth.forms import AuthenticationForm
 
 SUCURSALES = (
     ('', 'Sucursal'),
@@ -233,9 +234,11 @@ class ReporteAdminForm(forms.ModelForm):
     
     fecha_cierre = forms.DateField(label='Fecha de Cierre',
                                    required=False, 
-                                   widget=forms.DateInput(attrs={'type': 'date', 
-                                      'class': 'form-control mt-3', 
-                                      'id': 'fecha_cierre'}))
+                                   widget=forms.DateInput(attrs={
+                                       'type': 'date',
+                                       'class': 'form-control mt-3',
+                                       'id': 'fecha_cierre',
+                                       'placeholder': 'Fecha de Cierre'}))
     
     costo = forms.DecimalField(label='Costo',
                                required=False, 
@@ -249,3 +252,18 @@ class ReporteAdminForm(forms.ModelForm):
                               widget=forms.FileInput(attrs={
                                     'class': 'form-control mt-3', 
                                     'id': 'ods_pdf'}))
+    
+class CustomAuthenticationForm(AuthenticationForm):
+    username = forms.CharField(
+        max_length=254,
+        widget=forms.TextInput(attrs={'class': 'form-control mt-3',
+                                      'placeholder': 'Usuario',
+                                      'autocomplete' : 'off'}),
+    )
+    password = forms.CharField(
+        label="Contraseña",
+        strip=False,
+        widget=forms.PasswordInput(attrs={'class': 'form-control mt-3',
+                                          'placeholder': 'Contraseña',
+                                          'autocomplete' : 'off'}),
+    )

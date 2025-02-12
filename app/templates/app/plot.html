@@ -9,6 +9,9 @@
                 <div>
                     <form class="requires-validation" method="post">
                         {% csrf_token %}
+                        <label for="equipo">Nombre del Equipo</label>
+                        <input type="text" name="equipo" id="equipo" placeholder="Ej: Cava de Congelados" required><br><br>
+
                         <label for="temperaturas">Temperaturas (separadas por comas)<br>Use punto "." como separador decimal:</label>
                         <input type="text" name="temperaturas" id="temperaturas" placeholder="Ej: -15.1, -12.8, -10.0, -15.3, etc..." required><br><br>
                 
