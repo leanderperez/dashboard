@@ -5,6 +5,6 @@ from app.models import Reporte
 
 
 def pendientes(request):
-    reportes = Reporte.objects.all()
+    reportes = Reporte.objects.filter(estatus=False)
     contexto = {'reportes': reportes}
     return render(request, 'app/pendientes.html', contexto)

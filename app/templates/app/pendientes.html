@@ -24,7 +24,7 @@
         <div class="blog-slider__content">
           <span class="blog-slider__code">{{ reporte.fecha }}</span>
           <div class="blog-slider__title">{{ reporte.reporte }}</div>
-          <div class="blog-slider__text">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae voluptate repellendus magni illo ea animi? </div>
+          <div class="blog-slider__text">{{ reporte.observaciones }}</div>
           <a href="{% url 'modificar_reporte' reporte.id %}" class="blog-slider__button">Detalles</a>
         </div>
       </div>

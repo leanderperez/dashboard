@@ -253,6 +253,13 @@ class ReporteAdminForm(forms.ModelForm):
                                     'class': 'form-control mt-3', 
                                     'id': 'ods_pdf'}))
     
+    observaciones = forms.CharField(label='Observaciones',
+                                    required=False,
+                                    widget=forms.Textarea(attrs={
+                                        'class': 'form-control mt-3',
+                                        'id': 'observaciones',
+                                        'placeholder': 'Ingrese sus observaciones aquí...'}))
+    
 class CustomAuthenticationForm(AuthenticationForm):
     username = forms.CharField(
         max_length=254,
