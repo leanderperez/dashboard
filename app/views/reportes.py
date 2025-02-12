@@ -18,7 +18,7 @@ def crear_reporte(request):
 def modificar_reporte(request, pk):
     form = Reporte.objects.get(pk=pk)
     if request.method == 'POST':
-        form = ReporteAdminForm(request.POST, instance=form)
+        form = ReporteAdminForm(request.POST, request.FILES, instance=form)
         if form.is_valid():
             form.save()
             return redirect('datatable')  # Redirige a datatable
