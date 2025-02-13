@@ -22,7 +22,7 @@
           <img src="https://res.cloudinary.com/muhammederdem/image/upload/q_60/v1535759872/kuldar-kalvik-799168-unsplash.webp" alt="">
         </div>
         <div class="blog-slider__content">
-          <span class="blog-slider__code">{{ reporte.fecha }}</span>
+          <span class="blog-slider__code">{{ reporte.sucursal }} - {{ reporte.fecha }}</span>
           <div class="blog-slider__title">{{ reporte.reporte }}</div>
           <div class="blog-slider__text">{{ reporte.observaciones }}</div>
           <a href="{% url 'modificar_reporte' reporte.id %}" class="blog-slider__button">Detalles</a>

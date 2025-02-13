@@ -11,7 +11,7 @@ var swiper = new Swiper('.blog-slider', {
         clickable: true,
       },
       autoplay: {
-        delay: 3000, // Tiempo en milisegundos (2000 ms = 2 segundos)
+        delay: 3000,
         disableOnInteraction: false, // Permite que el autoplay continúe después de la interacción del usuario
       }
     });

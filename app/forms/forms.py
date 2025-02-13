@@ -34,9 +34,10 @@ CLASIFICACIONES = (
     ('Energía', 'Energía'),
     ('Refrigeración', 'Refrigeración'),
     ('Climatización', 'Climatización'),
-    ('Laboratorio', 'Laboratorio'),
+    ('Perecederos', 'Perecederos'),
     ('Lavandería', 'Lavandería'),
     ('Carga y Transporte', 'Carga y Transporte'),
+    ('Hidráulica', 'Hidráulica')
 )
 FALLAS = (
     ('', 'Falla o Motivo de Visita'),
@@ -56,18 +57,59 @@ COORDINADORES = (
 )
 EQUIPOS = (
     ('', 'Equipo'),
-    ('Generador', 'Generador'),
-    ('Panel Solar', 'Panel Solar'),
-    ('Nevera', 'Nevera'),
-    ('Congelador', 'Congelador'),
-    ('Aire Acondicionado', 'Aire Acondicionado'),
-    ('Ventilador', 'Ventilador'),
-    ('Microscopio', 'Microscopio'),
-    ('Centrífuga', 'Centrífuga'),
-    ('Lavadora', 'Lavadora'),
-    ('Secadora', 'Secadora'),
-    ('Camión', 'Camión'),
-    ('Montacargas', 'Montacargas')
+
+    ('Planta Eléctrica','Planta Eléctrica'),
+    ('Suministro Eléctrico','Suministro Eléctrico'),
+
+    ('Planta Eléctrica','Planta Eléctrica'),
+    ('Suministro Eléctrico','Suministro Eléctrico'),
+    ('Cava de Refrigerados','Cava de Refrigerados'),
+    ('Cava de Congelados','Cava de Congelados'),
+    ('Laboratorio','Laboratorio'),
+    ('Compresor MT','Compresor MT'),
+    ('Compresor BT','Compresor BT'),
+    ('Rack de Compresores','Rack de Compresores'),
+    ('Nevera Beluga','Nevera Beluga'),
+    ('Nevera Valzer (Reachin)','Nevera Valzer (Reachin)'),
+    ('Nevera Overture','Nevera Overture'),
+    ('Nevera de Barra','Nevera de Barra'),
+    ('Thermo King','Thermo King'),
+    ('Bonba de Agua Helada','Bonba de Agua Helada'),
+
+    ('A/A Split','A/A Split'),
+    ('Chiller','Chiller'),
+    ('Compresor','Compresor'),
+    ('Unidad Condensadora','Unidad Condensadora'),
+    ('Cortina de Aire','Cortina de Aire'),
+    ('Fancoil','Fancoil'),
+    ('UMA','UMA'),
+    ('Bomba de Agua Helada','Bomba de Agua Helada'),
+
+    ('Empaquetadora al Vacío','Empaquetadora al Vacío'),
+    ('Molino','Molino'),
+    ('Ralladora','Ralladora'),
+    ('Rebanadora','Rebanadora'),
+    ('Sierra','Sierra'),
+
+    ('Lavadora','Lavadora'),
+    ('Secadora','Secadora'),
+
+    ('Ascensor','Ascensor'),
+    ('Carretilla','Carretilla'),
+    ('Cinta Transportadora','Cinta Transportadora'),
+    ('Elevador de Carga','Elevador de Carga'),
+    ('Genie','Genie'),
+    ('Montacarga','Montacarga'),
+    ('Plataforma (Romana)','Plataforma (Romana)'),
+    ('Traspaleta','Traspaleta'),
+    ('Trolley','Trolley'),
+
+    ('Bomba de Agua','Bomba de Agua'),
+    ('Compresor de Aire', 'Compresor de Aire'),
+    ('Filtro de Agua','Filtro de Agua'),
+    ('Tanque Subterráneo','Tanque Subterráneo'),
+    ('Tanque Aéreo','Tanque Aéreo'),
+
 )
 PERSONAL = (
     ('', 'Personal'),
@@ -107,7 +149,7 @@ REFRIGERANTES = (
 class ReporteForm(forms.ModelForm):
     class Meta:
         model = Reporte
-        fields = ['fecha', 'sucursal', 'clasificacion', 'equipo', 'reporte', 'falla', 'coordinador', 'estatus']  # Campos que puede rellenar el usuario
+        fields = ['fecha', 'sucursal', 'clasificacion', 'equipo', 'reporte', 'falla', 'coordinador', 'estatus', 'observaciones']  # Campos que puede rellenar el usuario
 
     fecha = forms.DateField(label='Sucursal',
         widget=forms.DateInput(attrs={'type': 'date', 
@@ -149,12 +191,18 @@ class ReporteForm(forms.ModelForm):
                                  widget=forms.CheckboxInput(attrs={
                                      'class': 'form-check-input', 
                                      'id': 'estatus'}))
+    
+    observaciones = forms.CharField(label='Observaciones',
+                                    required=False,
+                                    widget=forms.Textarea(attrs={
+                                        'class': 'form-control mt-3',
+                                        'id': 'observaciones',
+                                        'placeholder': 'Ingrese su observación de forma concisa'}))
 
 class ReporteAdminForm(forms.ModelForm):
     class Meta:
         model = Reporte
         fields = '__all__'  # Todos los campos para el administrador
-        #fields = ['fecha', 'sucursal', 'clasificacion', 'equipo', 'reporte', 'falla', 'coordinador', 'estatus']
 
     fecha = forms.DateField(label='Fecha',
                             widget=forms.DateInput(attrs={
@@ -258,7 +306,7 @@ class ReporteAdminForm(forms.ModelForm):
                                     widget=forms.Textarea(attrs={
                                         'class': 'form-control mt-3',
                                         'id': 'observaciones',
-                                        'placeholder': 'Ingrese sus observaciones aquí...'}))
+                                        'placeholder': 'Ingrese su observación de forma concisa'}))
     
 class CustomAuthenticationForm(AuthenticationForm):
     username = forms.CharField(

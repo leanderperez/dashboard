@@ -72,6 +72,12 @@
                                 {% block admin_form %}
                                 {% endblock %}
 
+                                <div class="col-md-12">
+                                    {{form.observaciones}}
+                                    <div class="valid-feedback"></div>
+                                    <div class="invalid-feedback">Realice una observacion concisa</div>
+                                </div>
+
                                 <div class="form-button mt-3">
                                     <button id="submit" type="submit" class="btn btn-primary">Registrar</button>
                                 </div>

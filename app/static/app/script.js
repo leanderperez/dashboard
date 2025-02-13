@@ -4,12 +4,19 @@ document.addEventListener('DOMContentLoaded', function() {
   const equipmentSelect = document.getElementById('equipment');
 
   const equipmentOptions = {
-    'Energía': ['Generador', 'Panel Solar'],
-    'Refrigeración': ['Nevera', 'Congelador'],
-    'Climatización': ['Aire Acondicionado', 'Ventilador'],
-    'Laboratorio': ['Microscopio', 'Centrífuga'],
+    'Energía': ['Planta Eléctrica', 'Suministro Eléctrico'],
+
+    'Refrigeración': ['Cava de Refrigerados', 'Cava de Congelados', 'Laboratorio', 'Compresor MT', 'Compresor BT', 'Rack de Compresores', 'Nevera Beluga', 'Nevera Valzer (Reachin)', 'Nevera Overture', 'Nevera de Barra', 'Thermo King', 'Bonba de Agua Helada'],
+
+    'Climatización': ['A/A Split', 'Chiller', 'Compresor', 'Unidad Condensadora', 'Cortina de Aire', 'Fancoil', 'UMA', 'Bomba de Agua Helada'],
+
+    'Perecederos': ['Empaquetadora al Vacío', 'Molino', 'Ralladora', 'Rebanadora', 'Sierra'],
+
     'Lavandería': ['Lavadora', 'Secadora'],
-    'Carga y Transporte': ['Camión', 'Montacargas']
+
+    'Carga y Transporte': ['Ascensor','Carretilla', 'Cinta Transportadora', 'Elevador de Carga', 'Genie', 'Montacargas', 'Plataforma (Romana)', 'Traspaleta', 'Trolley'],
+
+    'Hidráulica': ['Bomba de Agua', 'Compresor de Aire', 'Filtro de Agua', 'Tanque Subterráneo', 'Tanque Aéreo']
   };
 
   classificationSelect.addEventListener('change', function() {
