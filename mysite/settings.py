@@ -21,10 +21,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-8pus72&#9g)51+c1l5tm=_^yett^!ov-cr69yt0#e^o(^oh61)'
+SECRET_KEY = os.getenv('FORUM_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -77,8 +77,12 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgressql_psycopg2',
+        'NAME': os.getenv('FORUM_DB_NAME'),
+        'USER': os.getenv('FORUM_DB_USER'),
+        'PASSWORD': os.getenv('FORUM_DB_PASSWORD'),
+        'HOST': os.getenv('FORUM_DB_HOST'),
+        'PORT': os.getenv('FORUM_DB_PORT'),
     }
 }
 
@@ -124,8 +128,10 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-MEDIA_URL = '/media/'
+MEDIA_URL = '/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+STATIC_ROOT = 'staticfiles'
