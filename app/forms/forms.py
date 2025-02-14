@@ -50,9 +50,13 @@ FALLAS = (
     ('Preventivo', 'Preventivo')
 )
 COORDINADORES = (
+    ('', 'Coordiador'),
+    ('Airam', 'Airam'),
+    ('Carlos', 'Carlos'),
     ('Cesar', 'Cesar'),
     ('Edicson', 'Edicson'),
     ('Iriana', 'Iriana'),
+    ('José', 'José'),
     ('Leander', 'Leander'),
 )
 EQUIPOS = (
@@ -145,11 +149,16 @@ REFRIGERANTES = (
     ('R-718 (H2O)', 'R-718 (H2O)'),
     ('R-744 (CO2)', 'R-744 (CO2)'),
 )
+URGENCIAS = (
+    ('Baja', 'Baja'),
+    ('Media', 'Media'),
+    ('Alta', 'Alta'),
+)
 
 class ReporteForm(forms.ModelForm):
     class Meta:
         model = Reporte
-        fields = ['fecha', 'sucursal', 'clasificacion', 'equipo', 'reporte', 'falla', 'coordinador', 'estatus', 'observaciones']  # Campos que puede rellenar el usuario
+        fields = ['fecha', 'sucursal', 'clasificacion', 'equipo', 'reporte', 'falla', 'coordinador', 'estatus', 'observaciones', 'urgencia']  # Campos que puede rellenar el usuario
 
     fecha = forms.DateField(label='Sucursal',
         widget=forms.DateInput(attrs={'type': 'date', 
@@ -182,9 +191,12 @@ class ReporteForm(forms.ModelForm):
                                   'class': 'form-select mt-3', 'id': 'falla'}))
     
     coordinador = forms.ChoiceField(choices=COORDINADORES, label='Coordinador', 
+                                    widget=forms.Select(attrs={
+                                        'class': 'form-select mt-3', 'id': 'coordinador'}))
+    
+    urgencia = forms.ChoiceField(choices=URGENCIAS, label='Urgencia', 
                                     widget=forms.RadioSelect(attrs={
-                                        'class': 'btn-check', 'autocomplete': 'off'}), 
-                                    required=True)
+                                        'class': 'btn-check'}))
     
     estatus = forms.BooleanField(label='Estatus',
                                  required=False, 
@@ -237,10 +249,12 @@ class ReporteAdminForm(forms.ModelForm):
                                    'id': 'falla'}))
     
     coordinador = forms.ChoiceField(choices=COORDINADORES, label='Coordinador', 
+                                    widget=forms.Select(attrs={
+                                        'class': 'form-select mt-3', 'id': 'coordinador'}))
+    
+    urgencia = forms.ChoiceField(choices=URGENCIAS, label='Urgencia', 
                                     widget=forms.RadioSelect(attrs={
-                                        'class': 'btn-check', 
-                                        'autocomplete': 'off'}), 
-                                    required=True)
+                                        'class': 'btn-check'}))
     
     estatus = forms.BooleanField(label='Estatus',
                                  required=False, 

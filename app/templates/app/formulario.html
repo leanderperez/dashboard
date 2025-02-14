@@ -51,17 +51,23 @@
                                         <div class="invalid-feedback">Seleccione un motivo de visita</div>
                                 </div>
 
+                                <div class="col-md-12">
+                                    {{form.coordinador}}
+                                    <div class="valid-feedback"></div>
+                                    <div class="invalid-feedback">Seleccione un coordinador</div>
+                            </div>
+
 
                                 <div class="col-md-12 mt-3">
-                                    <label class="mb-3 mr-1" for="Coordinador">Coordinador: </label>
+                                    <label class="mb-3 mr-1" for="Coordinador">Urgencia:</label>
 
-                                    {% for coordinador in form.coordinador %}
-                                        <input type="radio" class="btn-check" name="coordinador", value="{{coordinador.choice_label}}" id="{{coordinador.choice_label}}" autocomplete="off" required>
-                                        <label class="btn btn-sm btn-outline-secondary" for="{{coordinador.choice_label}}">{{coordinador.choice_label}}</label>
+                                    {% for urgencia in form.urgencia %}
+                                        <input type="radio" class="btn-check" name="urgencia", value="{{urgencia.choice_label}}" id="{{urgencia.choice_label}}" required>
+                                        <label class="btn btn-sm btn-outline-secondary" for="{{urgencia.choice_label}}">{{urgencia.choice_label}}</label>
                                     {% endfor %}
 
                                     <div class="valid-feedback mv-up"></div>
-                                    <div class="invalid-feedback mv-up">Seleccione un coordinador</div>
+                                    <div class="invalid-feedback mv-up">¿Qué tan crítico es el reporte?</div>
                                 </div>
  
                                 <div class="form-check">
