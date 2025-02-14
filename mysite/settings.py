@@ -81,7 +81,7 @@ DATABASES = {
         'NAME': os.getenv('FORUM_DB_NAME'),
         'USER': os.getenv('FORUM_DB_USER'),
         'PASSWORD': os.getenv('FORUM_DB_PASSWORD'),
-         #'HOST': os.getenv('FORUM_DB_HOST'),
+        'HOST': os.getenv('FORUM_DB_HOST'),
         'PORT': os.getenv('FORUM_DB_PORT'),
     }
 }
