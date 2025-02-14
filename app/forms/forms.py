@@ -78,7 +78,7 @@ EQUIPOS = (
     ('Nevera Overture','Nevera Overture'),
     ('Nevera de Barra','Nevera de Barra'),
     ('Thermo King','Thermo King'),
-    ('Bonba de Agua Helada','Bonba de Agua Helada'),
+    ('Bomba de Agua Helada','Bomba de Agua Helada'),
 
     ('A/A Split','A/A Split'),
     ('Chiller','Chiller'),

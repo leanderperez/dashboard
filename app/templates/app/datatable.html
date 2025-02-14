@@ -15,6 +15,7 @@
                 <th>Encargado</th>
                 <th>Coordinador</th>
                 <th>Estatus</th>
+                <th>Urgencia</th>
             </tr>
         </thead>
         <tbody>
@@ -36,6 +37,7 @@
                             Abierto
                         {% endif %}
                     </td>
+                    <td>{{ reporte.urgencia }}</td>
                 </tr>
             {% endfor %}
         </tbody>
@@ -51,6 +53,7 @@
                 <th>Encargado</th>
                 <th>Coordinador</th>
                 <th>Estatus</th>
+                <th>Urgencia</th>
             </tr>
         </tfoot>
     </table>

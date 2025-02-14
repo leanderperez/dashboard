@@ -3,8 +3,9 @@ from django.contrib.auth.decorators import login_required
 from app.models import Reporte
 
 
-
+login_required
 def pendientes(request):
-    reportes = Reporte.objects.filter(estatus=False)
+    coordinador = request.user.username
+    reportes = Reporte.objects.filter(estatus=False, coordinador=coordinador)
     contexto = {'reportes': reportes}
     return render(request, 'app/pendientes.html', contexto)
