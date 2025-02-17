@@ -27,7 +27,7 @@ def modificar_reporte(request, pk):
             if personal in ['Técnico de Cuadrilla', 'Técnico de Infraestructura']:
                 # Construir el código de referencia
                 year = datetime.now().year % 100  # Obtener los dos últimos dígitos del año en curso
-                referencia = f"GEI-{year:02d}{reporte.id}"
+                referencia = f"GEEI{year:02d}-{reporte.id:04d}"
                 # Asignar el código de referencia al campo correspondiente
                 form.instance.referencia = referencia
             form.save()
