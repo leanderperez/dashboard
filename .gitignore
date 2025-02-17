@@ -8,4 +8,5 @@ venv/
 *.log
 db.sqlite3
 /media
+/staticfiles
 *.pem
