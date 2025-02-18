@@ -77,6 +77,9 @@ EQUIPOS = (
     ('Nevera Valzer (Reachin)','Nevera Valzer (Reachin)'),
     ('Nevera Overture','Nevera Overture'),
     ('Nevera de Barra','Nevera de Barra'),
+    ('Nevera de Barra (Remota)', 'Nevera de Barra (Remota)'),
+    ('Nevera Mural (Remota)', 'Nevera Mural (Remota)'),
+    ('Nevera Bahía (Remota)', 'Nevera Bahía (Remota)'),
     ('Thermo King','Thermo King'),
     ('Bomba de Agua Helada','Bomba de Agua Helada'),
 

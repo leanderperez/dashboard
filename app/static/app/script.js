@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const equipmentOptions = {
     'Energía': ['Planta Eléctrica', 'Suministro Eléctrico'],
 
-    'Refrigeración': ['Cava de Refrigerados', 'Cava de Congelados', 'Laboratorio', 'Compresor MT', 'Compresor BT', 'Rack de Compresores', 'Nevera Beluga', 'Nevera Valzer (Reachin)', 'Nevera Overture', 'Nevera de Barra', 'Thermo King', 'Bomba de Agua Helada'],
+    'Refrigeración': ['Cava de Refrigerados', 'Cava de Congelados', 'Laboratorio', 'Compresor MT', 'Compresor BT', 'Rack de Compresores', 'Nevera Beluga', 'Nevera Valzer (Reachin)', 'Nevera Overture', 'Nevera de Barra', 'Thermo King', 'Bomba de Agua Helada', 'Nevera de Barra (Remota)', 'Nevera Mural (Remota)', 'Nevera Bahía (Remota)'],
 
     'Climatización': ['A/A Split', 'Chiller', 'Compresor', 'Unidad Condensadora', 'Cortina de Aire', 'Fancoil', 'UMA', 'Bomba de Agua Helada'],
 
