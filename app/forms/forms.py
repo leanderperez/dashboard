@@ -108,6 +108,8 @@ EQUIPOS = (
     ('Genie','Genie'),
     ('Montacarga','Montacarga'),
     ('Plataforma (Romana)','Plataforma (Romana)'),
+    ('Portón','Portón'),
+    ('Santa María','Santa María'),
     ('Traspaleta','Traspaleta'),
     ('Trolley','Trolley'),
 

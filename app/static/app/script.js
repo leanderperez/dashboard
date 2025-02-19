@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     'Lavandería': ['Lavadora', 'Secadora'],
 
-    'Carga y Transporte': ['Ascensor','Carretilla', 'Cinta Transportadora', 'Elevador de Carga', 'Genie', 'Montacargas', 'Plataforma (Romana)', 'Traspaleta', 'Trolley'],
+    'Carga y Transporte': ['Ascensor','Carretilla', 'Cinta Transportadora', 'Elevador de Carga', 'Genie', 'Montacargas', 'Plataforma (Romana)', 'Portón', 'Santa María', 'Traspaleta', 'Trolley'],
 
     'Hidráulica': ['Bomba de Agua', 'Compresor de Aire', 'Filtro de Agua', 'Tanque Subterráneo', 'Tanque Aéreo']
   };
