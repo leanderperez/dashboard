@@ -134,3 +134,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+# Local Settings
+try:
+    from .local_settings import *
+except ImportError:
+    pass
