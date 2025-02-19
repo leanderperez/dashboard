@@ -1,9 +1,7 @@
-<!-- filepath: /home/leander/dashboard/app/templates/app/dashboard.html -->
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Gráficos Interactivos con AJAX</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% extends 'app/base.html' %}
+{% block title %}Gestión de Reportes GEEI{% endblock %}
+
+{% block stylesheet %}
     <style>
         .selected-sucursal {
             display: inline-block;
@@ -18,10 +16,21 @@
             color: red;
             margin-left: 5px;
         }
+        /*
+        #selected-sucursales {
+            min-height: 20px; 
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        */
+        
     </style>
-</head>
-<body>
-    <h1>Dashboard en Construcción</h1>
+{% endblock %}
+
+
+{% block content %}
+
     <form id="filtro-form" method="post">
         {% csrf_token %}
         <label for="sucursal">Sucursales:</label>
@@ -37,6 +46,7 @@
         {{ plot_div|safe }}
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
             $('#sucursal-select').change(function() {
@@ -80,5 +90,5 @@
             }
         });
     </script>
-</body>
-</html>
+
+{% endblock %}
