@@ -1,31 +1,75 @@
+<!-- filepath: /home/leander/dashboard/app/templates/app/dashboard.html -->
 <!DOCTYPE html>
 <html>
 <head>
     <title>Gráficos Interactivos con AJAX</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .selected-sucursal {
+            display: inline-block;
+            margin: 5px;
+            padding: 5px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        .remove-sucursal {
+            cursor: pointer;
+            color: red;
+            margin-left: 5px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Gráfico de Productos</h1>
+    <h1>Dashboard en Construcción</h1>
     <form id="filtro-form" method="post">
         {% csrf_token %}
-        <label for="categoria">Categoría:</label>
-        <select name="categoria" id="categoria">
-            <option value="">Todas</option>
-            {% for categoria in categorias %}
-                <option value="{{ categoria }}">{{ categoria }}</option>
+        <label for="sucursal">Sucursales:</label>
+        <select id="sucursal-select">
+            <option value="">Seleccione una sucursal</option>
+            {% for sucursal in sucursales %}
+                <option value="{{ sucursal }}">{{ sucursal }}</option>
             {% endfor %}
         </select>
     </form>
+    <div id="selected-sucursales"></div>
     <div id="grafico-container">
-        {{ plot_div|safe }}  </div>
+        {{ plot_div|safe }}
+    </div>
 
     <script>
         $(document).ready(function() {
-            $('#categoria').change(function() {
+            $('#sucursal-select').change(function() {
+                const selectedSucursal = $(this).val();
+                if (selectedSucursal && !$('#selected-sucursales').find(`[data-sucursal="${selectedSucursal}"]`).length) {
+                    $('#selected-sucursales').append(
+                        `<div class="selected-sucursal" data-sucursal="${selectedSucursal}">
+                            ${selectedSucursal}
+                            <span class="remove-sucursal">x</span>
+                        </div>`
+                    );
+                }
+                $(this).val('');
+                updateGrafico();
+            });
+
+            $(document).on('click', '.remove-sucursal', function() {
+                $(this).parent().remove();
+                updateGrafico();
+            });
+
+            function updateGrafico() {
+                const sucursales = $('#selected-sucursales .selected-sucursal').map(function() {
+                    return $(this).data('sucursal');
+                }).get();
+
                 $.ajax({
-                    url: '/',
+                    url: '/dashboard/',
                     type: 'POST',
-                    data: $('#filtro-form').serialize(),
+                    data: {
+                        'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(),
+                        'sucursal': sucursales
+                    },
                     success: function(response) {
                         $('#grafico-container').html(response.plot_div);
                     },
@@ -33,7 +77,7 @@
                         console.error('Error al actualizar el gráfico:', error);
                     }
                 });
-            });
+            }
         });
     </script>
 </body>
