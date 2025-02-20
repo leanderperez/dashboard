@@ -58,6 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
+// Valiador de formularios
 (function () {
   'use strict'
   const forms = document.querySelectorAll('.requires-validation')
@@ -88,7 +89,7 @@ var swiper = new Swiper('.blog-slider', {
     clickable: true,
   },
   autoplay: {
-    delay: 3000,
+    delay: 4000,
     disableOnInteraction: false, // Permite que el autoplay continúe después de la interacción del usuario
   }
 });

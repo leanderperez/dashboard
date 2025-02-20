@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 from app.models import Reporte
 import pandas as pd
 import plotly.graph_objects as go
@@ -13,6 +14,7 @@ def generar_grafico(queryset):
     plot_div = plot(fig, output_type='div')
     return plot_div
 
+@login_required
 def index(request):
     reportes = Reporte.objects.all()  # Obtiene todos los reportes
     sucursales = Reporte.objects.values_list('sucursal', flat=True).distinct()
