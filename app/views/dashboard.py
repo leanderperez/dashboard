@@ -1,4 +1,3 @@
-# filepath: /home/leander/dashboard/app/views/dashboard.py
 from django.shortcuts import render
 from app.models import Reporte
 import pandas as pd
