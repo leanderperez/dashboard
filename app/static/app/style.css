@@ -21,7 +21,6 @@ html, body {
 
 .layout {
   width: 100%;
-
   display: grid;
   grid:
     "header" auto
