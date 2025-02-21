@@ -5,17 +5,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
   const equipmentOptions = {
     'Energía': ['Planta Eléctrica', 'Suministro Eléctrico'],
-
     'Refrigeración': ['Cava de Refrigerados', 'Cava de Congelados', 'Laboratorio', 'Compresor MT', 'Compresor BT', 'Rack de Compresores', 'Nevera Beluga', 'Nevera Valzer (Reachin)', 'Nevera Overture', 'Nevera de Barra', 'Thermo King', 'Bomba de Agua Helada', 'Nevera de Barra (Remota)', 'Nevera Mural (Remota)', 'Nevera Bahía (Remota)'],
-
     'Climatización': ['A/A Split', 'Chiller', 'Compresor', 'Unidad Condensadora', 'Cortina de Aire', 'Fancoil', 'UMA', 'Bomba de Agua Helada'],
-
     'Perecederos': ['Empaquetadora al Vacío', 'Molino', 'Ralladora', 'Rebanadora', 'Sierra'],
-
     'Lavandería': ['Lavadora', 'Secadora'],
-
     'Carga y Transporte': ['Ascensor','Carretilla', 'Cinta Transportadora', 'Elevador de Carga', 'Genie', 'Montacargas', 'Plataforma (Romana)', 'Portón', 'Santa María', 'Traspaleta', 'Trolley'],
-
     'Hidráulica': ['Bomba de Agua', 'Compresor de Aire', 'Filtro de Agua', 'Tanque Subterráneo', 'Tanque Aéreo']
   };
 
@@ -33,20 +27,37 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
-// Script para mostrar el encargado segun el personal seleccionado
+// Script para mostrar el encargado segun la categoría y el personal seleccionado
 document.addEventListener('DOMContentLoaded', function() {
   const personalSelect = document.getElementById('personal');
+  const classificationSelect = document.getElementById('classification');
   const encargadoSelect = document.getElementById('encargado');
 
   const encargadoOptions = {
-    'Contratista': ['Tecnonorte', 'Somago', 'JCF', 'KTM', 'Tecnoembalaje'],
+    'Contratista': {
+      'Energía': ['Top Generation', 'Plantas Modulares', 'Hema'],
+      'Refrigeración': ['Tecnonorte', 'RSC', 'Tecniservicios JN'],
+      'Climatización': ['Somago', 'Midea'],
+      'Perecederos' : ['JCF', 'Rios Agua Viva', 'Tecnoembalaje'],
+      'Lavandería' : ['Alberto Medina'],
+      'Carga y Transporte' : ['KTM', 'Ascensores PP', 'Ascensores del Lago', 'Tecnivera', 'Yan Landaeta', 'Forkli'],
+      'Hidráulica' : ['Hidrosoluciones', 'Jose Luís Peña'],
+    },
     'Técnico de Cuadrilla': ['Tec. Oscar', 'Tec. Jean', 'Tec. Starlyn', 'Tec. Juan', 'Tec. Luis', 'Tec. Gustavo'],
     'Técnico de Infraestructura': ['Supervisor de Infraestructura']
   };
 
-  personalSelect.addEventListener('change', function() {
-    const selectedpersonal = personalSelect.value;
-    const options = encargadoOptions[selectedpersonal] || [];
+  function updateEncargadoOptions() {
+    const selectedPersonal = personalSelect.value;
+    const selectedClassification = classificationSelect.value;
+
+    let options = [];
+
+    if (selectedPersonal === 'Contratista') {
+      options = (encargadoOptions[selectedPersonal] && encargadoOptions[selectedPersonal][selectedClassification]) || [];
+    } else {
+      options = encargadoOptions[selectedPersonal] || [];
+    }
 
     encargadoSelect.innerHTML = '<option selected disabled value="">Encargado</option>';
     options.forEach(function(option) {
@@ -55,6 +66,16 @@ document.addEventListener('DOMContentLoaded', function() {
       optionElement.textContent = option;
       encargadoSelect.appendChild(optionElement);
     });
+  }
+
+  personalSelect.addEventListener('change', function() {
+    console.log('Personal select changed');
+    updateEncargadoOptions();
+  });
+
+  classificationSelect.addEventListener('change', function() {
+    console.log('Classification select changed');
+    updateEncargadoOptions();
   });
 });
 

@@ -10,7 +10,7 @@ new DataTable('#datatable', {
             buttons: ['excel', 'pdf', 'print']
         },
         language: {
-            url: 'dataTables.german.json',
+            url: "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json",
         }
     }
 });
