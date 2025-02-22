@@ -53,6 +53,8 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'mysite.urls'
 
+CSRF_TRUSTED_ORIGINS = ['https://34.226.247.55']
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
