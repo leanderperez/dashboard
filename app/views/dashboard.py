@@ -17,11 +17,12 @@ def generar_grafico(queryset):
 @login_required
 def index(request):
     reportes = Reporte.objects.all()  # Obtiene todos los reportes
-    plot_div1 = generar_grafico(reportes)  # Genera el primer gráfico
-    plot_div2 = generar_grafico(reportes)  # Genera el segundo gráfico
-    plot_div3 = generar_grafico(reportes)  # Genera el tercer gráfico
-    plot_div4 = generar_grafico(reportes)  # Genera el cuarto gráfico
-    return render(request, 'app/dashboard.html', {'plot_div1': plot_div1, 'plot_div2': plot_div2, 'plot_div3': plot_div3, 'plot_div4': plot_div4})
+    sucursales = Reporte.objects.values_list('sucursal', flat=True).distinct()
+    plot_div = generar_grafico(reportes)  # Genera el gráfico
+    if request.method == 'GET':  # Maneja la solicitud GET inicial
+        return render(request, 'app/dashboard.html', {'sucursales': sucursales, 'plot_div': plot_div})
+    elif request.method == 'POST':  # Maneja la solicitud POST de AJAX
+        return actualizar_grafico(request)  # Llama a la vista actualizar_grafico
 
 def actualizar_grafico(request):
     if request.method == 'POST':
