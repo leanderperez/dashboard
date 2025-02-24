@@ -1,5 +1,91 @@
 {% extends 'app/base.html' %}
 {% block title %}Gestión de Reportes GEEI{% endblock %}
 
+{% block stylesheet %}
+    <style>
+        .selected-sucursal {
+            display: inline-block;
+            margin: 2px;
+            padding: 2px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        .remove-sucursal {
+            cursor: pointer;
+            color: rgb(18, 20, 49);
+            margin-left: 3px;
+        }
+        /*
+        #selected-sucursales {
+            min-height: 20px; 
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        */
+    </style>
+{% endblock %}
+
 {% block content %}
+
+    <form id="filtro-form" method="post">
+        {% csrf_token %}
+        <label for="sucursal">Sucursales:</label>
+        <select id="sucursal-select">
+            <option value="">Seleccione una sucursal</option>
+            {% for sucursal in sucursales %}
+                <option value="{{ sucursal }}">{{ sucursal }}</option>
+            {% endfor %}
+        </select>
+    </form>
+    <div id="selected-sucursales"></div>
+    <div id="grafico-container">
+        {{ plot_div|safe }}
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#sucursal-select').change(function() {
+                const selectedSucursal = $(this).val();
+                if (selectedSucursal && !$('#selected-sucursales').find(`[data-sucursal="${selectedSucursal}"]`).length) {
+                    $('#selected-sucursales').append(
+                        `<div class="selected-sucursal" data-sucursal="${selectedSucursal}">
+                            ${selectedSucursal}
+                            <span class="remove-sucursal">x</span>
+                        </div>`
+                    );
+                }
+                $(this).val('');
+                updateGrafico();
+            });
+
+            $(document).on('click', '.remove-sucursal', function() {
+                $(this).parent().remove();
+                updateGrafico();
+            });
+
+            function updateGrafico() {
+                const sucursales = $('#selected-sucursales .selected-sucursal').map(function() {
+                    return $(this).data('sucursal');
+                }).get();
+
+                $.ajax({
+                    url: '/dashboard/',
+                    type: 'POST',
+                    data: {
+                        'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(),
+                        'sucursal': sucursales
+                    },
+                    success: function(response) {
+                        $('#grafico-container').html(response.plot_div);
+                    },
+                    error: function(error) {
+                        console.error('Error al actualizar el gráfico:', error);
+                    }
+                });
+            }
+        });
+    </script>
 {% endblock %}
