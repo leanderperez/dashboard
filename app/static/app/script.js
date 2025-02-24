@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
     })
   })()
 
-//Script para los pendientes
+//Script para carrousel de pendientes
 var swiper = new Swiper('.blog-slider', {
   spaceBetween: 30,
   effect: 'fade',
