@@ -1,91 +1,26 @@
 {% extends 'app/base.html' %}
 {% block title %}Gestión de Reportes GEEI{% endblock %}
 
-{% block stylesheet %}
-    <style>
-        .selected-sucursal {
-            display: inline-block;
-            margin: 2px;
-            padding: 2px;
-            background-color: #f0f0f0;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-        }
-        .remove-sucursal {
-            cursor: pointer;
-            color: rgb(18, 20, 49);
-            margin-left: 3px;
-        }
-        /*
-        #selected-sucursales {
-            min-height: 20px; 
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin-bottom: 20px;
-        }
-        */
-    </style>
-{% endblock %}
 
 {% block content %}
-
-    <form id="filtro-form" method="post">
-        {% csrf_token %}
-        <label for="sucursal">Sucursales:</label>
-        <select id="sucursal-select">
-            <option value="">Seleccione una sucursal</option>
-            {% for sucursal in sucursales %}
-                <option value="{{ sucursal }}">{{ sucursal }}</option>
-            {% endfor %}
-        </select>
-    </form>
-    <div id="selected-sucursales"></div>
-    <div id="grafico-container">
-        {{ plot_div|safe }}
+<div class="dashboard">
+    <div class="izquierda">
+        Contenido de la izquierda
     </div>
+    <div class="derecha">
+        <div class="tabs">
+            <button class="tab-button active" data-tab="tab1">Pestaña 1</button>
+            <button class="tab-button" data-tab="tab2">Pestaña 2</button>
+        </div>
+        <div class="tab-content active" id="tab1">
+            <div class="grafico1">Gráfico 1 de la pestaña 1</div>
+            <div class="grafico2">Gráfico 2 de la pestaña 1</div>
+        </div>
+        <div class="tab-content" id="tab2">
+            <div class="grafico1">Gráfico 1 de la pestaña 2</div>
+            <div class="grafico2">Gráfico 2 de la pestaña 2</div>
+        </div>
+    </div>
+</div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('#sucursal-select').change(function() {
-                const selectedSucursal = $(this).val();
-                if (selectedSucursal && !$('#selected-sucursales').find(`[data-sucursal="${selectedSucursal}"]`).length) {
-                    $('#selected-sucursales').append(
-                        `<div class="selected-sucursal" data-sucursal="${selectedSucursal}">
-                            ${selectedSucursal}
-                            <span class="remove-sucursal">x</span>
-                        </div>`
-                    );
-                }
-                $(this).val('');
-                updateGrafico();
-            });
-
-            $(document).on('click', '.remove-sucursal', function() {
-                $(this).parent().remove();
-                updateGrafico();
-            });
-
-            function updateGrafico() {
-                const sucursales = $('#selected-sucursales .selected-sucursal').map(function() {
-                    return $(this).data('sucursal');
-                }).get();
-
-                $.ajax({
-                    url: '/dashboard/',
-                    type: 'POST',
-                    data: {
-                        'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(),
-                        'sucursal': sucursales
-                    },
-                    success: function(response) {
-                        $('#grafico-container').html(response.plot_div);
-                    },
-                    error: function(error) {
-                        console.error('Error al actualizar el gráfico:', error);
-                    }
-                });
-            }
-        });
-    </script>
 {% endblock %}

@@ -114,3 +114,22 @@ var swiper = new Swiper('.blog-slider', {
     disableOnInteraction: false, // Permite que el autoplay continúe después de la interacción del usuario
   }
 });
+
+
+//Script para pestañas del dashboard
+const tabButtons = document.querySelectorAll('.tab-button');
+const tabContents = document.querySelectorAll('.tab-content');
+
+tabButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        const tabId = button.dataset.tab;
+
+        // Desactiva todas las pestañas y contenidos
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        tabContents.forEach(content => content.classList.remove('active'));
+
+        // Activa la pestaña y el contenido correspondiente
+        button.classList.add('active');
+        document.getElementById(tabId).classList.add('active');
+    });
+});
