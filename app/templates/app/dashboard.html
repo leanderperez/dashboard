@@ -4,7 +4,7 @@
 
 {% block content %}
 <div style="display: flex;">
-    <div style="width: 20%; padding: 20px;">
+    <div style="width: 20%; padding: 5px;">
         <form method="post">
             {% csrf_token %}
             <label for="fecha_inicio">Fecha Inicio:</label>
@@ -24,17 +24,17 @@
                     <option value="{{ sucursal }}">{{ sucursal }}</option>
                 {% endfor %}
             </select><br><br>
-            <label for="encargado">Encargado:</label>
-            <select name="encargado" id="encargado">
+            <label for="personal">Personal:</label>
+            <select name="personal" id="personal">
                 <option value="">Todos</option>
                 {% for encargado in encargados %}
-                    <option value="{{ encargado }}">{{ encargado }}</option>
+                    <option value="{{ personal }}">{{ personal }}</option>
                 {% endfor %}
             </select><br><br>
             <button type="submit">Filtrar</button>
         </form>
     </div>
-    <div style="width: 80%; padding: 20px;">
+    <div style="width: 80%; padding: 5px;">
         <div id="tabs">
             <button class="tablinks" onclick="openTab(event, 'Clasificacion')" id="defaultOpen">Clasificación</button>
             <button class="tablinks" onclick="openTab(event, 'Sucursales')">Sucursales</button>
@@ -80,5 +80,5 @@
 
         // Abre la pestaña predeterminada al cargar la página
         document.getElementById("defaultOpen").click();
-    </script>
+</script>
 {% endblock %}
