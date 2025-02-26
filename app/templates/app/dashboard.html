@@ -1,91 +1,84 @@
 {% extends 'app/base.html' %}
 {% block title %}Gestión de Reportes GEEI{% endblock %}
 
-{% block stylesheet %}
-    <style>
-        .selected-sucursal {
-            display: inline-block;
-            margin: 2px;
-            padding: 2px;
-            background-color: #f0f0f0;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-        }
-        .remove-sucursal {
-            cursor: pointer;
-            color: rgb(18, 20, 49);
-            margin-left: 3px;
-        }
-        /*
-        #selected-sucursales {
-            min-height: 20px; 
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin-bottom: 20px;
-        }
-        */
-    </style>
-{% endblock %}
 
 {% block content %}
-
-    <form id="filtro-form" method="post">
-        {% csrf_token %}
-        <label for="sucursal">Sucursales:</label>
-        <select id="sucursal-select">
-            <option value="">Seleccione una sucursal</option>
-            {% for sucursal in sucursales %}
-                <option value="{{ sucursal }}">{{ sucursal }}</option>
-            {% endfor %}
-        </select>
-    </form>
-    <div id="selected-sucursales"></div>
-    <div id="grafico-container">
-        {{ plot_div|safe }}
+<div style="display: flex;">
+    <div style="width: 20%; padding: 20px;">
+        <form method="post">
+            {% csrf_token %}
+            <label for="fecha_inicio">Fecha Inicio:</label>
+            <input type="date" name="fecha_inicio" id="fecha_inicio"><br><br>
+            <label for="fecha_fin">Fecha Fin:</label>
+            <input type="date" name="fecha_fin" id="fecha_fin"><br><br>
+            <label for="clasificacion">Clasificación:</label>
+            <select name="clasificacion" id="clasificacion">
+                <option value="">Todos</option>
+                {% for clasificacion in clasificaciones %}
+                    <option value="{{ clasificacion }}">{{ clasificacion }}</option>
+                {% endfor %}
+            </select><br><br>
+            <label for="sucursales">Sucursales:</label>
+            <select name="sucursales" id="sucursales" multiple>
+                {% for sucursal in sucursales_list %}
+                    <option value="{{ sucursal }}">{{ sucursal }}</option>
+                {% endfor %}
+            </select><br><br>
+            <label for="encargado">Encargado:</label>
+            <select name="encargado" id="encargado">
+                <option value="">Todos</option>
+                {% for encargado in encargados %}
+                    <option value="{{ encargado }}">{{ encargado }}</option>
+                {% endfor %}
+            </select><br><br>
+            <button type="submit">Filtrar</button>
+        </form>
     </div>
+    <div style="width: 80%; padding: 20px;">
+        <div id="tabs">
+            <button class="tablinks" onclick="openTab(event, 'Clasificacion')" id="defaultOpen">Clasificación</button>
+            <button class="tablinks" onclick="openTab(event, 'Sucursales')">Sucursales</button>
+            <button class="tablinks" onclick="openTab(event, 'Kilos')">Kilos</button>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('#sucursal-select').change(function() {
-                const selectedSucursal = $(this).val();
-                if (selectedSucursal && !$('#selected-sucursales').find(`[data-sucursal="${selectedSucursal}"]`).length) {
-                    $('#selected-sucursales').append(
-                        `<div class="selected-sucursal" data-sucursal="${selectedSucursal}">
-                            ${selectedSucursal}
-                            <span class="remove-sucursal">x</span>
-                        </div>`
-                    );
-                }
-                $(this).val('');
-                updateGrafico();
-            });
+            <div id="Clasificacion" class="tabcontent">
+                <div style="display: flex; flex-direction: column;">
+                    <div>{{ fig1|safe }}</div>
+                    <div>{{ fig2|safe }}</div>
+                </div>
+            </div>
 
-            $(document).on('click', '.remove-sucursal', function() {
-                $(this).parent().remove();
-                updateGrafico();
-            });
+            <div id="Sucursales" class="tabcontent">
+                <div style="display: flex; flex-direction: column;">
+                    <div>{{ fig3|safe }}</div>
+                    <div>{{ fig4|safe }}</div>
+                </div>
+            </div>
 
-            function updateGrafico() {
-                const sucursales = $('#selected-sucursales .selected-sucursal').map(function() {
-                    return $(this).data('sucursal');
-                }).get();
+            <div id="Kilos" class="tabcontent">
+                <div style="display: flex; flex-direction: column;">
+                    <div>{{ fig5|safe }}</div>
+                    <div>{{ fig6|safe }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function openTab(evt, tabName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.className += " active";
+        }
 
-                $.ajax({
-                    url: '/dashboard/',
-                    type: 'POST',
-                    data: {
-                        'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(),
-                        'sucursal': sucursales
-                    },
-                    success: function(response) {
-                        $('#grafico-container').html(response.plot_div);
-                    },
-                    error: function(error) {
-                        console.error('Error al actualizar el gráfico:', error);
-                    }
-                });
-            }
-        });
+        // Abre la pestaña predeterminada al cargar la página
+        document.getElementById("defaultOpen").click();
     </script>
 {% endblock %}

@@ -3,33 +3,79 @@ from django.contrib.auth.decorators import login_required
 from app.models import Reporte
 import pandas as pd
 import plotly.graph_objects as go
-from plotly.offline import plot
-from django.http import JsonResponse
-
-def generar_grafico(queryset):
-    df = pd.DataFrame(list(queryset.values('sucursal')))
-    df = df['sucursal'].value_counts()
-    fig = go.Figure(data=[go.Bar(x=df.index, y=df.values)])
-    fig.update_layout(title='Gráfico de Reportes por Sucursal')
-    plot_div = plot(fig, output_type='div')
-    return plot_div
 
 @login_required
 def index(request):
-    reportes = Reporte.objects.all()  # Obtiene todos los reportes
-    sucursales = Reporte.objects.values_list('sucursal', flat=True).distinct()
-    plot_div = generar_grafico(reportes)  # Genera el gráfico
-    if request.method == 'GET':  # Maneja la solicitud GET inicial
-        return render(request, 'app/dashboard.html', {'sucursales': sucursales, 'plot_div': plot_div})
-    elif request.method == 'POST':  # Maneja la solicitud POST de AJAX
-        return actualizar_grafico(request)  # Llama a la vista actualizar_grafico
+    reportes = Reporte.objects.all()
+    df = pd.DataFrame(list(reportes.values()))
 
-def actualizar_grafico(request):
+    # Convertir la columna 'fecha' a datetime
+    df['fecha'] = pd.to_datetime(df['fecha'], errors='coerce')
+
+    # Filtros
     if request.method == 'POST':
-        sucursales = request.POST.getlist('sucursal[]')  # Obtiene la lista de sucursales seleccionadas
-        reportes = Reporte.objects.all()
+        fecha_inicio = request.POST.get('fecha_inicio')
+        fecha_fin = request.POST.get('fecha_fin')
+        clasificacion = request.POST.get('clasificacion')
+        sucursales = request.POST.getlist('sucursales')
+        personal = request.POST.get('personal')
+
+        if fecha_inicio and fecha_fin:
+            df = df[(df['fecha'] >= fecha_inicio) & (df['fecha'] <= fecha_fin)]
+        if clasificacion:
+            df = df[df['clasificacion'] == clasificacion]
         if sucursales:
-            reportes = reportes.filter(sucursal__in=sucursales)
-        plot_div = generar_grafico(reportes)
-        return JsonResponse({'plot_div': plot_div})
-    return JsonResponse({'error': 'No se proporcionaron sucursales'})
+            df = df[df['sucursal'].isin(sucursales)]
+        if personal:
+            df = df[df['personal'] == personal]
+
+    # Asegúrate de que los valores True y False estén presentes en el DataFrame
+    if not df['estatus'].isin([True]).any():
+        df = df.append({'estatus': True}, ignore_index=True)
+    if not df['estatus'].isin([False]).any():
+        df = df.append({'estatus': False}, ignore_index=True)
+
+    # Gráfico 1: Reportes vs Clasificación (abierto/cerrado)
+    grouped = df.groupby(['clasificacion', 'estatus']).size().unstack(fill_value=0)
+    fig1 = go.Figure(data=[
+        go.Bar(name='Abierto', x=grouped.index, y=grouped.get(False, [0]*len(grouped.index))),
+        go.Bar(name='Cerrado', x=grouped.index, y=grouped.get(True, [0]*len(grouped.index)))
+    ])
+
+    # Gráfico 2: Reportes vs Clasificación (personal)
+    grouped = df.groupby(['clasificacion', 'personal']).size().unstack(fill_value=0)
+    fig2 = go.Figure(data=[go.Bar(name=col, x=grouped.index, y=grouped[col]) for col in grouped.columns])
+
+    # Gráfico 3: Reportes por Sucursal
+    sucursal_counts = df['sucursal'].value_counts()
+    fig3 = go.Figure(data=[go.Bar(x=sucursal_counts.index, y=sucursal_counts.values)])
+
+    # Gráfico 4: Reportes por Mes
+    monthly_counts = df.groupby(df['fecha'].dt.to_period('M')).size()
+    fig4 = go.Figure(data=[go.Scatter(x=monthly_counts.index.astype(str), y=monthly_counts.values, mode='lines+markers')])
+
+    # Gráfico 5: Kilos de Refrigerante por Sucursal
+    fig5 = go.Figure()
+    for refrigerante in df['refrigerante'].unique():
+        refrigerante_data = df[df['refrigerante'] == refrigerante]
+        sucursal_kilos = refrigerante_data.groupby('sucursal')['kilos'].sum()
+        fig5.add_trace(go.Bar(x=sucursal_kilos.index, y=sucursal_kilos.values, name=refrigerante))
+
+    # Gráfico 6: Kilos de Refrigerante por Mes
+    fig6 = go.Figure()
+    for refrigerante in df['refrigerante'].unique():
+        monthly_kilos = df[df['refrigerante'] == refrigerante].groupby(df['fecha'].dt.to_period('M'))['kilos'].sum()
+        fig6.add_trace(go.Scatter(x=monthly_kilos.index.astype(str), y=monthly_kilos.values, mode='lines+markers', name=refrigerante))
+
+    context = {
+        'fig1': fig1.to_html(),
+        'fig2': fig2.to_html(),
+        'fig3': fig3.to_html(),
+        'fig4': fig4.to_html(),
+        'fig5': fig5.to_html(),
+        'fig6': fig6.to_html(),
+        'clasificaciones': df['clasificacion'].unique(),
+        'sucursales_list': df['sucursal'].unique(),
+        'encargados': df['encargado'].unique(),
+    }
+    return render(request, 'app/dashboard.html', context)
