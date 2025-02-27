@@ -201,6 +201,11 @@ h3 {
   :root.dark {
     --dt-html-background: rgb(33, 37, 41);
   }
+
+  thead input {
+    width: 100%;
+    box-sizing: border-box;
+  }
   
   table.dataTable td.dt-control {
     text-align: center;

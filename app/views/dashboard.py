@@ -48,7 +48,6 @@ def index(request):
 
     # Gráfico 2: Reportes vs Clasificación (personal)
     grouped = df.groupby(['clasificacion', 'personal']).size().unstack(fill_value=0)
-    print(grouped)
     fig2 = go.Figure(data=[go.Bar(name=col, x=grouped.index, y=grouped[col]) for col in grouped.columns])
     fig2.update_layout(width=800, 
                        height=250,
