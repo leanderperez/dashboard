@@ -121,13 +121,13 @@ EQUIPOS = (
 
 )
 PERSONAL = (
-    ('', 'Personal'),
+    ('Sin Asignar', 'Personal'),
     ('Contratista', 'Contratista'),
     ('Técnico de Cuadrilla', 'Técnico de Cuadrilla'),
     ('Técnico de Infraestructura', 'Técnico de Infraestructura')
     )
 ENCARGADOS = (
-    ('', 'Encargado'),
+    ('Sin Asignar', 'Encargado'),
     ('Top Generation', 'Top Generation'),
     ('Plantas Modulares', 'Plantas Modulares'),
     ('Hema', 'Hema'),

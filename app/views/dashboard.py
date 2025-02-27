@@ -8,8 +8,7 @@ import plotly.graph_objects as go
 def index(request):
     reportes = Reporte.objects.all()
     df = pd.DataFrame(list(reportes.values()))
-    df['personal'] = df['personal'].fillna('Sin Asignar').replace('None', 'Sin Asignar')
-    df['kilos'] = df['kilos'].fillna(0)
+    df['personal'] = df['personal'].replace('None', 'Sin Asignar').fillna('Sin Asignar')
     template = 'seaborn'
 
     # Convertir la columna 'fecha' a datetime
@@ -49,6 +48,7 @@ def index(request):
 
     # Gráfico 2: Reportes vs Clasificación (personal)
     grouped = df.groupby(['clasificacion', 'personal']).size().unstack(fill_value=0)
+    print(grouped)
     fig2 = go.Figure(data=[go.Bar(name=col, x=grouped.index, y=grouped[col]) for col in grouped.columns])
     fig2.update_layout(width=800, 
                        height=250,
@@ -83,29 +83,31 @@ def index(request):
     # Gráfico 5: Kilos de Refrigerante Recargados por Sucursal
     fig5 = go.Figure()
     for refrigerante in df['refrigerante'].unique():
-        refrigerante_data = df[df['refrigerante'] == refrigerante]
-        sucursal_kilos = refrigerante_data.groupby('sucursal')['kilos'].sum()
-        fig5.add_trace(go.Bar(x=sucursal_kilos.index, y=sucursal_kilos.values, name=refrigerante))
-        fig5.update_layout(width=800, 
-                       height=250,
-                       title="Kilos de Refrigerante Recargados por Sucursal",
-                       xaxis_title="Sucursales",
-                       yaxis_title="Refrigerante (Kg)",
-                       template=template,
-                       margin=dict(l=10, r=10, t=35, b=5))
+        if refrigerante:
+            refrigerante_data = df[df['refrigerante'] == refrigerante]
+            sucursal_kilos = refrigerante_data.groupby('sucursal')['kilos'].sum()
+            fig5.add_trace(go.Bar(x=sucursal_kilos.index, y=sucursal_kilos.values, name=refrigerante))
+    fig5.update_layout(width=800, 
+                    height=250,
+                    title="Kilos de Refrigerante Recargados por Sucursal",
+                    xaxis_title="Sucursales",
+                    yaxis_title="Refrigerante (Kg)",
+                    template=template,
+                    margin=dict(l=10, r=10, t=35, b=5))
 
     # Gráfico 6: Kilos de Refrigerante por Mes
     fig6 = go.Figure()
     for refrigerante in df['refrigerante'].unique():
-        monthly_kilos = df[df['refrigerante'] == refrigerante].groupby(df['fecha'].dt.to_period('M'))['kilos'].sum()
-        fig6.add_trace(go.Scatter(x=monthly_kilos.index.astype(str), y=monthly_kilos.values, mode='lines+markers', name=refrigerante))
-        fig6.update_layout(width=800, 
-                       height=250,
-                       title="Kilos de Refrigerante Recargados por Mes",
-                       xaxis_title="Mes",
-                       yaxis_title="Refrigerante (Kg)",
-                       template=template,
-                       margin=dict(l=10, r=10, t=35, b=5))
+        if refrigerante:
+            monthly_kilos = df[df['refrigerante'] == refrigerante].groupby(df['fecha'].dt.to_period('M'))['kilos'].sum()
+            fig6.add_trace(go.Scatter(x=monthly_kilos.index.astype(str), y=monthly_kilos.values, mode='lines+markers', name=refrigerante))
+    fig6.update_layout(width=800, 
+                    height=250,
+                    title="Kilos de Refrigerante Recargados por Mes",
+                    xaxis_title="Mes",
+                    yaxis_title="Refrigerante (Kg)",
+                    template=template,
+                    margin=dict(l=10, r=10, t=35, b=5))
         
     context = {
         'fig1': fig1.to_html(),
