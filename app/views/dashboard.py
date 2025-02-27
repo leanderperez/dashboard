@@ -8,6 +8,7 @@ import plotly.graph_objects as go
 def index(request):
     reportes = Reporte.objects.all()
     df = pd.DataFrame(list(reportes.values()))
+    template = 'seaborn'
 
     # Convertir la columna 'fecha' a datetime
     df['fecha'] = pd.to_datetime(df['fecha'], errors='coerce')
@@ -29,11 +30,6 @@ def index(request):
         if personal:
             df = df[df['personal'] == personal]
 
-    # Asegúrate de que los valores True y False estén presentes en el DataFrame
-    if not df['estatus'].isin([True]).any():
-        df = df.append({'estatus': True}, ignore_index=True)
-    if not df['estatus'].isin([False]).any():
-        df = df.append({'estatus': False}, ignore_index=True)
 
     # Gráfico 1: Reportes vs Clasificación (abierto/cerrado)
     grouped = df.groupby(['clasificacion', 'estatus']).size().unstack(fill_value=0)
@@ -46,6 +42,7 @@ def index(request):
                        title="Reportes vs Clasificación",
                        xaxis_title="Clasificación (abierto/cerrado)",
                        yaxis_title="Número de Reportes",
+                       template=template,
                        margin=dict(l=10, r=10, t=35, b=5))
 
     # Gráfico 2: Reportes vs Clasificación (personal)
@@ -56,6 +53,7 @@ def index(request):
                        title="Reportes vs Clasificación",
                        xaxis_title="Clasificación (personal)",
                        yaxis_title="Número de Reportes",
+                       template=template,
                        margin=dict(l=10, r=10, t=35, b=5))
 
     # Gráfico 3: Reportes por Sucursal
@@ -66,6 +64,7 @@ def index(request):
                        title="Reportes por Sucursal",
                        xaxis_title="Sucursales",
                        yaxis_title="Número de Reportes",
+                       template=template,
                        margin=dict(l=10, r=10, t=35, b=5))
 
     # Gráfico 4: Reportes por Mes
@@ -76,6 +75,7 @@ def index(request):
                        title="Reportes por Mes",
                        xaxis_title="Mes",
                        yaxis_title="Número de Reportes",
+                       template=template,
                        margin=dict(l=10, r=10, t=35, b=5))
     
     # Gráfico 5: Kilos de Refrigerante Recargados por Sucursal
@@ -88,7 +88,8 @@ def index(request):
                        height=250,
                        title="Kilos de Refrigerante Recargados por Sucursal",
                        xaxis_title="Sucursales",
-                       yaxis_title="Regrigerante (Kg)",
+                       yaxis_title="Refrigerante (Kg)",
+                       template=template,
                        margin=dict(l=10, r=10, t=35, b=5))
 
     # Gráfico 6: Kilos de Refrigerante por Mes
@@ -100,7 +101,8 @@ def index(request):
                        height=250,
                        title="Kilos de Refrigerante Recargados por Mes",
                        xaxis_title="Mes",
-                       yaxis_title="Regrigerante (Kg)",
+                       yaxis_title="Refrigerante (Kg)",
+                       template=template,
                        margin=dict(l=10, r=10, t=35, b=5))
         
     context = {
@@ -114,4 +116,5 @@ def index(request):
         'sucursales_list': df['sucursal'].unique(),
         'personal': df['personal'].unique(),
     }
+    print(df['personal'].unique())
     return render(request, 'app/dashboard.html', context)

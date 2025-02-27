@@ -4,41 +4,51 @@
 
 {% block content %}
 <div style="display: flex;">
-    <div style="width: 20%; padding: 5px;">
-        <form method="post">
-            {% csrf_token %}
-            <label for="fecha_inicio">Fecha Inicio:</label>
-            <input type="date" name="fecha_inicio" id="fecha_inicio"><br><br>
-            <label for="fecha_fin">Fecha Fin:</label>
-            <input type="date" name="fecha_fin" id="fecha_fin"><br><br>
-            <label for="clasificacion">Clasificación:</label>
-            <select name="clasificacion" id="clasificacion">
-                <option value="">Todos</option>
-                {% for clasificacion in clasificaciones %}
-                    <option value="{{ clasificacion }}">{{ clasificacion }}</option>
-                {% endfor %}
-            </select><br><br>
-            <label for="sucursales">Sucursales:</label>
-            <select name="sucursales" id="sucursales" multiple>
-                {% for sucursal in sucursales_list %}
-                    <option value="{{ sucursal }}">{{ sucursal }}</option>
-                {% endfor %}
-            </select><br><br>
-            <label for="personal">Personal:</label>
-            <select name="personal" id="personal">
-                <option value="">Todos</option>
-                {% for encargado in encargados %}
-                    <option value="{{ personal }}">{{ personal }}</option>
-                {% endfor %}
-            </select><br><br>
-            <button type="submit">Filtrar</button>
-        </form>
+    <div style="width: 40%; padding: 5px;">
+        <div class="form-content">
+            <div class="form-items">
+                <form method="post">
+                    {% csrf_token %}
+        
+                    <label for="fecha_inicio">Fecha Inicio:</label>
+                    <input type="date" class="form-control" name="fecha_inicio" id="fecha_inicio">
+        
+                    <label for="fecha_fin">Fecha Fin:</label>
+                    <input type="date" class="form-control" name="fecha_fin" id="fecha_fin">
+        
+                    <select name="clasificacion" class="form-select mt-3" id="clasificacion">
+                        <option value="">Clasificación</option>
+                        {% for clasificacion in clasificaciones %}
+                            <option value="{{ clasificacion }}">{{ clasificacion }}</option>
+                        {% endfor %}
+                    </select>
+        
+                    <select name="sucursales" class="form-select mt-3" id="sucursales" multiple>
+                        {% for sucursal in sucursales_list %}
+                            <option value="{{ sucursal }}">{{ sucursal }}</option>
+                        {% endfor %}
+                    </select>
+        
+                    <select name="personal" class="form-select mt-3" id="personal">
+                        <option value="">Personal de atención</option>
+                        {% for encargado in encargados %}
+                            <option value="{{ personal }}">{{ personal }}</option>
+                        {% endfor %}
+                    </select>
+                    
+                    <div class="form-button mt-3">
+                        <button type="submit" class="btn btn-primary">Filtrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-    <div style="width: 80%; padding: 5px;">
+
+    <div style="width: 60%; padding: 5px;">
         <div id="tabs">
             <button class="tablinks" onclick="openTab(event, 'Clasificacion')" id="defaultOpen">Clasificación</button>
             <button class="tablinks" onclick="openTab(event, 'Sucursales')">Sucursales</button>
-            <button class="tablinks" onclick="openTab(event, 'Kilos')">Kilos</button>
+            <button class="tablinks" onclick="openTab(event, 'Kilos')">Refrigerantes</button>
 
             <div id="Clasificacion" class="tabcontent">
                 <div style="display: flex; flex-direction: column;">
@@ -63,6 +73,7 @@
         </div>
     </div>
 </div>
+
 <script>
     function openTab(evt, tabName) {
         var i, tabcontent, tablinks;
