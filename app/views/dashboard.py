@@ -8,6 +8,7 @@ import plotly.graph_objects as go
 def index(request):
     reportes = Reporte.objects.all()
     df = pd.DataFrame(list(reportes.values()))
+    df['personal'] = df['personal'].fillna('Sin Asignar').replace('None', 'Sin Asignar')
     template = 'seaborn'
 
     # Convertir la columna 'fecha' a datetime
@@ -116,5 +117,4 @@ def index(request):
         'sucursales_list': df['sucursal'].unique(),
         'personal': df['personal'].unique(),
     }
-    print(df['personal'].unique())
     return render(request, 'app/dashboard.html', context)

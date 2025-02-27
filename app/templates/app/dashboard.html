@@ -31,7 +31,7 @@
         
                     <select name="personal" class="form-select mt-3" id="personal">
                         <option value="">Personal de atención</option>
-                        {% for encargado in encargados %}
+                        {% for personal in personal %}
                             <option value="{{ personal }}">{{ personal }}</option>
                         {% endfor %}
                     </select>
