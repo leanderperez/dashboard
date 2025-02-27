@@ -9,6 +9,7 @@ def index(request):
     reportes = Reporte.objects.all()
     df = pd.DataFrame(list(reportes.values()))
     df['personal'] = df['personal'].fillna('Sin Asignar').replace('None', 'Sin Asignar')
+    df['kilos'] = df['kilos'].fillna(0)
     template = 'seaborn'
 
     # Convertir la columna 'fecha' a datetime
