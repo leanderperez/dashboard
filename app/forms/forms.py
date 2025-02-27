@@ -121,7 +121,7 @@ EQUIPOS = (
 
 )
 PERSONAL = (
-    ('Sin Asignar', 'Personal'),
+    ('Técnico de Infraestructura', 'Personal'),
     ('Contratista', 'Contratista'),
     ('Técnico de Cuadrilla', 'Técnico de Cuadrilla'),
     ('Técnico de Infraestructura', 'Técnico de Infraestructura')

@@ -8,7 +8,7 @@ import plotly.graph_objects as go
 def index(request):
     reportes = Reporte.objects.all()
     df = pd.DataFrame(list(reportes.values()))
-    df['personal'] = df['personal'].replace('None', 'Sin Asignar').fillna('Sin Asignar')
+    df['personal'] = df['personal'].replace('None', 'Técnico de Infraestructura').fillna('Técnico de Infraestructura')
     template = 'seaborn'
 
     # Convertir la columna 'fecha' a datetime
