@@ -119,13 +119,15 @@ def index(request):
                 x=df_agrupado['costo'],
                 y=df_agrupado['personal'],
                 name='Costo',
-                orientation='h'
+                orientation='h',
+                text=df_agrupado['costo'].apply(lambda a: f'Costo: {a}')
             ),
             go.Bar(
                 x=df_agrupado['gasto'],
                 y=df_agrupado['personal'],
                 name='Gasto',
-                orientation='h'
+                orientation='h',
+                text=df_agrupado['gasto'].apply(lambda a: f'Gasto: {a}')
             ),
             go.Bar(
                 x=df_agrupado['ahorro'],
