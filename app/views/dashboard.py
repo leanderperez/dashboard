@@ -113,7 +113,6 @@ def index(request):
     df['personal'] = df['personal'].replace({'Técnico de Cuadrilla': 'Forum GEEI', 'Técnico de Infraestructura': 'Forum GEEI'})
     df_agrupado = df.groupby('personal').agg({'costo': 'sum', 'gasto': 'sum'}).reset_index()
     df_agrupado['ahorro'] = df_agrupado['costo'] - df_agrupado['gasto']
-    print(df_agrupado)
     fig7 = go.Figure(
         data=[
             go.Bar(
