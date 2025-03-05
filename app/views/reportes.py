@@ -7,13 +7,13 @@ from datetime import datetime
 @login_required
 def crear_reporte(request):
     if request.method == 'POST':
-        form = ReporteForm(request.POST)
+        form = ReporteAdminForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('datatable')  # Redirige a datatable
     else:
-        form = ReporteForm()
-    return render(request, 'app/formulario.html', {'form': form})
+        form = ReporteAdminForm()
+    return render(request, 'app/formulario_admin.html', {'form': form})
 
 @login_required
 def modificar_reporte(request, pk):

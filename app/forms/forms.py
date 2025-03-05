@@ -327,7 +327,14 @@ class ReporteAdminForm(forms.ModelForm):
                                widget=forms.NumberInput(attrs={
                                     'class': 'form-control mt-3', 
                                     'id': 'costo',
-                                    'placeholder': 'Costo'}))
+                                    'placeholder': 'Costo o Costo Estimado'}))
+    
+    gasto = forms.DecimalField(label='Costo',
+                               required=False, 
+                               widget=forms.NumberInput(attrs={
+                                    'class': 'form-control mt-3', 
+                                    'id': 'gasto',
+                                    'placeholder': 'Gasto Realizado por Forum'}))
     
     ods_pdf = forms.FileField(label='ODS PDF',
                               required=False,

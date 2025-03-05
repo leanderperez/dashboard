@@ -22,6 +22,7 @@ class Reporte(models.Model):
     kilos = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     fecha_cierre = models.DateField(blank=True, null=True)
     costo = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    gasto = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     ods_pdf = models.FileField(upload_to='pdfs/', blank=True, null=True)
     observaciones = models.TextField(blank=True, null=True)
 
