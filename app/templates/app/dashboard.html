@@ -1,7 +1,6 @@
 {% extends 'app/base.html' %}
 {% block title %}Gestión de Reportes GEEI{% endblock %}
 
-
 {% block content %}
 <div style="display: flex;">
     <div style="width: 40%; padding: 5px;">
@@ -49,6 +48,7 @@
             <button class="tablinks" onclick="openTab(event, 'Clasificacion')" id="defaultOpen">Clasificación</button>
             <button class="tablinks" onclick="openTab(event, 'Sucursales')">Sucursales</button>
             <button class="tablinks" onclick="openTab(event, 'Kilos')">Refrigerantes</button>
+            <button class="tablinks" onclick="openTab(event, 'Costos')">Costos</button>
 
             <div id="Clasificacion" class="tabcontent">
                 <div style="display: flex; flex-direction: column;">
@@ -73,6 +73,13 @@
                     <div>{{ fig6|safe }}</div>
                 </div>
             </div>
+
+            <div id="Costos" class="tabcontent">
+                <div style="display: flex; flex-direction: column;">
+                    <div>{{ fig7|safe }}</div>
+                </div>
+            </div>
+            
         </div>
     </div>
 </div>
@@ -90,9 +97,9 @@
         }
         document.getElementById(tabName).style.display = "block";
         evt.currentTarget.className += " active";
-        }
+    }
 
-        // Abre la pestaña predeterminada al cargar la página
-        document.getElementById("defaultOpen").click();
+    // Abre la pestaña predeterminada al cargar la página
+    document.getElementById("defaultOpen").click();
 </script>
 {% endblock %}

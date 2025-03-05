@@ -107,6 +107,48 @@ def index(request):
                     yaxis_title="Refrigerante (Kg)",
                     template=template,
                     margin=dict(l=10, r=10, t=35, b=5))
+    
+    # Grafico 7: Costos por Personal
+    df = df[df['personal'] != 'En Proceso']
+    df['personal'] = df['personal'].replace({'Técnico de Cuadrilla': 'Forum GEEI', 'Técnico de Infraestructura': 'Forum GEEI'})
+    df_agrupado = df.groupby('personal').agg({'costo': 'sum', 'gasto': 'sum'}).reset_index()
+    df_agrupado['ahorro'] = df_agrupado['costo'] - df_agrupado['gasto']
+    print(df_agrupado)
+    fig7 = go.Figure(
+        data=[
+            go.Bar(
+                x=df_agrupado['costo'],
+                y=df_agrupado['personal'],
+                name='Costo',
+                orientation='h'
+            ),
+            go.Bar(
+                x=df_agrupado['gasto'],
+                y=df_agrupado['personal'],
+                name='Gasto',
+                orientation='h'
+            ),
+            go.Bar(
+                x=df_agrupado['ahorro'],
+                y=df_agrupado['personal'],
+                name='Ahorro',
+                orientation='h',
+                base=df_agrupado['gasto'],  # Ajustar la base para que comience donde termina la barra de gasto
+                marker={'color': 'lightgreen'},
+                text=df_agrupado['ahorro'].apply(lambda a: f'Ahorro: {a}'),
+                textposition='auto'
+            )
+        ],
+    )
+    fig7.update_layout(width=800, 
+                    height=400,
+                    title="Grafico de costos",
+                    barmode='group',
+                    xaxis_title="Costo",
+                    yaxis_title="Personal",
+                    template=template,
+                    margin=dict(l=10, r=10, t=35, b=5))
+
         
     context = {
         'fig1': fig1.to_html(),
@@ -115,6 +157,7 @@ def index(request):
         'fig4': fig4.to_html(),
         'fig5': fig5.to_html(),
         'fig6': fig6.to_html(),
+        'fig7': fig7.to_html(),
         'clasificaciones': df['clasificacion'].unique(),
         'sucursales_list': df['sucursal'].unique(),
         'personal': df['personal'].unique(),
