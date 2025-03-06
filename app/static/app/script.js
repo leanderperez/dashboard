@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
     'Perecederos': ['Empaquetadora al Vacío', 'Molino', 'Ralladora', 'Rebanadora', 'Sierra'],
     'Lavandería': ['Lavadora', 'Secadora'],
     'Carga y Transporte': ['Ascensor','Carretilla', 'Cinta Transportadora', 'Elevador de Carga', 'Genie', 'Montacargas', 'Plataforma (Romana)', 'Portón', 'Santa María', 'Traspaleta', 'Trolley'],
-    'Hidráulica': ['Bomba de Agua', 'Compresor de Aire', 'Filtro de Agua', 'Tanque Subterráneo', 'Tanque Aéreo']
+    'Hidráulica': ['Bomba de Agua', 'Compresor de Aire', 'Filtro de Agua', 'Tanque Subterráneo', 'Tanque Aéreo', 'Calentador']
   };
 
   classificationSelect.addEventListener('change', function() {

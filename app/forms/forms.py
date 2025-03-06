@@ -131,6 +131,7 @@ EQUIPOS = (
     ('Filtro de Agua','Filtro de Agua'),
     ('Tanque Subterráneo','Tanque Subterráneo'),
     ('Tanque Aéreo','Tanque Aéreo'),
+    ('Calentador', 'Calentador')
 
 )
 PERSONAL = (
