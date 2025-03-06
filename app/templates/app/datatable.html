@@ -22,7 +22,7 @@
         <tbody>
             {% for reporte in reportes %}
                 <tr>
-                    <td><a href="{% url 'modificar_reporte' reporte.id %}">{{ reporte.referencia }}</a></td>
+                    <td>{{ reporte.referencia }}</td>
                     <td><a href="{% url 'modificar_reporte' reporte.id %}">{{ reporte.fecha }}</a></td>
                     <td>{{ reporte.sucursal }}</td>
                     <td>{{ reporte.clasificacion }}</td>

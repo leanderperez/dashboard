@@ -9,7 +9,16 @@ def crear_reporte(request):
     if request.method == 'POST':
         form = ReporteAdminForm(request.POST)
         if form.is_valid():
-            form.save()
+            form.save()  # Guardar el objeto primero para obtener el ID
+            if form.instance.personal in ['Técnico de Cuadrilla', 'Técnico de Infraestructura']:
+                # Construir el código de referencia
+                year = datetime.now().year % 100
+                referencia = f"GEEI{year:02d}-{form.instance.id:04d}"
+                form.instance.referencia = referencia
+                form.instance.save()  # Guardar nuevamente para actualizar el campo referencia
+            elif not form.instance.referencia:
+                form.instance.referencia = '⚠️ Nuevo'
+                form.instance.save()  # Guardar nuevamente para actualizar el campo referencia
             return redirect('datatable')  # Redirige a datatable
     else:
         form = ReporteAdminForm()
