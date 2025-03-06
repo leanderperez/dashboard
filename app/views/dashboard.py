@@ -120,14 +120,14 @@ def index(request):
                 y=df_agrupado['personal'],
                 name='Costo',
                 orientation='h',
-                text=df_agrupado['costo'].apply(lambda a: f'Costo: {a}')
+                text=df_agrupado['costo'].apply(lambda a: f'Costo: {a} $')
             ),
             go.Bar(
                 x=df_agrupado['gasto'],
                 y=df_agrupado['personal'],
                 name='Gasto',
                 orientation='h',
-                text=df_agrupado['gasto'].apply(lambda a: f'Gasto: {a}')
+                text=df_agrupado['gasto'].apply(lambda a: f'Gasto: {a} $')
             ),
             go.Bar(
                 x=df_agrupado['ahorro'],
@@ -136,7 +136,7 @@ def index(request):
                 orientation='h',
                 base=df_agrupado['gasto'],  # Ajustar la base para que comience donde termina la barra de gasto
                 marker={'color': 'lightgreen'},
-                text=df_agrupado['ahorro'].apply(lambda a: f'Ahorro: {a}'),
+                text=df_agrupado['ahorro'].apply(lambda a: f'Ahorro: {a} $'),
                 textposition='auto'
             )
         ],
