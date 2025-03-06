@@ -135,7 +135,7 @@ EQUIPOS = (
 
 )
 PERSONAL = (
-    ('En Proceso', 'Personal'),
+    ('', 'Personal'),
     ('Contratista', 'Contratista'),
     ('Técnico de Cuadrilla', 'Técnico de Cuadrilla'),
     ('Técnico de Infraestructura', 'Técnico de Infraestructura')
