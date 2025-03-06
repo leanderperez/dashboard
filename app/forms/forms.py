@@ -71,6 +71,7 @@ EQUIPOS = (
     ('Herrería', 'Herrería'),
     ('Plomería', 'Plomería'),
     ('Carpintería', 'Carpintería'),
+    ('Cerrajería', 'Cerrajería'),
     ('Jardinería', 'Jardinería'),
 
     ('Planta Eléctrica','Planta Eléctrica'),
