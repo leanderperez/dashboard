@@ -5,11 +5,14 @@ from django.contrib.auth.forms import AuthenticationForm
 SUCURSALES = (
     ('', 'Sucursal'),
     ('Acarigua', 'Acarigua'),
+    ('Altamira', 'Altamira'),
     ('Barquisimeto', 'Barquisimeto'),
     ('Cagua', 'Cagua'),
+    ('CENDIS', 'CENDIS'),
     ('Charallave', 'Charallave'),
     ('Ciudad Bolívar', 'Ciudad Bolívar'),
     ('El Paraíso', 'El Paraíso'),
+    ('Fuerte Tiuna', 'Fuerte Tiuna'),
     ('Guarenas', 'Guarenas'),
     ('Guatire', 'Guatire'),
     ('Humbolt', 'Humbolt'),
@@ -31,6 +34,7 @@ SUCURSALES = (
 )
 CLASIFICACIONES = (
     ('', 'Clasificación'),
+    ('Infraestructura', 'Infraestructura'),
     ('Energía', 'Energía'),
     ('Refrigeración', 'Refrigeración'),
     ('Climatización', 'Climatización'),
@@ -61,6 +65,13 @@ COORDINADORES = (
 )
 EQUIPOS = (
     ('', 'Equipo'),
+
+    ('Obra Civil', 'Obra Civil'),
+    ('Electricidad', 'Electricidad'),
+    ('Herrería', 'Herrería'),
+    ('Plomería', 'Plomería'),
+    ('Carpintería', 'Carpintería'),
+    ('Jardinería', 'Jardinería'),
 
     ('Planta Eléctrica','Planta Eléctrica'),
     ('Suministro Eléctrico','Suministro Eléctrico'),
