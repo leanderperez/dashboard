@@ -132,7 +132,6 @@ EQUIPOS = (
     ('Tanque Subterráneo','Tanque Subterráneo'),
     ('Tanque Aéreo','Tanque Aéreo'),
     ('Calentador', 'Calentador')
-
 )
 PERSONAL = (
     ('', 'Personal'),
