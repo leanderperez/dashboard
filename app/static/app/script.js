@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   const encargadoOptions = {
     'Contratista': {
-      'Energía': ['Top Generation', 'Plantas Modulares', 'Hema'],
+      'Energía': ['Top Generation', 'Plantas Modulares', 'Hema', 'Omega'],
       'Refrigeración': ['Tecnonorte', 'RSC', 'Tecniservicios JN'],
       'Climatización': ['Somago', 'Midea'],
       'Perecederos' : ['JCF', 'Rios Agua Viva', 'Tecnoembalaje'],

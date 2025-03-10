@@ -141,10 +141,11 @@ PERSONAL = (
     ('Técnico de Infraestructura', 'Técnico de Infraestructura')
     )
 ENCARGADOS = (
-    ('En Proceso', 'Encargado'),
+    ('', 'Encargado'),
     ('Top Generation', 'Top Generation'),
     ('Plantas Modulares', 'Plantas Modulares'),
     ('Hema', 'Hema'),
+    ('Omega', 'Omega'),
     ('Tecnonorte', 'Tecnonorte'),
     ('RSC', 'RSC'),
     ('Tecniservicios JN', 'Tecniservicios JN'),
