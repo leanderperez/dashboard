@@ -108,47 +108,92 @@ def index(request):
                     template=template,
                     margin=dict(l=10, r=10, t=35, b=5))
     
-    # Grafico 7: Costos por Personal
+    # Grafico 7 y 8: Costos por Personal
     df = df[df['personal'] != 'En Proceso']
     df['personal'] = df['personal'].replace({'Técnico de Cuadrilla': 'Forum GEEI', 'Técnico de Infraestructura': 'Forum GEEI'})
-    df_agrupado = df.groupby('personal').agg({'costo': 'sum', 'gasto': 'sum'}).reset_index()
-    df_agrupado['ahorro'] = df_agrupado['costo'] - df_agrupado['gasto']
+
+    # Grafico 7: Filtrar datos para Forum GEEI
+    df_forum = df[df['personal'] == 'Forum GEEI']
+    df_agrupado_forum = df_forum.groupby('personal').agg({'costo': 'sum', 'gasto': 'sum'}).reset_index()
+    df_agrupado_forum['ahorro'] = df_agrupado_forum['costo'] - df_agrupado_forum['gasto']
     fig7 = go.Figure(
         data=[
             go.Bar(
-                x=df_agrupado['costo'],
-                y=df_agrupado['personal'],
+                x=df_agrupado_forum['costo'],
+                y=df_agrupado_forum['personal'],
                 name='Costo',
                 orientation='h',
-                text=df_agrupado['costo'].apply(lambda a: f'Costo: {a} $')
+                text=df_agrupado_forum['costo'].apply(lambda a: f'Costo: {a} $')
             ),
             go.Bar(
-                x=df_agrupado['gasto'],
-                y=df_agrupado['personal'],
+                x=df_agrupado_forum['gasto'],
+                y=df_agrupado_forum['personal'],
                 name='Gasto',
                 orientation='h',
-                text=df_agrupado['gasto'].apply(lambda a: f'Gasto: {a} $')
+                text=df_agrupado_forum['gasto'].apply(lambda a: f'Gasto: {a} $')
             ),
             go.Bar(
-                x=df_agrupado['ahorro'],
-                y=df_agrupado['personal'],
+                x=df_agrupado_forum['ahorro'],
+                y=df_agrupado_forum['personal'],
                 name='Ahorro',
                 orientation='h',
-                base=df_agrupado['gasto'],  # Ajustar la base para que comience donde termina la barra de gasto
+                base=df_agrupado_forum['gasto'],  # Ajustar la base para que comience donde termina la barra de gasto
                 marker={'color': 'lightgreen'},
-                text=df_agrupado['ahorro'].apply(lambda a: f'Ahorro: {a} $'),
+                text=df_agrupado_forum['ahorro'].apply(lambda a: f'Ahorro: {a} $'),
                 textposition='auto'
             )
         ],
     )
     fig7.update_layout(width=800, 
-                    height=400,
-                    title="Grafico de costos",
+                    height=250,
+                    title="Grafico de costos - Forum GEEI",
                     barmode='group',
                     xaxis_title="Costo",
                     yaxis_title="Personal",
                     template=template,
                     margin=dict(l=10, r=10, t=35, b=5))
+
+    # Grafico 8: Filtrar datos para Contratista
+    df_contratista = df[df['personal'] == 'Contratista']
+    df_agrupado_contratista = df_contratista.groupby('personal').agg({'costo': 'sum', 'gasto': 'sum'}).reset_index()
+    df_agrupado_contratista['ahorro'] = df_agrupado_contratista['costo'] - df_agrupado_contratista['gasto']
+    fig8 = go.Figure(
+        data=[
+            go.Bar(
+                x=df_agrupado_contratista['costo'],
+                y=df_agrupado_contratista['personal'],
+                name='Costo',
+                orientation='h',
+                text=df_agrupado_contratista['costo'].apply(lambda a: f'Costo: {a} $')
+            ),
+            go.Bar(
+                x=df_agrupado_contratista['gasto'],
+                y=df_agrupado_contratista['personal'],
+                name='Gasto',
+                orientation='h',
+                text=df_agrupado_contratista['gasto'].apply(lambda a: f'Gasto: {a} $')
+            ),
+            go.Bar(
+                x=df_agrupado_contratista['ahorro'],
+                y=df_agrupado_contratista['personal'],
+                name='Ahorro',
+                orientation='h',
+                base=df_agrupado_contratista['gasto'],  # Ajustar la base para que comience donde termina la barra de gasto
+                marker={'color': 'lightgreen'},
+                text=df_agrupado_contratista['ahorro'].apply(lambda a: f'Ahorro: {a} $'),
+                textposition='auto'
+            )
+        ],
+    )
+    fig8.update_layout(width=800, 
+                    height=250,
+                    title="Grafico de costos - Contratista",
+                    barmode='group',
+                    xaxis_title="Costo",
+                    yaxis_title="Personal",
+                    template=template,
+                    margin=dict(l=10, r=10, t=35, b=5))
+
 
         
     context = {
@@ -159,6 +204,7 @@ def index(request):
         'fig5': fig5.to_html(),
         'fig6': fig6.to_html(),
         'fig7': fig7.to_html(),
+        'fig8': fig8.to_html(),
         'clasificaciones': df['clasificacion'].unique(),
         'sucursales_list': df['sucursal'].unique(),
         'personal': df['personal'].unique(),
