@@ -68,30 +68,49 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.2.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.2.1/js/buttons.print.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 
     <script>
         $(document).ready(function() {
-            // Inicializar DataTable
             var table = $('#datatable').DataTable({
                 paging: false,
                 scrollCollapse: true,
                 scrollY: '60vh',
-            layout: {
-                topStart : 'search',
-                bottomStart: 'pageLength',
-                bottomEnd: 'paging',
-                topEnd: {
-                    buttons: ['excel', 'pdf', 'print']
+                layout: {
+                    topStart : 'search',
+                    bottomStart: 'pageLength',
+                    bottomEnd: 'paging',
+                    topEnd: {
+                        buttons: ['excel', 'pdf', 'print']
+                    },
+                    language: {
+                        url: "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json",
+                    }
                 },
-                language: {
-                    url: "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json",
-                }}
+                columnDefs: [{
+                    targets: [1], // Índice de la columna de fecha (ajusta si es necesario)
+                    render: function(data) {
+                        if (data) {
+                            // Crear un elemento jQuery a partir del HTML del enlace
+                            var $enlace = $(data);
+                            // Extraer el texto de la fecha del enlace
+                            var fechaTexto = $enlace.text();
+                            // Formatear la fecha
+                            var fechaFormateada = moment(fechaTexto, "MMM DD, YYYY").format('YYYY/MM/DD');
+                            // Reemplazar el texto original con la fecha formateada
+                            $enlace.text(fechaFormateada);
+                            // Devolver el HTML modificado
+                            return $enlace[0].outerHTML;
+                        } else {
+                            return '';
+                        }
+                    }
+                }]
             });
-
-            // Aplicar la búsqueda en cada columna
+    
             table.columns().every(function() {
                 var that = this;
-
+    
                 $('input', this.header()).on('keyup change', function() {
                     if (that.search() !== this.value) {
                         that
