@@ -1,0 +1,40 @@
+{% extends 'requisiciones/base.html' %}
+{% load static %}
+{% block content %}
+    <div class="hoja-carta">
+        <div class="header">
+            <img src="{% static 'images/logo.png' %}" alt="Logo de la Empresa" class="logo">
+            <div class="fecha">
+                Fecha: {{ solicitud.fecha_solicitud }}
+            </div>
+        </div>
+        <div class="titulo">
+            <h1>Solicitud de Materiales</h1>
+        </div>
+        <div class="detalles">
+            <p><strong>Solicitante:</strong> {{ solicitud.usuario.username }}</p>
+            <p><strong>Número de Solicitud:</strong> {{ solicitud.pk }}</p>
+        </div>
+        <table class="tabla-materiales">
+            <thead>
+                <tr>
+                    <th>Material</th>
+                    <th>Cantidad</th>
+                    <th>Unidad de Medida</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for detalle in solicitud.detallesolicitud_set.all %}
+                    <tr>
+                        <td>{{ detalle.material.nombre }}</td>
+                        <td>{{ detalle.cantidad }}</td>
+                        <td>{{ detalle.material.unidad_medida }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="firma">
+            <p>Firma del Solicitante: _________________________</p>
+        </div>
+    </div>
+{% endblock %}

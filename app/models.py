@@ -1,6 +1,5 @@
 from django.db import models
-
-# Create your models here.
+from django.contrib.auth.models import User
 
 class Reporte(models.Model):
     # Campos que puede rellenar el usuario
@@ -26,3 +25,27 @@ class Reporte(models.Model):
     ods_pdf = models.FileField(upload_to='pdfs/', blank=True, null=True)
     observaciones = models.TextField(blank=True, null=True)
 
+
+class Material(models.Model):
+    nombre = models.CharField(max_length=100)
+    descripcion = models.TextField(blank=True, null=True)
+    unidad_medida = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.nombre
+
+class SolicitudMaterial(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    fecha_solicitud = models.DateField(auto_now_add=True)
+    materiales = models.ManyToManyField(Material, through='DetalleSolicitud')
+
+    def __str__(self):
+        return f"Solicitud de {self.usuario.username} - {self.fecha_solicitud}"
+
+class DetalleSolicitud(models.Model):
+    solicitud = models.ForeignKey(SolicitudMaterial, on_delete=models.CASCADE)
+    material = models.ForeignKey(Material, on_delete=models.CASCADE)
+    cantidad = models.PositiveIntegerField()
+
+    def __str__(self):
+        return f"{self.material.nombre} - {self.cantidad}"

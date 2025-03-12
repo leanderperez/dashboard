@@ -1,0 +1,11 @@
+{% extends 'requisiciones/base.html' %}
+{% block content %}
+    <h1>Mis Solicitudes de Materiales</h1>
+    <ul>
+        {% for solicitud in solicitudes %}
+            <li>
+                <a href="{% url 'detalle_solicitud' solicitud.pk %}">Solicitud #{{ solicitud.pk }}</a> - {{ solicitud.fecha_solicitud }}
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

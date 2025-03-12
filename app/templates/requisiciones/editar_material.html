@@ -1,0 +1,10 @@
+{% extends 'requisiciones/base.html' %}
+{% block content %}
+    <h1>Editar Material</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Guardar Cambios</button>
+        <a href="{% url 'lista_materiales' %}">Cancelar</a>
+    </form>
+{% endblock %}

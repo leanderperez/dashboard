@@ -1,6 +1,7 @@
 from django import forms
-from ..models import Reporte
+from ..models import Reporte, Material, SolicitudMaterial, DetalleSolicitud
 from django.contrib.auth.forms import AuthenticationForm
+from django.forms import inlineformset_factory
 
 SUCURSALES = (
     ('', 'Sucursal'),
@@ -377,3 +378,16 @@ class CustomAuthenticationForm(AuthenticationForm):
                                           'placeholder': 'Contraseña',
                                           'autocomplete' : 'off'}),
     )
+
+
+class MaterialForm(forms.ModelForm):
+    class Meta:
+        model = Material
+        fields = '__all__'
+
+class SolicitudMaterialForm(forms.ModelForm):
+    class Meta:
+        model = SolicitudMaterial
+        fields = []
+
+DetalleSolicitudFormSet = inlineformset_factory(SolicitudMaterial, DetalleSolicitud, fields=('material', 'cantidad'), extra=3, can_delete=True)
