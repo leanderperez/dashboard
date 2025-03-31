@@ -189,6 +189,12 @@ h3 {
     margin-bottom: 5px;
 }
 
+.table-responsive {
+  overflow-x: auto;
+  width: 99%;
+  margin: 0 auto;
+}
+
 :root {
     --dt-row-selected: 13, 110, 253;
     --dt-row-selected-text: 255, 255, 255;
