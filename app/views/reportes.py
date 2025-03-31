@@ -9,17 +9,19 @@ def crear_reporte(request):
     if request.method == 'POST':
         form = ReporteAdminForm(request.POST)
         if form.is_valid():
-            form.save()  # Guardar el objeto primero para obtener el ID
+            form.save(commit=False) 
+            form.instance.usuario = request.user  
+            form.instance.save()
             if form.instance.personal in ['Técnico de Cuadrilla', 'Técnico de Infraestructura']:
                 # Construir el código de referencia
                 year = datetime.now().year % 100
                 referencia = f"GEEI{year:02d}-{form.instance.id:04d}"
                 form.instance.referencia = referencia
-                form.instance.save()  # Guardar nuevamente para actualizar el campo referencia
+                form.instance.save() 
             elif not form.instance.referencia:
                 form.instance.referencia = '⚠️ Nuevo'
-                form.instance.save()  # Guardar nuevamente para actualizar el campo referencia
-            return redirect('datatable')  # Redirige a datatable
+                form.instance.save()  
+            return redirect('datatable')
     else:
         form = ReporteAdminForm()
     return render(request, 'app/formulario_admin.html', {'form': form})
@@ -29,7 +31,6 @@ def modificar_reporte(request, pk):
     reporte = Reporte.objects.get(pk=pk)
     if request.method == 'POST':
         form = ReporteAdminForm(request.POST, request.FILES, instance=reporte)
-         
         if form.is_valid():
             # Obtener el personal del formulario
             personal = form.cleaned_data.get('personal')

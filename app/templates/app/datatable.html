@@ -1,4 +1,4 @@
-{% extends 'app/base.html' %}
+{% extends 'base.html' %}
 
 {% block title %}Tabla de Registros GEI{% endblock %}
 
@@ -88,18 +88,13 @@
                     }
                 },
                 columnDefs: [{
-                    targets: [1], // Índice de la columna de fecha
+                    targets: [1],
                     render: function(data) {
                         if (data) {
-                            // Crear un elemento jQuery a partir del HTML del enlace
                             var $enlace = $(data);
-                            // Extraer el texto de la fecha del enlace
                             var fechaTexto = $enlace.text();
-                            // Formatear la fecha
                             var fechaFormateada = moment(fechaTexto, "MMM DD, YYYY").format('YYYY/MM/DD');
-                            // Reemplazar el texto original con la fecha formateada
                             $enlace.text(fechaFormateada);
-                            // Devolver el HTML modificado
                             return $enlace[0].outerHTML;
                         } else {
                             return '';

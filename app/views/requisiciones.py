@@ -64,4 +64,9 @@ def lista_solicitudes(request):
 @login_required
 def detalle_solicitud(request, pk):
     solicitud = get_object_or_404(SolicitudMaterial, pk=pk)
+    if request.method == 'POST':
+        completado = request.POST.get('completado', 'off') == 'on'
+        solicitud.completado = completado
+        solicitud.save()
+        return redirect('detalle_solicitud', pk=pk)
     return render(request, 'requisiciones/detalle_solicitud.html', {'solicitud': solicitud})

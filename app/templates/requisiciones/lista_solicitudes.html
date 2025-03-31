@@ -1,11 +1,100 @@
-{% extends 'requisiciones/base.html' %}
+{% extends 'base.html' %}
+{% block title %}Tabla de Requisiciones pendientes{% endblock %}
+
 {% block content %}
-    <h1>Mis Solicitudes de Materiales</h1>
-    <ul>
-        {% for solicitud in solicitudes %}
-            <li>
-                <a href="{% url 'detalle_solicitud' solicitud.pk %}">Solicitud #{{ solicitud.pk }}</a> - {{ solicitud.fecha_solicitud }}
-            </li>
-        {% endfor %}
-    </ul>
+    <table id="datatable" class="display">
+        <thead>
+            <tr>
+                <th><input type="text" placeholder="Solicitud" /></th>
+                <th><input type="text" placeholder="Fecha" /></th>
+                <th><input type="text" placeholder="Solicitante" /></th>
+                <th><input type="text" placeholder="Sucursal" /></th>
+                <th><input type="text" placeholder="Estatus" /></th>
+                <th><input type="text" placeholder="Observaciones" /></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for solicitud in solicitudes %}
+                <tr>
+                    <td><a href="{% url 'detalle_solicitud' solicitud.pk %}">Solicitud #{{ solicitud.pk }}</a></td>
+                    <td>{{ solicitud.fecha_solicitud }}</td>
+                    <td>{{ solicitud.usuario }}</td>
+                    <td>{{ solicitud.sucursal }}</td>
+                    <td>
+                        {% if solicitud.completado == True %}
+                            Completada
+                        {% else %}
+                            Pendiente
+                        {% endif %}
+                    </td>
+                    <td>{{ solicitud.observaciones }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>Solicitud</th>
+                <th>Fecha</th>
+                <th>Solicitante</th>
+                <th>Sucursal</th>
+                <th>Estatus</th>
+                <th>Observaciones</th>
+            </tr>
+        </tfoot>
+    </table>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.2.1/js/dataTables.buttons.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.2.1/js/buttons.dataTables.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.2.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.2.1/js/buttons.print.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var table = $('#datatable').DataTable({
+                paging: false,
+                scrollCollapse: true,
+                scrollY: '60vh',
+                layout: {
+                    topStart : 'search',
+                    bottomStart: 'pageLength',
+                    bottomEnd: 'paging',
+                    topEnd: {
+                        buttons: ['excel', 'pdf', 'print']
+                    },
+                    language: {
+                        url: "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json",
+                    }
+                },
+                columnDefs: [{
+                    targets: [1],
+                    render: function(data) {
+                        if (data) {
+                            var fechaFormateada = moment(data, "MMM DD, YYYY").format('YYYY/MM/DD');
+                            return fechaFormateada;
+                        } else {
+                            return '';
+                        }
+                    }
+                }]
+            });
+
+            table.columns().every(function() {
+                var that = this;
+
+                $('input', this.header()).on('keyup change', function() {
+                    if (that.search() !== this.value) {
+                        that
+                            .search(this.value)
+                            .draw();
+                    }
+                });
+            });
+        });
+    </script>
 {% endblock %}

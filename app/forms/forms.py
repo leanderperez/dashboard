@@ -193,7 +193,7 @@ URGENCIAS = (
 class ReporteForm(forms.ModelForm):
     class Meta:
         model = Reporte
-        fields = ['fecha', 'sucursal', 'clasificacion', 'equipo', 'reporte', 'falla', 'coordinador', 'estatus', 'observaciones', 'urgencia']  # Campos que puede rellenar el usuario
+        fields = ['usuario', 'fecha', 'sucursal', 'clasificacion', 'equipo', 'reporte', 'falla', 'coordinador', 'estatus', 'observaciones', 'urgencia']  # Campos que puede rellenar el usuario
 
     fecha = forms.DateField(label='Sucursal',
         widget=forms.DateInput(attrs={'type': 'date', 
@@ -379,7 +379,6 @@ class CustomAuthenticationForm(AuthenticationForm):
                                           'autocomplete' : 'off'}),
     )
 
-
 class MaterialForm(forms.ModelForm):
     class Meta:
         model = Material
@@ -388,6 +387,24 @@ class MaterialForm(forms.ModelForm):
 class SolicitudMaterialForm(forms.ModelForm):
     class Meta:
         model = SolicitudMaterial
-        fields = []
+        fields = ['sucursal', 'observaciones']
 
-DetalleSolicitudFormSet = inlineformset_factory(SolicitudMaterial, DetalleSolicitud, fields=('material', 'cantidad'), extra=3, can_delete=True)
+    sucursal = forms.ChoiceField(choices=SUCURSALES, label='Sucursal', 
+                                 widget=forms.Select(attrs={
+                                     'class': 'form-select mt-3', 
+                                     'id': 'sucursal'}))
+    
+    observaciones = forms.CharField(label='Observaciones',
+                                    required=False,
+                                    widget=forms.Textarea(attrs={
+                                        'class': 'form-control mt-3',
+                                        'id': 'observaciones',
+                                        'placeholder': 'Ingrese su observación de forma concisa'}))
+
+DetalleSolicitudFormSet = inlineformset_factory(SolicitudMaterial, DetalleSolicitud, 
+                                                fields=('material', 'cantidad'), 
+                                                extra=1, 
+                                                can_delete=False,
+                                                widgets={
+                                                    'material': forms.Select(attrs={'class': 'form-select mt-3'}),
+                                                    'cantidad': forms.NumberInput(attrs={'value': 1, 'class': 'form-control'})})

@@ -1,4 +1,4 @@
-{% extends 'requisiciones/base.html' %}
+{% extends 'base.html' %}
 {% load static %}
 {% block content %}
     <div class="hoja-carta">
@@ -15,26 +15,39 @@
             <p><strong>Solicitante:</strong> {{ solicitud.usuario.username }}</p>
             <p><strong>Número de Solicitud:</strong> {{ solicitud.pk }}</p>
         </div>
-        <table class="tabla-materiales">
-            <thead>
-                <tr>
-                    <th>Material</th>
-                    <th>Cantidad</th>
-                    <th>Unidad de Medida</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for detalle in solicitud.detallesolicitud_set.all %}
+        <form method="post">
+            {% csrf_token %}
+            <table class="tabla-materiales">
+                <thead>
                     <tr>
-                        <td>{{ detalle.material.nombre }}</td>
-                        <td>{{ detalle.cantidad }}</td>
-                        <td>{{ detalle.material.unidad_medida }}</td>
+                        <th>Material</th>
+                        <th>Cantidad</th>
+                        <th>Unidad de Medida</th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <div class="firma">
-            <p>Firma del Solicitante: _________________________</p>
-        </div>
+                </thead>
+                <tbody>
+                    {% for detalle in solicitud.detallesolicitud_set.all %}
+                        <tr>
+                            <td>{{ detalle.material.nombre }}</td>
+                            <td>{{ detalle.cantidad }}</td>
+                            <td>{{ detalle.material.unidad_medida }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            <div class="firma">
+                <p>Firma del Solicitante: _________________________</p>
+            </div>
+            <br>
+
+            <div class="form-check mt-3">
+                <input type="checkbox" class="form-check-input" id="completado" name="completado" {% if solicitud.completado %}checked{% endif %}>
+                <label class="form-check-label" for="completado">Marcar solicitud como completada</label>
+            </div>
+            <div class="form-button mt-3">
+                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+            </div>
+        </form>
     </div>
 {% endblock %}

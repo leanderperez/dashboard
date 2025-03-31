@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 
 class Reporte(models.Model):
     # Campos que puede rellenar el usuario
+    usuario = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, related_name='reportes')
     fecha = models.DateField()
     sucursal = models.CharField(max_length=50)
     clasificacion = models.CharField(max_length=50)
@@ -12,7 +13,7 @@ class Reporte(models.Model):
     coordinador = models.CharField(max_length=50)
     estatus = models.BooleanField(default=False)
     urgencia = models.CharField(max_length=50, null=True)
-
+    
     # Campos para ser llenados por un administrador
     referencia = models.CharField(max_length=50, blank=True, null=True)
     personal = models.CharField(max_length=50, blank=True, null=True)
@@ -25,9 +26,8 @@ class Reporte(models.Model):
     ods_pdf = models.FileField(upload_to='pdfs/', blank=True, null=True)
     observaciones = models.TextField(blank=True, null=True)
 
-
 class Material(models.Model):
-    nombre = models.CharField(max_length=100)
+    nombre = models.CharField(max_length=200)
     descripcion = models.TextField(blank=True, null=True)
     unidad_medida = models.CharField(max_length=50)
 
@@ -38,6 +38,9 @@ class SolicitudMaterial(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     fecha_solicitud = models.DateField(auto_now_add=True)
     materiales = models.ManyToManyField(Material, through='DetalleSolicitud')
+    completado = models.BooleanField(default=False)
+    sucursal = models.CharField(max_length=50)
+    observaciones = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return f"Solicitud de {self.usuario.username} - {self.fecha_solicitud}"

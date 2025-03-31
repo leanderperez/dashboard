@@ -1,40 +1,103 @@
-{% extends 'requisiciones/base.html' %}
+{% extends 'base.html' %}
 {% block content %}
-    <h1>Crear Solicitud de Materiales</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <div id="materiales-container">
-            {{ formset.management_form }}
-            {% for form in formset %}
-                <div class="material-form">
-                    {{ form.as_p }}
-                </div>
-            {% endfor %}
-        </div>
-        <button type="button" id="agregar-material">Agregar Material</button>
-        <button type="submit">Guardar Solicitud</button>
-    </form>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const materialesContainer = document.getElementById('materiales-container');
-            const agregarMaterialButton = document.getElementById('agregar-material');
-            const totalForms = document.getElementById('id_detallesolicitud_set-TOTAL_FORMS');
-            let formNum = materialesContainer.querySelectorAll('.material-form').length;
 
-            agregarMaterialButton.addEventListener('click', function() {
-                const newForm = materialesContainer.querySelector('.material-form').cloneNode(true);
-                formNum++;
-                newForm.querySelectorAll('input, select').forEach(element => {
-                    const name = element.name.replace(/-(\d+)-/, `-${formNum}-`);
-                    const id = `id_${name}`;
-                    element.name = name;
-                    element.id = id;
-                    element.value = ''; // Limpiar valores
-                });
-                materialesContainer.appendChild(newForm);
-                totalForms.value = formNum;
+<div class="container-fluid form-body">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="form-holder">
+                <div class="form-content">
+                    <div class="form-items">
+                        <h3>Solicitud de Materiales</h3>
+                        <p>Formulario para requisición de materiales</p>
+                        <form class="requires-validation" novalidate method="post">
+                            {% csrf_token %}
+                            
+                            <div id="materiales-container">
+                                {{ formset.management_form }}
+                                {% for form in formset %}
+                                    <div class="material-form position-relative">
+                                        <button type="button" class="btn-close remove-material" aria-label="Close" style="position: absolute; top: 0; right: 0;"></button>
+                                        
+                                        <div class="mt-2 mb-2">
+                                            <label for="{{ form.material.id_for_label }}" class="form-label" style="margin-bottom: 1px;">Material</label>
+                                            {{ form.material }}
+                                        </div>
+                                        <div class="mb-3">
+                                            {{ form.cantidad }}
+                                        </div>
+                                        <br>
+
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="col-md-12">
+                                {{form.sucursal}}
+                                <div class="valid-feedback"></div>
+                                <div class="invalid-feedback">Seleccione una sucursal</div>
+                            </div>
+
+                            <div class="col-md-12">
+                                {{form.observaciones}}
+                                <div class="valid-feedback"></div>
+                                <div class="invalid-feedback">Realice una observacion concisa</div>
+                            </div>
+
+                            <div class="form-button mt-3">
+                                <button type="button" id="agregar-material" class="btn btn-primary">Agregar Material</button>
+                                <button id="submit" type="submit" class="btn btn-primary">Solicitar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const materialesContainer = document.getElementById('materiales-container');
+        const agregarMaterialButton = document.getElementById('agregar-material');
+        const totalForms = document.getElementById('id_detallesolicitud_set-TOTAL_FORMS');
+        let formNum = materialesContainer.querySelectorAll('.material-form').length;
+
+        // Agregar nuevo formulario
+        agregarMaterialButton.addEventListener('click', function() {
+            const newForm = materialesContainer.querySelector('.material-form').cloneNode(true);
+            formNum++;
+            newForm.querySelectorAll('input, select').forEach(element => {
+                const name = element.name.replace(/-(\d+)-/, `-${formNum}-`);
+                const id = `id_${name}`;
+                element.name = name;
+                element.id = id;
+
+                // Limpiar valores y establecer cantidad predeterminada
+                if (element.type === 'number' && element.name.includes('cantidad')) {
+                    element.value = 1; // Establecer cantidad predeterminada en 1
+                } else {
+                    element.value = ''; // Limpiar otros valores
+                }
+            });
+
+            newForm.querySelector('.remove-material').addEventListener('click', function() {
+                newForm.remove();
+                totalForms.value = materialesContainer.querySelectorAll('.material-form').length;
+            });
+
+            materialesContainer.appendChild(newForm);
+            totalForms.value = formNum;
+        });
+
+        // Eliminar formulario existente
+        materialesContainer.querySelectorAll('.remove-material').forEach(button => {
+            button.addEventListener('click', function() {
+                const form = button.closest('.material-form');
+                form.remove();
+                totalForms.value = materialesContainer.querySelectorAll('.material-form').length;
             });
         });
-    </script>
+    });
+</script>
+
 {% endblock %}

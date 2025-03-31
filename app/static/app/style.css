@@ -978,6 +978,11 @@ h3 {
       box-sizing: border-box;
       font-size: 12px;
   }
+
+  #datatable th, #datatable td {
+    text-align: center;
+    vertical-align: middle;
+}
   
   /* Estilo de Navbar */
 
