@@ -983,6 +983,14 @@ h3 {
     text-align: center;
     vertical-align: middle;
 }
+
+.tabla-materiales th {
+  padding: 10px;
+}
+
+.tabla-materiales td {
+  padding: 5px; 
+}
   
   /* Estilo de Navbar */
 

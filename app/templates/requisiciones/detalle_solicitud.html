@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% block title %}Gestión de Reportes GEEI{% endblock %}
 {% block content %}
     <div class="hoja-carta">
         <div class="header">
@@ -7,9 +8,6 @@
             <div class="fecha">
                 Fecha: {{ solicitud.fecha_solicitud }}
             </div>
-        </div>
-        <div class="titulo">
-            <h1>Solicitud de Materiales</h1>
         </div>
         <div class="detalles">
             <p><strong>Solicitante:</strong> {{ solicitud.usuario.username }}</p>
@@ -35,10 +33,6 @@
                     {% endfor %}
                 </tbody>
             </table>
-            
-            <div class="firma">
-                <p>Firma del Solicitante: _________________________</p>
-            </div>
             <br>
 
             <div class="form-check mt-3">
