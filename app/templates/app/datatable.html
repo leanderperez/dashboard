@@ -17,6 +17,7 @@
                 <th><input type="text" placeholder="Coordinador" /></th>
                 <th><input type="text" placeholder="Estatus" /></th>
                 <th><input type="text" placeholder="Urgencia" /></th>
+                <th><input type="text" placeholder="Observaciones" /></th>
             </tr>
         </thead>
         <tbody>
@@ -39,6 +40,7 @@
                         {% endif %}
                     </td>
                     <td>{{ reporte.urgencia }}</td>
+                    <td>{{ reporte.observaciones }}</td>
                 </tr>
             {% endfor %}
         </tbody>
@@ -55,6 +57,7 @@
                 <th>Coordinador</th>
                 <th>Estatus</th>
                 <th>Urgencia</th>
+                <th>Observaciones</th>
             </tr>
         </tfoot>
     </table>
@@ -76,6 +79,7 @@
                 paging: false,
                 scrollCollapse: true,
                 scrollY: '60vh',
+                scrollX: true,
                 layout: {
                     topStart : 'search',
                     bottomStart: 'pageLength',
@@ -87,20 +91,21 @@
                         url: "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json",
                     }
                 },
-                columnDefs: [{
-                    targets: [1],
-                    render: function(data) {
-                        if (data) {
-                            var $enlace = $(data);
-                            var fechaTexto = $enlace.text();
-                            var fechaFormateada = moment(fechaTexto, "MMM DD, YYYY").format('YYYY/MM/DD');
-                            $enlace.text(fechaFormateada);
-                            return $enlace[0].outerHTML;
-                        } else {
-                            return '';
+                columnDefs: [
+                    {
+                        targets: [1],
+                        render: function(data) {
+                            if (data) {
+                                var $enlace = $(data);
+                                var fechaTexto = $enlace.text();
+                                var fechaFormateada = moment(fechaTexto, "MMM DD, YYYY").format('YYYY/MM/DD');
+                                $enlace.text(fechaFormateada);
+                                return $enlace[0].outerHTML;
+                            } else {
+                                return '';
+                            }
                         }
-                    }
-                }]
+                    }]
             });
     
             table.columns().every(function() {

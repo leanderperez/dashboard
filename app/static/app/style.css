@@ -979,11 +979,6 @@ h3 {
       font-size: 12px;
   }
 
-  #datatable th, #datatable td {
-    text-align: center;
-    vertical-align: middle;
-}
-
 .tabla-materiales th {
   padding: 10px;
 }

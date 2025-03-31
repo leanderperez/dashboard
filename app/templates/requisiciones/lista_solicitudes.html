@@ -71,7 +71,12 @@
                         url: "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json",
                     }
                 },
-                columnDefs: [{
+                columnDefs: [
+                {
+                    targets: '_all',
+                    className: 'dt-center' 
+                },   
+                {
                     targets: [1],
                     render: function(data) {
                         if (data) {
