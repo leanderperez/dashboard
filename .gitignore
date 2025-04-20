@@ -15,3 +15,5 @@ forum.service
 gunicorn_start
 nginx
 ssmtp.conf
+backup_postgres.sh
+muttrc
