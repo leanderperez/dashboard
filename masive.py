@@ -29,7 +29,7 @@ def cargar_datos_csv_a_postgres(nombre_archivo_csv, nombre_tabla, host, nombre_b
             encabezados = next(lector_csv)  # Leer la primera fila (encabezados)
 
             # Construir la consulta SQL para la inserción masiva
-            consulta_sql = f"COPY {nombre_tabla} FROM stdin WITH (FORMAT CSV, HEADER TRUE)"
+            consulta_sql = f"COPY {nombre_tabla} (nombre, descripcion, unidad_medida) FROM stdin WITH (FORMAT CSV, HEADER TRUE)"
 
             # Usar COPY para insertar los datos de manera eficiente
             cursor.copy_expert(consulta_sql, archivo_csv)
