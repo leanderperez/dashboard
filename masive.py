@@ -27,6 +27,7 @@ def cargar_datos_csv_a_postgres(nombre_archivo_csv, nombre_tabla, host, nombre_b
         with open(nombre_archivo_csv, 'r') as archivo_csv:
             lector_csv = csv.reader(archivo_csv, delimiter=';')
             encabezados = next(lector_csv)  # Leer la primera fila (encabezados)
+            print(f"Encabezados leídos del CSV: {encabezados}")
 
             # Construir la consulta SQL para la inserción masiva
             consulta_sql = f"COPY {nombre_tabla} ({','.join(encabezados)}) FROM stdin WITH (FORMAT CSV, HEADER TRUE)"
