@@ -1,15 +1,88 @@
 {% extends 'base.html' %}
 {% block title %}Gestión de Reportes GEEI{% endblock %}
+
+
 {% block content %}
-    <h1>Lista de Materiales</h1>
-    <a href="{% url 'crear_material' %}">Crear Material</a>
-    <ul>
-        {% for material in materiales %}
-            <li>
-                {{ material.nombre }} - {{ material.unidad_medida }}
-                <a href="{% url 'editar_material' material.pk %}">Editar</a>
-                <a href="{% url 'eliminar_material' material.pk %}">Eliminar</a>
-            </li>
-        {% endfor %}
-    </ul>
+<div class="table-responsive">
+    <table id="datatable" class="display">
+        <thead>
+            <tr>
+                <th><input type="text" placeholder="Material" /></th>
+                <th><input type="text" placeholder="Unidad de medida" /></th>
+                <th><input type="text" placeholder="Descripción" /></th>
+                <th>Editar</th>
+                <th>Eliminar</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for material in materiales %}
+                <tr>
+                    <td>{{ material.nombre }}</td>
+                    <td>{{ material.unidad_medida }}</td>
+                    <td>{{ material.descripcion }}</td>
+                    <td><a href="{% url 'editar_material' material.pk %}">Editar</a></td>
+                    <td><a href="{% url 'eliminar_material' material.pk %}">Eliminar</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>Material</th>
+                <th>Unidad de medida</th>
+                <th>Descripción</th>
+                <th>Editar</th>
+                <th>Eliminar</th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.2.1/js/dataTables.buttons.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.2.1/js/buttons.dataTables.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.2.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.2.1/js/buttons.print.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var table = $('#datatable').DataTable({
+                paging: false,
+                scrollCollapse: true,
+                scrollY: '60vh',
+                layout: {
+                    topStart : 'search',
+                    bottomStart: 'pageLength',
+                    bottomEnd: 'paging',
+                    topEnd: {
+                        buttons: ['excel','print']
+                    },
+                    language: {
+                        url: "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json",
+                    }
+                },
+                columnDefs: [
+                {
+                    targets: '_all',
+                    className: 'dt-center' 
+                }
+                ],
+            });
+
+            table.columns().every(function() {
+                var that = this;
+
+                $('input', this.header()).on('keyup change', function() {
+                    if (that.search() !== this.value) {
+                        that
+                            .search(this.value)
+                            .draw();
+                    }
+                });
+            });
+        });
+    </script>
 {% endblock %}
