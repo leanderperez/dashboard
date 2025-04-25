@@ -7,9 +7,10 @@
     <table id="datatable" class="display">
         <thead>
             <tr>
+                <th>Cantidad</th>
                 <th><input type="text" placeholder="Material" /></th>
-                <th><input type="text" placeholder="Unidad de medida" /></th>
-                <th><input type="text" placeholder="Descripción" /></th>
+                <th>Unidad de medida</th>
+                <th>Descripción</th>
                 <th>Editar</th>
                 <th>Eliminar</th>
             </tr>
@@ -17,6 +18,7 @@
         <tbody>
             {% for material in materiales %}
                 <tr>
+                    <td><input type="number" class="cantidad-input" data-id="{{ material.pk }}" min="0" value="" style="width: 60px;" /></td>
                     <td>{{ material.nombre }}</td>
                     <td>{{ material.unidad_medida }}</td>
                     <td>{{ material.descripcion }}</td>
@@ -27,6 +29,7 @@
         </tbody>
         <tfoot>
             <tr>
+                <th>Cantidad</th>
                 <th>Material</th>
                 <th>Unidad de medida</th>
                 <th>Descripción</th>
@@ -36,6 +39,43 @@
         </tfoot>
     </table>
 </div>
+
+<div class="mt-3">
+    <button id="generar-solicitud" class="btn btn-primary">Generar Solicitud</button>
+</div>
+
+<div class="modal fade" id="solicitudModal" tabindex="-1" aria-labelledby="solicitudModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="solicitudModalLabel">Información de la Solicitud</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="solicitud-form" method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="sucursal" class="form-label">Sucursal</label>
+                        <select id="sucursal" class="form-select">
+                            {% for value, label in sucursales %}
+                                <option value="{{ value }}">{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="observaciones" class="form-label">Observaciones</label>
+                        <textarea id="observaciones" class="form-control" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" id="confirmar-solicitud" class="btn btn-primary">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.2.1/js/dataTables.buttons.js"></script>
@@ -76,6 +116,77 @@
                             .draw();
                     }
                 });
+            });
+
+            // Seleccionar/Deseleccionar todos los checkboxes
+            $('#select-all').on('click', function() {
+                $('.material-checkbox').prop('checked', this.checked);
+            });
+
+            // Obtener el token CSRF desde el formulario
+            const csrfToken = "{{ csrf_token }}";
+
+            // Manejar el botón "Generar Solicitud"
+            $('#generar-solicitud').on('click', function() {
+                const selectedMaterials = [];
+                $('.cantidad-input').each(function() {
+                    const cantidad = parseInt($(this).val());
+                    const materialId = $(this).data('id');
+                    if (cantidad > 0) {
+                        selectedMaterials.push({ id: materialId, cantidad: cantidad });
+                    }
+                });
+
+                if (selectedMaterials.length === 0) {
+                    alert('Por favor, ingresa una cantidad para al menos un material.');
+                    return;
+                }
+
+                // Mostrar el modal
+                $('#solicitudModal').modal('show');
+            });
+
+            // Confirmar la solicitud
+            $('#confirmar-solicitud').on('click', function() {
+                const sucursal = $('#sucursal').val();
+                const observaciones = $('#observaciones').val();
+                const selectedMaterials = [];
+                $('.cantidad-input').each(function() {
+                    const cantidad = parseInt($(this).val());
+                    const materialId = $(this).data('id');
+                    if (cantidad > 0) {
+                        selectedMaterials.push({ id: materialId, cantidad: cantidad });
+                    }
+                });
+
+                if (!sucursal) {
+                    alert('Por favor, selecciona una sucursal.');
+                    return;
+                }
+
+                // Enviar los datos al servidor
+                $.ajax({
+                    url: "{% url 'crear_solicitud_material' %}",
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": csrfToken // Incluir el token CSRF en el encabezado
+                    },
+                    data: {
+                        materiales: JSON.stringify(selectedMaterials),
+                        sucursal: sucursal,
+                        observaciones: observaciones
+                    },
+                    success: function(response) {
+                        alert('Solicitud generada exitosamente.');
+                        location.reload();
+                    },
+                    error: function(error) {
+                        alert('Ocurrió un error al generar la solicitud.');
+                    }
+                });
+
+                // Cerrar el modal
+                $('#solicitudModal').modal('hide');
             });
         });
     </script>

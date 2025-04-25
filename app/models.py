@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+import uuid
 
 class Reporte(models.Model):
     # Campos que puede rellenar el usuario
@@ -37,13 +38,14 @@ class Material(models.Model):
 class SolicitudMaterial(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     fecha_solicitud = models.DateField(auto_now_add=True)
-    materiales = models.ManyToManyField(Material, through='DetalleSolicitud')
-    completado = models.BooleanField(default=False)
     sucursal = models.CharField(max_length=50)
     observaciones = models.TextField(blank=True, null=True)
+    aprobada = models.BooleanField(default=False)
+    completado = models.BooleanField(default=False)
+    token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)  # Token único
 
     def __str__(self):
-        return f"Solicitud de {self.usuario.username} - {self.fecha_solicitud}"
+        return f"Solicitud #{self.id} - {self.usuario.username}"
 
 class DetalleSolicitud(models.Model):
     solicitud = models.ForeignKey(SolicitudMaterial, on_delete=models.CASCADE)

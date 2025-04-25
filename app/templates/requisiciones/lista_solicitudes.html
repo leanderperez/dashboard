@@ -10,6 +10,7 @@
                 <th><input type="text" placeholder="Fecha" /></th>
                 <th><input type="text" placeholder="Solicitante" /></th>
                 <th><input type="text" placeholder="Sucursal" /></th>
+                <th><input type="text" placeholder="Aprobación" /></th>
                 <th><input type="text" placeholder="Estatus" /></th>
                 <th><input type="text" placeholder="Observaciones" /></th>
             </tr>
@@ -22,10 +23,17 @@
                     <td>{{ solicitud.usuario }}</td>
                     <td>{{ solicitud.sucursal }}</td>
                     <td>
-                        {% if solicitud.completado == True %}
-                            Completada
+                        {% if solicitud.aprobada %}
+                            <span class="badge bg-success">Aprobada</span>
                         {% else %}
-                            Pendiente
+                            <span class="badge bg-danger">Pendiente</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if solicitud.completado == True %}
+                        <span class="badge bg-success">Completada</span>
+                        {% else %}
+                        <span class="badge bg-danger">Pendiente</span>
                         {% endif %}
                     </td>
                     <td>{{ solicitud.observaciones }}</td>
