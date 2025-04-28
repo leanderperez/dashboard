@@ -18,4 +18,3 @@ ssmtp.conf
 backup_postgres.sh
 muttrc
 masive.py
-masive1.py
