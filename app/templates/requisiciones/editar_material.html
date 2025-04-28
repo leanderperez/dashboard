@@ -1,11 +1,74 @@
 {% extends 'base.html' %}
 {% block title %}Gestión de Reportes GEEI{% endblock %}
+
+
 {% block content %}
-    <h1>Editar Material</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Guardar Cambios</button>
-        <a href="{% url 'lista_materiales' %}">Cancelar</a>
-    </form>
+    <div class="container-fluid form-body">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="form-holder">
+                    <div class="form-content">
+                        <div class="form-items">
+                            <h3>Editar Material</h3>
+                            <p>Formulario para editar materiales</p>
+                            <form class="requires-validation" novalidate method="post">
+                                {% csrf_token %}
+                                
+                                <div class="col-md-12">
+                                    {{ form.nombre}}
+                                    <div class="valid-feedback"></div>
+                                    <div class="invalid-feedback">Inserte el nombre del material</div>
+                                </div>
+                                
+                                <div class="col-md-12">
+                                    {{form.unidad_medida}}
+                                    <div class="valid-feedback"></div>
+                                    <div class="invalid-feedback">¿Cuál es la unidad de medida del material</div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    {{form.descripcion}}
+                                    <div class="valid-feedback"></div>
+                                    <div class="invalid-feedback">Inserte una breve descripción</div>
+                                </div>
+
+                                <div class="form-button mt-3">
+                                    <button id="submit" type="submit" class="btn btn-primary">Guardar</button>
+                                </div>
+                            </form>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Cantidad</th>
+                                        <th>Nombre</th>
+                                        <th>Unidad de Medida</th>
+                                        <th>Descripción</th>
+                                        <th>Editar</th>
+                                        <th>Eliminar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for material in materiales %}
+                                        <tr>
+                                            <td><input type="number" class="cantidad-input" data-id="{{ material.pk }}" min="0" value="" style="width: 60px;" /></td>
+                                            <td>{{ material.nombre }}</td>
+                                            <td>{{ material.unidad_medida }}</td>
+                                            <td>{{ material.descripcion }}</td>
+                                            {% if request.user.is_staff %}
+                                                <td><a href="{% url 'editar_material' material.pk %}">Editar</a></td>
+                                                <td><a href="{% url 'eliminar_material' material.pk %}">Eliminar</a></td>
+                                            {% else %}
+                                                <td>-</td>
+                                                <td>-</td>
+                                            {% endif %}
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

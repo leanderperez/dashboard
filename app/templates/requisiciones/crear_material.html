@@ -2,10 +2,45 @@
 {% block title %}Gestión de Reportes GEEI{% endblock %}
 
 {% block content %}
-    <h1>Crear Material</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Guardar</button>
-    </form>
+    <div class="container-fluid form-body">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="form-holder">
+                    <div class="form-content">
+                        <div class="form-items">
+                            <h3>Crear Material</h3>
+                            <p>Formulario para el ingreso de nuevos materiales</p>
+                            <form class="requires-validation" novalidate method="post">
+                                {% csrf_token %}
+                                
+                                <div class="col-md-12">
+                                    {{ form.nombre}}
+                                    <div class="valid-feedback"></div>
+                                    <div class="invalid-feedback">Inserte el nombre del material</div>
+                                </div>
+                                
+                                <div class="col-md-12">
+                                    {{form.unidad_medida}}
+                                    <div class="valid-feedback"></div>
+                                    <div class="invalid-feedback">¿Cuál es la unidad de medida del material</div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    {{form.descripcion}}
+                                    <div class="valid-feedback"></div>
+                                    <div class="invalid-feedback">Inserte una breve descripción</div>
+                                </div>
+
+                                
+
+                                <div class="form-button mt-3">
+                                    <button id="submit" type="submit" class="btn btn-primary">Registrar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

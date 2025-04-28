@@ -61,7 +61,7 @@ COORDINADORES = (
     ('Cesar', 'Cesar'),
     ('Edicson', 'Edicson'),
     ('Iriana', 'Iriana'),
-    ('José', 'José'),
+    ('Juan', 'Juan'),
     ('Leander', 'Leander'),
 )
 EQUIPOS = (
@@ -383,6 +383,26 @@ class MaterialForm(forms.ModelForm):
     class Meta:
         model = Material
         fields = '__all__'
+
+    nombre = forms.CharField(label='Nombre',
+                            widget=forms.TextInput(attrs={
+                                'class': 'form-control mt-3', 
+                                'id': 'nombre',
+                                'placeholder': 'Nombre'}))
+    
+    descripcion = forms.CharField(label='Descripción',
+                                   required=False, 
+                                   widget=forms.Textarea(attrs={
+                                       'class': 'form-control mt-3', 
+                                       'id': 'descripcion',
+                                       'placeholder': 'Descripción'}))
+    
+    unidad_medida = forms.CharField(label='Unidad de Medida',
+                                    required=False, 
+                                    widget=forms.TextInput(attrs={
+                                        'class': 'form-control mt-3', 
+                                        'id': 'unidad_medida',
+                                        'placeholder': 'Unidad de Medida'}))
 
 class SolicitudMaterialForm(forms.ModelForm):
     class Meta:

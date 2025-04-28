@@ -8,6 +8,7 @@ import json
 from django.core.mail import send_mail, EmailMessage
 from django.urls import reverse
 from django.views.decorators.http import require_POST
+from django.contrib.admin.views.decorators import staff_member_required
 
 def es_supervisor(user):
     return user.is_superuser  # O verifica un grupo específico, como user.groups.filter(name='Supervisores').exists()
@@ -32,7 +33,7 @@ def crear_material(request):
         form = MaterialForm()
     return render(request, 'requisiciones/crear_material.html', {'form': form})
 
-@login_required
+@staff_member_required
 def editar_material(request, pk):
     material = get_object_or_404(Material, pk=pk)
     if request.method == 'POST':
@@ -44,7 +45,7 @@ def editar_material(request, pk):
         form = MaterialForm(instance=material)
     return render(request, 'requisiciones/editar_material.html', {'form': form})
 
-@login_required
+@staff_member_required
 def eliminar_material(request, pk):
     material = get_object_or_404(Material, pk=pk)
     if request.method == 'POST':
