@@ -18,7 +18,7 @@
         <tbody>
             {% for solicitud in solicitudes %}
                 <tr>
-                    <td><a href="{% url 'detalle_solicitud' solicitud.pk %}">Solicitud #{{ solicitud.pk }}</a></td>
+                    <td><a href="{% url 'detalle_solicitud' solicitud.pk %}" target="_blank">Solicitud #{{ solicitud.pk }}</a></td>
                     <td>{{ solicitud.fecha_solicitud }}</td>
                     <td>{{ solicitud.usuario }}</td>
                     <td>{{ solicitud.sucursal }}</td>
