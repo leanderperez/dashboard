@@ -104,13 +104,13 @@ def detalle_solicitud(request, pk):
     col_widths = [200, 100, 150]  # Anchos fijos para las columnas
     table = Table(data, colWidths=col_widths)
     table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('BACKGROUND', (0, 0), (-1, 0), colors.ReportLabBluePCMYK),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
         ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.whitesmoke),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
     ]))
 
