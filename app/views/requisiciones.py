@@ -1,11 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse, HttpResponse
-from django.views.decorators.csrf import csrf_exempt
 from app.models import Material, SolicitudMaterial, DetalleSolicitud
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import login_required
 from app.forms.forms import MaterialForm, SolicitudMaterialForm, DetalleSolicitudFormSet
 import json
-from django.core.mail import send_mail, EmailMessage
+from django.core.mail import EmailMessage
 from django.urls import reverse
 from django.contrib.admin.views.decorators import staff_member_required
 from reportlab.lib.pagesizes import letter
@@ -16,8 +15,6 @@ from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.units import inch
 from io import BytesIO
 
-def es_supervisor(user):
-    return user.is_superuser  # O verifica un grupo específico, como user.groups.filter(name='Supervisores').exists()
 
 @login_required
 def lista_materiales(request):
