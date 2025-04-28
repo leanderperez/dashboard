@@ -11,7 +11,9 @@ from django.contrib.admin.views.decorators import staff_member_required
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from reportlab.lib import colors
-from reportlab.platypus import Table, TableStyle
+from reportlab.platypus import Table, TableStyle, Paragraph
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.units import inch
 from io import BytesIO
 
 def es_supervisor(user):
@@ -89,20 +91,26 @@ def detalle_solicitud(request, pk):
     # Espacio para la tabla
     pdf.drawString(100, 575, "Detalles de los materiales:")
 
-    # Crear la tabla de materiales
+    # Crear la tabla de materiales con texto ajustable
+    styles = getSampleStyleSheet()
+    style_normal = styles['Normal']
+
     data = [["Material", "Cantidad", "Unidad de Medida"]]
     for detalle in detalles:
-        data.append([detalle.material.nombre, detalle.cantidad, detalle.material.unidad_medida])
+        material_paragraph = Paragraph(detalle.material.nombre, style_normal)
+        data.append([material_paragraph, detalle.cantidad, detalle.material.unidad_medida])
 
-    # Configurar la tabla con ReportLab
-    table = Table(data, colWidths=[200, 100, 150])
+    # Configurar la tabla con anchos fijos
+    col_widths = [200, 100, 150]  # Anchos fijos para las columnas
+    table = Table(data, colWidths=col_widths)
     table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.ReportLabBluePCMYK),
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.whitesmoke),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
     ]))
 
@@ -179,6 +187,7 @@ def enviar_correo_aprobacion(request, solicitud, supervisor_email):
     <html>
     <body>
         <p>Se ha generado una nueva solicitud de materiales.</p>
+        <p><strong>Usuario:</strong> {solicitud.usuario.username}</p>
         <p><strong>Sucursal:</strong> {solicitud.sucursal}</p>
         <p><strong>Observaciones:</strong> {solicitud.observaciones}</p>
         <p><strong>Materiales solicitados:</strong></p>
