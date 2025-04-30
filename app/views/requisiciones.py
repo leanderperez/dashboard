@@ -7,6 +7,8 @@ import json
 from django.core.mail import EmailMessage
 from django.urls import reverse
 from django.contrib.admin.views.decorators import staff_member_required
+from django.conf import settings
+
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from reportlab.lib import colors
@@ -74,19 +76,33 @@ def detalle_solicitud(request, pk):
     pdf = canvas.Canvas(buffer, pagesize=letter)
     pdf.setTitle(f"Solicitud #{solicitud.id}")
 
+    # Ruta del logo
+    logo_path = f"{settings.BASE_DIR}/app/static/images/logo.png"
+
+    # Dibujar el logo en el encabezado
+    pdf.drawImage(logo_path, 50, 710, width=100, height=50, preserveAspectRatio=True, mask='auto')
+
     # Encabezado
     pdf.setFont("Helvetica-Bold", 16)
-    pdf.drawString(50, 750, f"Solicitud de Materiales #{solicitud.id}")
-    pdf.setFont("Helvetica", 12)
-    pdf.drawString(50, 730, f"Usuario: {solicitud.usuario.username}")
-    pdf.drawString(50, 710, f"Fecha: {solicitud.fecha_solicitud}")
-    pdf.drawString(50, 690, f"Sucursal: {solicitud.sucursal}")
-    pdf.drawString(50, 670, f"Observaciones: {solicitud.observaciones or 'N/A'}")
-    pdf.drawString(50, 650, f"Aprobada: {'Sí' if solicitud.aprobada else 'No'}")
-    pdf.drawString(50, 630, f"Completada: {'Sí' if solicitud.completado else 'No'}")
+    pdf.drawString(200, 730, f"  Solicitud de Materiales #{solicitud.id}")
+    pdf.setFont("Helvetica-Bold", 10)
+    pdf.drawString(500, 730, f"{solicitud.fecha_solicitud}")
+    pdf.setFont("Helvetica-Bold", 14)
+    pdf.drawString(60, 680, f"{solicitud.sucursal}")
+    pdf.setFont("Helvetica", 10)
+    pdf.drawString(60, 665, f"Solicitante: {solicitud.usuario.username}")
+    pdf.drawString(60, 650, "Aprobada: ")
+    pdf.setFont("Helvetica-Bold", 10)
+    pdf.drawString(110, 650, "Sí" if solicitud.aprobada else "No")
+    pdf.setFont("Helvetica", 10)
+    pdf.drawString(130, 650, f"Completada: ")
+    pdf.setFont("Helvetica-Bold", 10)
+    pdf.drawString(190, 650, "Sí" if solicitud.completado else "No")
+    pdf.setFont("Helvetica", 10)
+    pdf.drawString(60, 635, f"Observaciones: {solicitud.observaciones or 'N/A'}")
 
     # Espacio para la tabla
-    pdf.drawString(100, 575, "Detalles de los materiales:")
+    pdf.drawString(60, 590, "Detalles de los materiales:")
 
     # Crear la tabla de materiales con texto ajustable
     styles = getSampleStyleSheet()
@@ -98,22 +114,22 @@ def detalle_solicitud(request, pk):
         data.append([material_paragraph, detalle.cantidad, detalle.material.unidad_medida])
 
     # Configurar la tabla con anchos fijos
-    col_widths = [200, 100, 150]  # Anchos fijos para las columnas
+    col_widths = [250, 100, 150]  # Anchos fijos para las columnas
     table = Table(data, colWidths=col_widths)
     table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.ReportLabBluePCMYK),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.whitesmoke),
-        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),  # Fondo de la fila del encabezado
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),  # Color del texto del encabezado
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),  # Centrar horizontalmente
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),  # Centrar verticalmente
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),  # Fuente del encabezado
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),  # Espaciado inferior en el encabezado
+        ('LINEBELOW', (0, 0), (-1, 0), 1, colors.black),  # Línea debajo del encabezado
+        ('LINEBELOW', (0, 1), (-1, -1), 0.5, colors.black),  # Líneas horizontales entre las filas
     ]))
 
     # Dibujar la tabla en el PDF
-    table.wrapOn(pdf, 75, 550)
-    table.drawOn(pdf, 75, 550 - len(data) * 20)
+    table.wrapOn(pdf, 50, 570)
+    table.drawOn(pdf, 50, 570 - len(data) * 20)
 
     # Finalizar el PDF
     pdf.save()
