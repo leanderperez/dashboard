@@ -93,7 +93,7 @@ def detalle_solicitud(request, pk):
     pdf.drawString(60, 665, f"Solicitante: {solicitud.usuario.username}")
     pdf.drawString(60, 650, "Aprobada: ")
     pdf.setFont("Helvetica-Bold", 10)
-    pdf.drawString(110, 650, "Sí" if solicitud.aprobada else "No")
+    pdf.drawString(110, 650, "Sí" if solicitud.estado == 'aprobada' else "No")
     pdf.setFont("Helvetica", 10)
     pdf.drawString(130, 650, f"Completada: ")
     pdf.setFont("Helvetica-Bold", 10)
