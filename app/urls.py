@@ -19,6 +19,6 @@ urlpatterns = [
     path('materiales/eliminar/<int:pk>/', requisiciones.eliminar_material, name='eliminar_material'),
     path('solicitudes/', requisiciones.lista_solicitudes, name='lista_solicitudes'),
     path('solicitudes/<int:pk>/', requisiciones.detalle_solicitud, name='detalle_solicitud'),
-    path('solicitudes/aprobar/<uuid:token>/', requisiciones.aprobar_solicitud, name='aprobar_solicitud'),
-    path('crear_solicitud_material/', requisiciones.crear_solicitud_material, name='crear_solicitud_material')
+    path('crear_solicitud_material/', requisiciones.crear_solicitud_material, name='crear_solicitud_material'),
+    path('solicitudes/cambiar-estado/<uuid:token>/<str:accion>/', requisiciones.cambiar_estado_solicitud, name='cambiar_estado_solicitud')
 ]

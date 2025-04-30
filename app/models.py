@@ -36,16 +36,26 @@ class Material(models.Model):
         return self.nombre
 
 class SolicitudMaterial(models.Model):
+    ESTADO_SOLICITUD = [
+        ('pendiente', 'Pendiente'),
+        ('aprobada', 'Aprobada'),
+        ('rechazada', 'Rechazada'),
+    ]
+
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     fecha_solicitud = models.DateField(auto_now_add=True)
     sucursal = models.CharField(max_length=50)
     observaciones = models.TextField(blank=True, null=True)
-    aprobada = models.BooleanField(default=False)
+    estado = models.CharField(
+        max_length=10,
+        choices=ESTADO_SOLICITUD,
+        default='pendiente',  # Estado por defecto
+    )
     completado = models.BooleanField(default=False)
     token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)  # Token único
 
     def __str__(self):
-        return f"Solicitud #{self.id} - {self.usuario.username}"
+        return f"Solicitud #{self.id} - {self.usuario.username} - {self.get_estado_display()}"
 
 class DetalleSolicitud(models.Model):
     solicitud = models.ForeignKey(SolicitudMaterial, on_delete=models.CASCADE)

@@ -169,15 +169,11 @@ def crear_solicitud_material(request):
         return JsonResponse({'message': 'Solicitud creada exitosamente.'})
     return JsonResponse({'error': 'Método no permitido.'}, status=405)
 
-def aprobar_solicitud(request, token):
-    solicitud = get_object_or_404(SolicitudMaterial, token=token)
-    solicitud.aprobada = True
-    solicitud.save()
-    return HttpResponse("La solicitud ha sido aprobada exitosamente.")
-
 def enviar_correo_aprobacion(request, solicitud, supervisor_email):
-    aprobar_url = reverse('aprobar_solicitud', args=[solicitud.token])
+    aprobar_url = reverse('cambiar_estado_solicitud', args=[solicitud.token, 'aprobar'])
+    rechazar_url = reverse('cambiar_estado_solicitud', args=[solicitud.token, 'rechazar'])
     aprobar_url = f"{request.build_absolute_uri(aprobar_url)}"
+    rechazar_url = f"{request.build_absolute_uri(rechazar_url)}"
 
     # Obtener los materiales relacionados con la solicitud
     detalles = solicitud.detallesolicitud_set.all()
@@ -207,6 +203,7 @@ def enviar_correo_aprobacion(request, solicitud, supervisor_email):
         {materiales_html}
         <p>
             <a href="{aprobar_url}" style="padding: 10px 20px; color: white; background-color: green; text-decoration: none; border-radius: 5px;">Aprobar Solicitud</a>
+            <a href="{rechazar_url}" style="padding: 10px 20px; color: white; background-color: red; text-decoration: none; border-radius: 5px;">Rechazar Solicitud</a>
         </p>
     </body>
     </html>
@@ -214,10 +211,21 @@ def enviar_correo_aprobacion(request, solicitud, supervisor_email):
 
     # Enviar el correo
     email = EmailMessage(
-        subject= f"Solicitud #{solicitud.id} - {solicitud.fecha_solicitud} - {solicitud.sucursal}",
+        subject=f"Solicitud #{solicitud.id} - {solicitud.fecha_solicitud} - {solicitud.sucursal}",
         body=mensaje_html,
         from_email='leanderperez@gmail.com',
         to=[supervisor_email]
     )
     email.content_subtype = 'html'  # Indicar que el contenido es HTML
     email.send()
+
+def cambiar_estado_solicitud(request, token, accion):
+    solicitud = get_object_or_404(SolicitudMaterial, token=token)
+    if accion == 'aprobar':
+        solicitud.estado = 'aprobada'
+    elif accion == 'rechazar':
+        solicitud.estado = 'rechazada'
+    else:
+        return HttpResponse("Acción no válida.", status=400)
+    solicitud.save()
+    return HttpResponse(f"La solicitud ha sido {solicitud.get_estado_display()} exitosamente.")
