@@ -1,12 +1,10 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse, HttpResponse
 from app.models import Material, SolicitudMaterial, DetalleSolicitud
 from django.contrib.auth.decorators import login_required
-from app.forms.forms import MaterialForm, SolicitudMaterialForm, DetalleSolicitudFormSet
 import json
 from django.core.mail import EmailMessage
 from django.urls import reverse
-from django.contrib.admin.views.decorators import staff_member_required
 from django.conf import settings
 
 from reportlab.lib.pagesizes import letter
@@ -16,47 +14,8 @@ from reportlab.platypus import Table, TableStyle, Paragraph
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.units import inch
 from io import BytesIO
+from django.views.decorators.csrf import csrf_exempt
 
-
-@login_required
-def lista_materiales(request):
-    materiales = Material.objects.all()
-    sucursales = SolicitudMaterialForm.base_fields['sucursal'].choices  # Obtener las opciones de SUCURSALES
-    return render(request, 'requisiciones/lista_materiales.html', {
-        'materiales': materiales,
-        'sucursales': sucursales
-    })
-
-@login_required
-def crear_material(request):
-    if request.method == 'POST':
-        form = MaterialForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('lista_materiales')
-    else:
-        form = MaterialForm()
-    return render(request, 'requisiciones/crear_material.html', {'form': form})
-
-@staff_member_required
-def editar_material(request, pk):
-    material = get_object_or_404(Material, pk=pk)
-    if request.method == 'POST':
-        form = MaterialForm(request.POST, instance=material)
-        if form.is_valid():
-            form.save()
-            return redirect('lista_materiales')
-    else:
-        form = MaterialForm(instance=material)
-    return render(request, 'requisiciones/editar_material.html', {'form': form})
-
-@staff_member_required
-def eliminar_material(request, pk):
-    material = get_object_or_404(Material, pk=pk)
-    if request.method == 'POST':
-        material.delete()
-        return redirect('lista_materiales')
-    return render(request, 'requisiciones/eliminar_material.html', {'material': material})
 
 @login_required
 def lista_solicitudes(request):
@@ -229,3 +188,27 @@ def cambiar_estado_solicitud(request, token, accion):
         return HttpResponse("Acción no válida.", status=400)
     solicitud.save()
     return HttpResponse(f"La solicitud ha sido {solicitud.get_estado_display()} exitosamente.")
+
+@csrf_exempt
+@login_required
+def completar_solicitud(request, pk):
+    if request.method == 'POST':
+        solicitud = get_object_or_404(SolicitudMaterial, pk=pk)
+        solicitud.completado = True
+        solicitud.save()
+        return JsonResponse({'message': 'Solicitud completada exitosamente.'})
+    return JsonResponse({'error': 'Método no permitido.'}, status=405)
+
+@csrf_exempt
+@login_required
+def asignar_analista(request, pk):
+    if request.method == 'POST':
+        solicitud = get_object_or_404(SolicitudMaterial, pk=pk)
+        data = json.loads(request.body)
+        analista = data.get('analista')
+        if analista in ['Cesar B.', 'José A.']:
+            solicitud.analista = analista
+            solicitud.save()
+            return JsonResponse({'message': 'Analista asignado exitosamente.'})
+        return JsonResponse({'error': 'Analista no válido.'}, status=400)
+    return JsonResponse({'error': 'Método no permitido.'}, status=405)

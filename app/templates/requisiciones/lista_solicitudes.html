@@ -12,7 +12,9 @@
                 <th><input type="text" placeholder="Sucursal" /></th>
                 <th><input type="text" placeholder="Aprobación" /></th>
                 <th><input type="text" placeholder="Estatus" /></th>
+                <th><input type="text" placeholder="Analista" /></th>
                 <th><input type="text" placeholder="Observaciones" /></th>
+                
             </tr>
         </thead>
         <tbody>
@@ -32,11 +34,22 @@
                         {% endif %}
                     </td>
                     <td>
-                        {% if solicitud.completado == True %}
-                        <span class="badge bg-success">Completada</span>
-                        {% else %}
-                        <span class="badge bg-danger">Pendiente</span>
-                        {% endif %}
+                        <a href="#" class="completar-link" data-id="{{ solicitud.pk }}" data-bs-toggle="modal" data-bs-target="#completarModal">
+                            {% if solicitud.completado %}
+                                <span class="badge bg-success">Completada</span>
+                            {% else %}
+                                <span class="badge bg-danger">Pendiente</span>
+                            {% endif %}
+                        </a>
+                    </td>
+                    <td>
+                        <a href="#" class="asignar-analista-link" data-id="{{ solicitud.pk }}" data-bs-toggle="modal" data-bs-target="#asignarAnalistaModal">
+                            {% if solicitud.analista %}
+                                {{ solicitud.analista }}
+                            {% else %}
+                                <span class="badge bg-secondary">Sin Asignar</span>
+                            {% endif %}
+                        </a>
                     </td>
                     <td>{{ solicitud.observaciones }}</td>
                 </tr>
@@ -54,6 +67,43 @@
         </tfoot>
     </table>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="completarModal" tabindex="-1" aria-labelledby="completarModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="completarModalLabel">Cambiar estado de la solicitud</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que deseas marcar esta solicitud como completada?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success" id="confirmarCompletar">Marcar como Completada</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para asignar analista -->
+<div class="modal fade" id="asignarAnalistaModal" tabindex="-1" aria-labelledby="asignarAnalistaModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="asignarAnalistaModalLabel">Asignar Analista</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Selecciona el analista para esta solicitud:</p>
+                <button type="button" class="btn btn-primary asignar-analista" data-analista="Cesar B.">Cesar B.</button>
+                <button type="button" class="btn btn-primary asignar-analista" data-analista="José A.">José A.</button>
+            </div>
+        </div>
+    </div>
+</div>
+
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.2.1/js/dataTables.buttons.js"></script>
@@ -108,6 +158,68 @@
                         that
                             .search(this.value)
                             .draw();
+                    }
+                });
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            let solicitudId = null;
+
+            // Capturar el ID de la solicitud al abrir el modal
+            document.querySelectorAll('.completar-link').forEach(link => {
+                link.addEventListener('click', function () {
+                    solicitudId = this.getAttribute('data-id');
+                });
+            });
+
+            // Manejar el clic en el botón "Confirmar Completar"
+            document.getElementById('confirmarCompletar').addEventListener('click', function () {
+                if (solicitudId) {
+                    fetch(`/solicitudes/completar/${solicitudId}/`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}',
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            location.reload(); // Recargar la página para reflejar los cambios
+                        } else {
+                            alert('Error al completar la solicitud.');
+                        }
+                    });
+                }
+            });
+
+            // Capturar el ID de la solicitud al abrir el modal de asignar analista
+            document.querySelectorAll('.asignar-analista-link').forEach(link => {
+                link.addEventListener('click', function () {
+                    solicitudId = this.getAttribute('data-id');
+                });
+            });
+
+            // Manejar el clic en los botones de asignar analista
+            document.querySelectorAll('.asignar-analista').forEach(button => {
+                button.addEventListener('click', function () {
+                    const analista = this.getAttribute('data-analista');
+                    if (solicitudId && analista) {
+                        fetch(`/solicitudes/asignar-analista/${solicitudId}/`, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRFToken': '{{ csrf_token }}',
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ analista: analista })
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                location.reload(); // Recargar la página para reflejar los cambios
+                            } else {
+                                alert('Error al asignar el analista.');
+                            }
+                        });
                     }
                 });
             });

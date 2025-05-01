@@ -53,6 +53,7 @@ class SolicitudMaterial(models.Model):
     )
     completado = models.BooleanField(default=False)
     token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)  # Token único
+    analista = models.CharField(max_length=50, blank=True, null=True)
 
     def __str__(self):
         return f"Solicitud #{self.id} - {self.usuario.username} - {self.get_estado_display()}"

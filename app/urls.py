@@ -1,5 +1,5 @@
 from django.urls import path
-from app.views import reportes, datatable, login, plot, pendientes, dashboard, requisiciones
+from app.views import reportes, datatable, login, plot, pendientes, dashboard, requisiciones, materiales
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
@@ -13,12 +13,14 @@ urlpatterns = [
     path('plot/', plot.crear_plot, name='plot'),
     path('pendientes/', pendientes.pendientes, name='pendientes'),
 
-    path('materiales/', requisiciones.lista_materiales, name='lista_materiales'),
-    path('materiales/crear/', requisiciones.crear_material, name='crear_material'),
-    path('materiales/editar/<int:pk>/', requisiciones.editar_material, name='editar_material'),
-    path('materiales/eliminar/<int:pk>/', requisiciones.eliminar_material, name='eliminar_material'),
+    path('materiales/', materiales.lista_materiales, name='lista_materiales'),
+    path('materiales/crear/', materiales.crear_material, name='crear_material'),
+    path('materiales/editar/<int:pk>/', materiales.editar_material, name='editar_material'),
+    path('materiales/eliminar/<int:pk>/', materiales.eliminar_material, name='eliminar_material'),
     path('solicitudes/', requisiciones.lista_solicitudes, name='lista_solicitudes'),
     path('solicitudes/<int:pk>/', requisiciones.detalle_solicitud, name='detalle_solicitud'),
     path('crear_solicitud_material/', requisiciones.crear_solicitud_material, name='crear_solicitud_material'),
-    path('solicitudes/cambiar-estado/<uuid:token>/<str:accion>/', requisiciones.cambiar_estado_solicitud, name='cambiar_estado_solicitud')
+    path('solicitudes/cambiar-estado/<uuid:token>/<str:accion>/', requisiciones.cambiar_estado_solicitud, name='cambiar_estado_solicitud'),
+    path('solicitudes/completar/<int:pk>/', requisiciones.completar_solicitud, name='completar_solicitud'),
+    path('solicitudes/asignar-analista/<int:pk>/', requisiciones.asignar_analista, name='asignar_analista')
 ]
