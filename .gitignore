@@ -17,5 +17,4 @@ nginx
 ssmtp.conf
 backup_postgres.sh
 muttrc
-masive.py
 /scripts
