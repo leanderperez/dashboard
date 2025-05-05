@@ -122,13 +122,14 @@ def crear_solicitud_material(request):
                 cantidad=material_data['cantidad']
             )
 
-        # Enviar correo al supervisor
-        enviar_correo_aprobacion(request, solicitud, 'leperez@forum.com.ve')
+        # Enviar correo a los supervisores
+        supervisor_emails = ['serv.grales.gerencia@forum.com.ve', 'serv.grales.subgerencia@forum.com.ve']
+        enviar_correo_aprobacion(request, solicitud, supervisor_emails)
 
         return JsonResponse({'message': 'Solicitud creada exitosamente.'})
     return JsonResponse({'error': 'Método no permitido.'}, status=405)
 
-def enviar_correo_aprobacion(request, solicitud, supervisor_email):
+def enviar_correo_aprobacion(request, solicitud, supervisor_emails):
     aprobar_url = reverse('cambiar_estado_solicitud', args=[solicitud.token, 'aprobar'])
     rechazar_url = reverse('cambiar_estado_solicitud', args=[solicitud.token, 'rechazar'])
     aprobar_url = f"{request.build_absolute_uri(aprobar_url)}"
@@ -173,7 +174,7 @@ def enviar_correo_aprobacion(request, solicitud, supervisor_email):
         subject=f"Solicitud #{solicitud.id} - {solicitud.fecha_solicitud} - {solicitud.sucursal}",
         body=mensaje_html,
         from_email='leanderperez@gmail.com',
-        to=[supervisor_email]
+        to=supervisor_emails  # Lista de correos electrónicos
     )
     email.content_subtype = 'html'  # Indicar que el contenido es HTML
     email.send()
