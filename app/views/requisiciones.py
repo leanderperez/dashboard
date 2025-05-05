@@ -19,7 +19,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 @login_required
 def lista_solicitudes(request):
-    solicitudes = SolicitudMaterial.objects.filter(usuario=request.user)
+    solicitudes = SolicitudMaterial.objects.all()
     return render(request, 'requisiciones/lista_solicitudes.html', {'solicitudes': solicitudes})
 
 @login_required
