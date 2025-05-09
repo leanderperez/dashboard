@@ -71,6 +71,20 @@
                         <label for="observaciones" class="form-label">Observaciones</label>
                         <textarea id="observaciones" class="form-control" rows="3"></textarea>
                     </div>
+                    <div class="mb-3">
+                        <h5>Materiales seleccionados:</h5>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Material</th>
+                                    <th>Cantidad</th>
+                                </tr>
+                            </thead>
+                            <tbody id="materiales-seleccionados">
+                                <!-- Los materiales seleccionados se agregarán aquí dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -134,11 +148,21 @@
             // Manejar el botón "Generar Solicitud"
             $('#generar-solicitud').on('click', function() {
                 const selectedMaterials = [];
+                $('#materiales-seleccionados').empty(); // Limpiar la tabla del modal
+
                 $('.cantidad-input').each(function() {
                     const cantidad = parseInt($(this).val());
                     const materialId = $(this).data('id');
+                    const materialNombre = $(this).closest('tr').find('td:nth-child(2)').text(); // Obtener el nombre del material
                     if (cantidad > 0) {
                         selectedMaterials.push({ id: materialId, cantidad: cantidad });
+                        // Agregar el material a la tabla del modal
+                        $('#materiales-seleccionados').append(`
+                            <tr>
+                                <td>${materialNombre}</td>
+                                <td>${cantidad}</td>
+                            </tr>
+                        `);
                     }
                 });
 
