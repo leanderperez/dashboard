@@ -64,7 +64,7 @@ def detalle_solicitud(request, pk):
     style_normal = styles['Normal']
 
     observaciones_paragraph = Paragraph(f"Observaciones: {solicitud.observaciones or 'N/A'}", style_normal)
-    frame = Frame(60, 580, 540, 50, showBoundary=0)  # Ajusta las coordenadas y el tamaño del área
+    frame = Frame(60, 580, 480, 50, showBoundary=0)  # Ajusta las coordenadas y el tamaño del área
     frame.addFromList([observaciones_paragraph], pdf)
 
     # Crear la tabla de materiales con texto ajustable
