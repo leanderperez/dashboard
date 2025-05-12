@@ -67,9 +67,6 @@ def detalle_solicitud(request, pk):
     frame = Frame(60, 580, 480, 50, showBoundary=0)  # Ajusta las coordenadas y el tamaño del área
     frame.addFromList([observaciones_paragraph], pdf)
 
-    # Espacio para la tabla
-    pdf.drawString(60, 550, "Detalles de los materiales:")
-
     # Crear la tabla de materiales con texto ajustable
     data = [["Material", "Cantidad", "Unidad de Medida"]]
     for detalle in detalles:
