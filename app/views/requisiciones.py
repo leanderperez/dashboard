@@ -10,7 +10,7 @@ from django.conf import settings
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from reportlab.lib import colors
-from reportlab.platypus import Table, TableStyle, Paragraph
+from reportlab.platypus import Table, TableStyle, Paragraph, Frame
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.units import inch
 from io import BytesIO
@@ -57,16 +57,20 @@ def detalle_solicitud(request, pk):
     pdf.drawString(130, 650, f"Completada: ")
     pdf.setFont("Helvetica-Bold", 10)
     pdf.drawString(190, 650, "Sí" if solicitud.completado else "No")
+
+    # Manejar observaciones largas
     pdf.setFont("Helvetica", 10)
-    pdf.drawString(60, 635, f"Observaciones: {solicitud.observaciones or 'N/A'}")
-
-    # Espacio para la tabla
-    pdf.drawString(60, 590, "Detalles de los materiales:")
-
-    # Crear la tabla de materiales con texto ajustable
     styles = getSampleStyleSheet()
     style_normal = styles['Normal']
 
+    observaciones_paragraph = Paragraph(f"Observaciones: {solicitud.observaciones or 'N/A'}", style_normal)
+    frame = Frame(60, 580, 480, 50, showBoundary=0)  # Ajusta las coordenadas y el tamaño del área
+    frame.addFromList([observaciones_paragraph], pdf)
+
+    # Espacio para la tabla
+    pdf.drawString(60, 550, "Detalles de los materiales:")
+
+    # Crear la tabla de materiales con texto ajustable
     data = [["Material", "Cantidad", "Unidad de Medida"]]
     for detalle in detalles:
         material_paragraph = Paragraph(detalle.material.nombre, style_normal)
@@ -87,8 +91,8 @@ def detalle_solicitud(request, pk):
     ]))
 
     # Dibujar la tabla en el PDF
-    table.wrapOn(pdf, 50, 570)
-    table.drawOn(pdf, 50, 570 - len(data) * 20)
+    table.wrapOn(pdf, 50, 520)
+    table.drawOn(pdf, 50, 520 - len(data) * 20)
 
     # Finalizar el PDF
     pdf.save()
