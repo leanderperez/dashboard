@@ -25,12 +25,24 @@
                     <td>{{ solicitud.usuario }}</td>
                     <td>{{ solicitud.sucursal }}</td>
                     <td>
-                        {% if solicitud.estado == 'aprobada' %}
-                            <span class="badge bg-success">Aprobada</span>
-                        {% elif solicitud.estado == 'rechazada' %}
-                            <span class="badge bg-danger">Rechazada</span>
+                        {% if usuario_autorizado %}
+                            <a href="#" class="aprobar-rechazar-link" data-id="{{ solicitud.pk }}" data-bs-toggle="modal" data-bs-target="#aprobarRechazarModal">
+                                {% if solicitud.estado == 'aprobada' %}
+                                    <span class="badge bg-success">Aprobada</span>
+                                {% elif solicitud.estado == 'rechazada' %}
+                                    <span class="badge bg-danger">Rechazada</span>
+                                {% else %}
+                                    <span class="badge bg-warning text-dark">Pendiente</span>
+                                {% endif %}
+                            </a>
                         {% else %}
-                            <span class="badge bg-warning text-dark">Pendiente</span>
+                            {% if solicitud.estado == 'aprobada' %}
+                                <span class="badge bg-success">Aprobada</span>
+                            {% elif solicitud.estado == 'rechazada' %}
+                                <span class="badge bg-danger">Rechazada</span>
+                            {% else %}
+                                <span class="badge bg-warning text-dark">Pendiente</span>
+                            {% endif %}
                         {% endif %}
                     </td>
                     <td>
@@ -99,6 +111,26 @@
                 <p>Selecciona el analista para esta solicitud:</p>
                 <button type="button" class="btn btn-primary asignar-analista" data-analista="Cesar B.">Cesar B.</button>
                 <button type="button" class="btn btn-primary asignar-analista" data-analista="José A.">José A.</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para aprobar/rechazar solicitud -->
+<div class="modal fade" id="aprobarRechazarModal" tabindex="-1" aria-labelledby="aprobarRechazarModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="aprobarRechazarModalLabel">Aprobar o Rechazar Solicitud</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <p>Ingrese su contraseña de 4 dígitos para confirmar la acción:</p>
+                <input type="password" id="claveAprobacion" maxlength="4" pattern="\d{4}" class="form-control mb-3" placeholder="****" inputmode="numeric">
+                <div class="d-flex justify-content-between">
+                    <button type="button" class="btn btn-success" id="btnAprobar">Aprobar</button>
+                    <button type="button" class="btn btn-danger" id="btnRechazar">Rechazar</button>
+                </div>
             </div>
         </div>
     </div>
@@ -222,6 +254,45 @@
                         });
                     }
                 });
+            });
+
+            // Capturar el ID de la solicitud al abrir el modal de aprobación
+            document.querySelectorAll('.aprobar-rechazar-link').forEach(link => {
+                link.addEventListener('click', function () {
+                    solicitudId = this.getAttribute('data-id');
+                    document.getElementById('claveAprobacion').value = '';
+                });
+            });
+
+            function enviarCambioEstado(accion) {
+                const clave = document.getElementById('claveAprobacion').value;
+                if (!/^\d{4}$/.test(clave)) {
+                    alert('La contraseña debe ser de 4 dígitos numéricos.');
+                    return;
+                }
+                fetch(`/solicitudes/cambiar-estado/${solicitudId}/${accion}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ clave: clave })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert(data.error || 'No autorizado o clave incorrecta.');
+                    }
+                });
+            }
+
+            document.getElementById('btnAprobar').addEventListener('click', function () {
+                enviarCambioEstado('aprobar');
+            });
+            document.getElementById('btnRechazar').addEventListener('click', function () {
+                enviarCambioEstado('rechazar');
             });
         });
     </script>

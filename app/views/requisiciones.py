@@ -15,12 +15,18 @@ from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.units import inch
 from io import BytesIO
 from django.views.decorators.csrf import csrf_exempt
+from django.utils import timezone
 
 
 @login_required
 def lista_solicitudes(request):
+    usuarios_autorizados = ['Analee', 'Leander']
+    usuario_autorizado = request.user.username in usuarios_autorizados
     solicitudes = SolicitudMaterial.objects.all()
-    return render(request, 'requisiciones/lista_solicitudes.html', {'solicitudes': solicitudes})
+    return render(request, 'requisiciones/lista_solicitudes.html', {
+        'solicitudes': solicitudes,
+        'usuario_autorizado': usuario_autorizado,
+    })
 
 @login_required
 def detalle_solicitud(request, pk):
@@ -180,16 +186,34 @@ def enviar_correo_aprobacion(request, solicitud, supervisor_emails):
     email.content_subtype = 'html'  # Indicar que el contenido es HTML
     email.send()
 
-def cambiar_estado_solicitud(request, token, accion):
-    solicitud = get_object_or_404(SolicitudMaterial, token=token)
-    if accion == 'aprobar':
-        solicitud.estado = 'aprobada'
-    elif accion == 'rechazar':
-        solicitud.estado = 'rechazada'
-    else:
-        return HttpResponse("Acción no válida.", status=400)
-    solicitud.save()
-    return HttpResponse(f"La solicitud ha sido {solicitud.get_estado_display()} exitosamente.")
+@csrf_exempt
+@login_required
+def cambiar_estado_solicitud(request, pk, accion):
+    # Solo permitir a usuarios específicos
+    usuarios_autorizados = ['Analee', 'Leander']
+    if request.user.username not in usuarios_autorizados:
+        return JsonResponse({'success': False, 'error': 'No autorizado.'})
+
+    if request.method == 'POST':
+        import json
+        data = json.loads(request.body)
+        clave = data.get('clave')
+        # Cambia '1234' por la clave real o implementa tu lógica de validación
+        if not clave or not clave.isdigit() or len(clave) != 4 or clave != '1234':
+            return JsonResponse({'success': False, 'error': 'Clave incorrecta.'})
+
+        solicitud = get_object_or_404(SolicitudMaterial, pk=pk)
+        if accion == 'aprobar':
+            solicitud.estado = 'aprobada'
+            solicitud.fecha_revision = timezone.now()
+        elif accion == 'rechazar':
+            solicitud.estado = 'rechazada'
+            solicitud.fecha_revision = timezone.now()
+        else:
+            return JsonResponse({'success': False, 'error': 'Acción no válida.'})
+        solicitud.save()
+        return JsonResponse({'success': True})
+    return JsonResponse({'success': False, 'error': 'Método no permitido.'})
 
 @csrf_exempt
 @login_required

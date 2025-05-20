@@ -18,3 +18,7 @@ ssmtp.conf
 backup_postgres.sh
 muttrc
 /scripts
+
+.dockerignore
+docker-compose.yml
+dockerfile
