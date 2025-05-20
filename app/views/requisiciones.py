@@ -20,7 +20,7 @@ from django.utils import timezone
 
 @login_required
 def lista_solicitudes(request):
-    usuarios_autorizados = ['Analee', 'Leander']
+    usuarios_autorizados = ['Analee', 'Leander', 'Yunuary']
     usuario_autorizado = request.user.username in usuarios_autorizados
     solicitudes = SolicitudMaterial.objects.all()
     return render(request, 'requisiciones/lista_solicitudes.html', {
