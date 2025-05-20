@@ -198,8 +198,7 @@ def cambiar_estado_solicitud(request, pk, accion):
         import json
         data = json.loads(request.body)
         clave = data.get('clave')
-        # Cambia '1234' por la clave real o implementa tu lógica de validación
-        if not clave or not clave.isdigit() or len(clave) != 4 or clave != '1234':
+        if not clave or not clave.isdigit() or len(clave) != 4 or clave != '1121':
             return JsonResponse({'success': False, 'error': 'Clave incorrecta.'})
 
         solicitud = get_object_or_404(SolicitudMaterial, pk=pk)
