@@ -190,7 +190,7 @@ def enviar_correo_aprobacion(request, solicitud, supervisor_emails):
 @login_required
 def cambiar_estado_solicitud(request, pk, accion):
     # Solo permitir a usuarios específicos
-    usuarios_autorizados = ['Analee', 'Leander']
+    usuarios_autorizados = ['Analee', 'Leander', 'Yunuary']
     if request.user.username not in usuarios_autorizados:
         return JsonResponse({'success': False, 'error': 'No autorizado.'})
 
