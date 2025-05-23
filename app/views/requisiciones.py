@@ -130,8 +130,8 @@ def crear_solicitud_material(request):
             )
 
         # Enviar correo a los supervisores
-        supervisor_emails = ['serv.grales.gerencia@forum.com.ve', 'serv.grales.subgerencia@forum.com.ve']
-        enviar_correo_aprobacion(request, solicitud, supervisor_emails)
+        # supervisor_emails = ['serv.grales.gerencia@forum.com.ve', 'serv.grales.subgerencia@forum.com.ve']
+        # enviar_correo_aprobacion(request, solicitud, supervisor_emails)
 
         return JsonResponse({'message': 'Solicitud creada exitosamente.'})
     return JsonResponse({'error': 'Método no permitido.'}, status=405)
