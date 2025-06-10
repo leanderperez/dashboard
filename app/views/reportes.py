@@ -19,7 +19,7 @@ def crear_reporte(request):
                 form.instance.referencia = referencia
                 form.instance.save() 
             elif not form.instance.referencia:
-                form.instance.referencia = '⚠️ Nuevo'
+                form.instance.referencia = 'S/R'
                 form.instance.save()  
             return redirect('datatable')
     else:

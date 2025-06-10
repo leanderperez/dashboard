@@ -178,7 +178,7 @@ def index(request):
                 y=df_agrupado_contratista['personal'],
                 name='Ahorro',
                 orientation='h',
-                base=df_agrupado_contratista['gasto'],  # Ajustar la base para que comience donde termina la barra de gasto
+                base=df_agrupado_contratista['gasto'], 
                 marker={'color': 'lightgreen'},
                 text=df_agrupado_contratista['ahorro'].apply(lambda a: f'Ahorro: {a} $'),
                 textposition='auto'
