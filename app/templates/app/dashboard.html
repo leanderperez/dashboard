@@ -8,33 +8,27 @@
             <div class="form-items">
                 <form method="post">
                     {% csrf_token %}
-        
                     <label for="fecha_inicio">Fecha Inicio:</label>
                     <input type="date" class="form-control" name="fecha_inicio" id="fecha_inicio">
-        
                     <label for="fecha_fin">Fecha Fin:</label>
                     <input type="date" class="form-control" name="fecha_fin" id="fecha_fin">
-        
                     <select name="clasificacion" class="form-select mt-3" id="clasificacion">
                         <option value="">Clasificación</option>
                         {% for clasificacion in clasificaciones %}
                             <option value="{{ clasificacion }}">{{ clasificacion }}</option>
                         {% endfor %}
                     </select>
-        
                     <select name="sucursales" class="form-select mt-3" id="sucursales" multiple>
                         {% for sucursal in sucursales_list %}
                             <option value="{{ sucursal }}">{{ sucursal }}</option>
                         {% endfor %}
                     </select>
-        
                     <select name="personal" class="form-select mt-3" id="personal">
                         <option value="">Personal de atención</option>
-                        {% for personal in personal %}
-                            <option value="{{ personal }}">{{ personal }}</option>
+                        {% for p in personal %}
+                            <option value="{{ p }}">{{ p }}</option>
                         {% endfor %}
                     </select>
-                    
                     <div class="form-button mt-3">
                         <button type="submit" class="btn btn-primary">Filtrar</button>
                     </div>
@@ -50,58 +44,74 @@
             <button class="tablinks" onclick="openTab(event, 'Kilos')">Refrigerantes</button>
             <button class="tablinks" onclick="openTab(event, 'Costos')">Costos</button>
 
-            <div id="Clasificacion" class="tabcontent">
-                <div style="display: flex; flex-direction: column;">
-                    <div>{{ fig1|safe }}</div>
-                    <div style="height: 5px;"></div>
-                    <div>{{ fig2|safe }}</div>
-                </div>
+            <div id="Clasificacion" class="tabcontent" style="display:none;">
+                <div id="contenido-clasificacion"></div>
             </div>
-
-            <div id="Sucursales" class="tabcontent">
-                <div style="display: flex; flex-direction: column;">
-                    <div>{{ fig3|safe }}</div>
-                    <div style="height: 5px;"></div>
-                    <div>{{ fig4|safe }}</div>
-                </div>
+            <div id="Sucursales" class="tabcontent" style="display:none;">
+                <div id="contenido-sucursales"></div>
             </div>
-
-            <div id="Kilos" class="tabcontent">
-                <div style="display: flex; flex-direction: column;">
-                    <div>{{ fig5|safe }}</div>
-                    <div style="height: 5px;"></div>
-                    <div>{{ fig6|safe }}</div>
-                </div>
+            <div id="Kilos" class="tabcontent" style="display:none;">
+                <div id="contenido-kilos"></div>
             </div>
-
-            <div id="Costos" class="tabcontent">
-                <div style="display: flex; flex-direction: column;">
-                    <div>{{ fig7|safe }}</div>
-                    <div style="height: 5px;"></div>
-                    <div>{{ fig8|safe }}</div>
-                </div>
+            <div id="Costos" class="tabcontent" style="display:none;">
+                <div id="contenido-costos"></div>
             </div>
-            
         </div>
     </div>
 </div>
 
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 <script>
-    function openTab(evt, tabName) {
-        var i, tabcontent, tablinks;
-        tabcontent = document.getElementsByClassName("tabcontent");
-        for (i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].style.display = "none";
-        }
-        tablinks = document.getElementsByClassName("tablinks");
-        for (i = 0; i < tablinks.length; i++) {
-            tablinks[i].className = tablinks[i].className.replace(" active", "");
-        }
-        document.getElementById(tabName).style.display = "block";
-        evt.currentTarget.className += " active";
+function openTab(evt, tabName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
     }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(tabName).style.display = "block";
+    evt.currentTarget.className += " active";
 
-    // Abre la pestaña predeterminada al cargar la página
+    // Cargar el gráfico solo si no se ha cargado antes
+    let contentDiv = document.getElementById('contenido-' + tabName.toLowerCase());
+    if (!contentDiv.dataset.loaded) {
+        let url = '';
+        if (tabName === 'Clasificacion') url = '{% url "grafico_clasificacion" %}';
+        if (tabName === 'Sucursales') url = '{% url "grafico_sucursales" %}';
+        if (tabName === 'Kilos') url = '{% url "grafico_kilos" %}';
+        if (tabName === 'Costos') url = '{% url "grafico_costos" %}';
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                contentDiv.innerHTML = data.html;
+                contentDiv.dataset.loaded = "true";
+                // Ejecutar los scripts de Plotly manualmente
+                if (window.Plotly) {
+                    document.querySelectorAll('#' + contentDiv.id + ' .js-plotly-plot').forEach(function(plotDiv) {
+                        Plotly.Plots.resize(plotDiv);
+                    });
+                }
+                // Ejecutar los scripts embebidos (Plotly) después de insertar el HTML
+                Array.from(contentDiv.getElementsByTagName("script")).forEach( oldScript => {
+                    const newScript = document.createElement("script");
+                    if (oldScript.src) {
+                        newScript.src = oldScript.src;
+                    } else {
+                        newScript.textContent = oldScript.textContent;
+                    }
+                    document.body.appendChild(newScript);
+                    // Opcional: eliminar el script después de ejecutarlo
+                    document.body.removeChild(newScript);
+                });
+            });
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
     document.getElementById("defaultOpen").click();
+});
 </script>
 {% endblock %}

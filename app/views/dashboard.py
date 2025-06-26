@@ -1,11 +1,43 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from app.models import Reporte
+from django.http import JsonResponse
+from django.template.loader import render_to_string
 import pandas as pd
 import plotly.graph_objects as go
 
+
 @login_required
 def index(request):
+    reportes = Reporte.objects.all()
+    df = pd.DataFrame(list(reportes.values()))
+
+    # Filtros
+    if request.method == 'POST':
+        fecha_inicio = request.POST.get('fecha_inicio')
+        fecha_fin = request.POST.get('fecha_fin')
+        clasificacion = request.POST.get('clasificacion')
+        sucursales = request.POST.getlist('sucursales')
+        personal = request.POST.get('personal')
+
+        if fecha_inicio and fecha_fin:
+            df = df[(df['fecha'] >= fecha_inicio) & (df['fecha'] <= fecha_fin)]
+        if clasificacion:
+            df = df[df['clasificacion'] == clasificacion]
+        if sucursales:
+            df = df[df['sucursal'].isin(sucursales)]
+        if personal:
+            df = df[df['personal'] == personal]
+        
+    context = {
+        'clasificaciones': df['clasificacion'].unique(),
+        'sucursales_list': df['sucursal'].unique(),
+        'personal': df['personal'].unique(),
+    }
+    return render(request, 'app/dashboard.html', context)
+
+@login_required
+def grafico_clasificacion(request):
     reportes = Reporte.objects.all()
     df = pd.DataFrame(list(reportes.values()))
     df['personal'] = df['personal'].replace(['', 'None'], 'En Proceso').fillna('En Proceso')
@@ -57,6 +89,37 @@ def index(request):
                        template=template,
                        margin=dict(l=10, r=10, t=35, b=5))
 
+    html = render_to_string('app/partials/grafico_clasificacion.html', {'fig1': fig1.to_html(), 'fig2': fig2.to_html()})
+    return JsonResponse({'html': html})
+
+@login_required
+def grafico_sucursales(request):
+    reportes = Reporte.objects.all()
+    df = pd.DataFrame(list(reportes.values()))
+    df['personal'] = df['personal'].replace(['', 'None'], 'En Proceso').fillna('En Proceso')
+    template = 'seaborn'
+
+    # Convertir la columna 'fecha' a datetime
+    df['fecha'] = pd.to_datetime(df['fecha'], errors='coerce')
+
+    # Filtros
+    if request.method == 'POST':
+        fecha_inicio = request.POST.get('fecha_inicio')
+        fecha_fin = request.POST.get('fecha_fin')
+        clasificacion = request.POST.get('clasificacion')
+        sucursales = request.POST.getlist('sucursales')
+        personal = request.POST.get('personal')
+
+        if fecha_inicio and fecha_fin:
+            df = df[(df['fecha'] >= fecha_inicio) & (df['fecha'] <= fecha_fin)]
+        if clasificacion:
+            df = df[df['clasificacion'] == clasificacion]
+        if sucursales:
+            df = df[df['sucursal'].isin(sucursales)]
+        if personal:
+            df = df[df['personal'] == personal]
+
+
     # Gráfico 3: Reportes por Sucursal
     sucursal_counts = df['sucursal'].value_counts()
     fig3 = go.Figure(data=[go.Bar(x=sucursal_counts.index, y=sucursal_counts.values)])
@@ -79,6 +142,37 @@ def index(request):
                        template=template,
                        margin=dict(l=10, r=10, t=35, b=5))
     
+    html = render_to_string('app/partials/grafico_sucursales.html', {'fig3': fig3.to_html(), 'fig4': fig4.to_html()})
+    return JsonResponse({'html': html})
+
+@login_required
+def grafico_kilos(request):
+    reportes = Reporte.objects.all()
+    df = pd.DataFrame(list(reportes.values()))
+    df['personal'] = df['personal'].replace(['', 'None'], 'En Proceso').fillna('En Proceso')
+    template = 'seaborn'
+
+    # Convertir la columna 'fecha' a datetime
+    df['fecha'] = pd.to_datetime(df['fecha'], errors='coerce')
+
+    # Filtros
+    if request.method == 'POST':
+        fecha_inicio = request.POST.get('fecha_inicio')
+        fecha_fin = request.POST.get('fecha_fin')
+        clasificacion = request.POST.get('clasificacion')
+        sucursales = request.POST.getlist('sucursales')
+        personal = request.POST.get('personal')
+
+        if fecha_inicio and fecha_fin:
+            df = df[(df['fecha'] >= fecha_inicio) & (df['fecha'] <= fecha_fin)]
+        if clasificacion:
+            df = df[df['clasificacion'] == clasificacion]
+        if sucursales:
+            df = df[df['sucursal'].isin(sucursales)]
+        if personal:
+            df = df[df['personal'] == personal]
+
+
     # Gráfico 5: Kilos de Refrigerante Recargados por Sucursal
     fig5 = go.Figure()
     for refrigerante in df['refrigerante'].unique():
@@ -108,6 +202,37 @@ def index(request):
                     template=template,
                     margin=dict(l=10, r=10, t=35, b=5))
     
+    html = render_to_string('app/partials/grafico_kilos.html', {'fig5': fig5.to_html(), 'fig6': fig6.to_html()})
+    return JsonResponse({'html': html})
+
+@login_required
+def grafico_costos(request):
+    reportes = Reporte.objects.all()
+    df = pd.DataFrame(list(reportes.values()))
+    df['personal'] = df['personal'].replace(['', 'None'], 'En Proceso').fillna('En Proceso')
+    template = 'seaborn'
+
+    # Convertir la columna 'fecha' a datetime
+    df['fecha'] = pd.to_datetime(df['fecha'], errors='coerce')
+
+    # Filtros
+    if request.method == 'POST':
+        fecha_inicio = request.POST.get('fecha_inicio')
+        fecha_fin = request.POST.get('fecha_fin')
+        clasificacion = request.POST.get('clasificacion')
+        sucursales = request.POST.getlist('sucursales')
+        personal = request.POST.get('personal')
+
+        if fecha_inicio and fecha_fin:
+            df = df[(df['fecha'] >= fecha_inicio) & (df['fecha'] <= fecha_fin)]
+        if clasificacion:
+            df = df[df['clasificacion'] == clasificacion]
+        if sucursales:
+            df = df[df['sucursal'].isin(sucursales)]
+        if personal:
+            df = df[df['personal'] == personal]
+
+
     # Grafico 7: Comparativo de Costos - Forum GEEI vs Contratista
     df = df[df['personal'] != 'En Proceso']
     df['personal'] = df['personal'].replace({'Técnico de Cuadrilla': 'Forum GEEI', 'Técnico de Infraestructura': 'Forum GEEI'})
@@ -165,7 +290,7 @@ def index(request):
         margin=dict(l=10, r=10, t=35, b=5)
     )
 
-    # Grafico 7: Comparativo de Costos - Forum GEEI vs Contratista
+    # Grafico 8: Comparativo de Costos - Forum GEEI vs Contratista
     df_gastos = df[df['personal'].isin(['Forum GEEI', 'Contratista'])]
 
     # Agrupa por mes y personal, sumando gasto y costo
@@ -203,17 +328,5 @@ def index(request):
         margin=dict(l=10, r=10, t=35, b=5)
     )
         
-    context = {
-        'fig1': fig1.to_html(),
-        'fig2': fig2.to_html(),
-        'fig3': fig3.to_html(),
-        'fig4': fig4.to_html(),
-        'fig5': fig5.to_html(),
-        'fig6': fig6.to_html(),
-        'fig7': fig7.to_html(),
-        'fig8': fig8.to_html(),
-        'clasificaciones': df['clasificacion'].unique(),
-        'sucursales_list': df['sucursal'].unique(),
-        'personal': df['personal'].unique(),
-    }
-    return render(request, 'app/dashboard.html', context)
+    html = render_to_string('app/partials/grafico_costos.html', {'fig7': fig7.to_html(), 'fig8': fig8.to_html()})
+    return JsonResponse({'html': html})

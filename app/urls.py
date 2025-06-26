@@ -23,5 +23,10 @@ urlpatterns = [
     path('crear_solicitud_material/', requisiciones.crear_solicitud_material, name='crear_solicitud_material'),
     path('solicitudes/cambiar-estado/<int:pk>/<str:accion>/', requisiciones.cambiar_estado_solicitud, name='cambiar_estado_solicitud'),
     path('solicitudes/completar/<int:pk>/', requisiciones.completar_solicitud, name='completar_solicitud'),
-    path('solicitudes/asignar-analista/<int:pk>/', requisiciones.asignar_analista, name='asignar_analista')
+    path('solicitudes/asignar-analista/<int:pk>/', requisiciones.asignar_analista, name='asignar_analista'),
+
+    path('dashboard/grafico_clasificacion/', dashboard.grafico_clasificacion, name='grafico_clasificacion'),
+    path('dashboard/grafico_sucursales/', dashboard.grafico_sucursales, name='grafico_sucursales'),
+    path('dashboard/grafico_kilos/', dashboard.grafico_kilos, name='grafico_kilos'),
+    path('dashboard/grafico_costos/', dashboard.grafico_costos, name='grafico_costos'),
 ]
