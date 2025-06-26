@@ -6,7 +6,7 @@
     <div style="width: 40%; padding: 5px;">
         <div class="form-content">
             <div class="form-items">
-                <form method="post">
+                <form id="filtros-form">
                     {% csrf_token %}
                     <label for="fecha_inicio">Fecha Inicio:</label>
                     <input type="date" class="form-control" name="fecha_inicio" id="fecha_inicio">
@@ -30,7 +30,7 @@
                         {% endfor %}
                     </select>
                     <div class="form-button mt-3">
-                        <button type="submit" class="btn btn-primary">Filtrar</button>
+                        <button type="button" class="btn btn-primary" id="btn-filtrar">Filtrar</button>
                     </div>
                 </form>
             </div>
@@ -75,40 +75,65 @@ function openTab(evt, tabName) {
     document.getElementById(tabName).style.display = "block";
     evt.currentTarget.className += " active";
 
-    // Cargar el gráfico solo si no se ha cargado antes
     let contentDiv = document.getElementById('contenido-' + tabName.toLowerCase());
-    if (!contentDiv.dataset.loaded) {
-        let url = '';
-        if (tabName === 'Clasificacion') url = '{% url "grafico_clasificacion" %}';
-        if (tabName === 'Sucursales') url = '{% url "grafico_sucursales" %}';
-        if (tabName === 'Kilos') url = '{% url "grafico_kilos" %}';
-        if (tabName === 'Costos') url = '{% url "grafico_costos" %}';
-        fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                contentDiv.innerHTML = data.html;
-                contentDiv.dataset.loaded = "true";
-                // Ejecutar los scripts de Plotly manualmente
-                if (window.Plotly) {
-                    document.querySelectorAll('#' + contentDiv.id + ' .js-plotly-plot').forEach(function(plotDiv) {
-                        Plotly.Plots.resize(plotDiv);
-                    });
-                }
-                // Ejecutar los scripts embebidos (Plotly) después de insertar el HTML
-                Array.from(contentDiv.getElementsByTagName("script")).forEach( oldScript => {
-                    const newScript = document.createElement("script");
-                    if (oldScript.src) {
-                        newScript.src = oldScript.src;
-                    } else {
-                        newScript.textContent = oldScript.textContent;
-                    }
-                    document.body.appendChild(newScript);
-                    // Opcional: eliminar el script después de ejecutarlo
-                    document.body.removeChild(newScript);
-                });
-            });
+    // Siempre recargar el gráfico al filtrar
+    contentDiv.dataset.loaded = "";
+
+    let url = '';
+    if (tabName === 'Clasificacion') url = '{% url "grafico_clasificacion" %}';
+    if (tabName === 'Sucursales') url = '{% url "grafico_sucursales" %}';
+    if (tabName === 'Kilos') url = '{% url "grafico_kilos" %}';
+    if (tabName === 'Costos') url = '{% url "grafico_costos" %}';
+
+    // Enviar filtros por POST si existen
+    let fetchOptions = {};
+    if (Object.keys(filtrosSeleccionados).length > 0) {
+        fetchOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: new URLSearchParams(filtrosSeleccionados)
+        };
     }
+
+    fetch(url, fetchOptions)
+        .then(response => response.json())
+        .then(data => {
+            contentDiv.innerHTML = data.html;
+            contentDiv.dataset.loaded = "true";
+            // Ejecutar scripts Plotly embebidos
+            Array.from(contentDiv.getElementsByTagName("script")).forEach( oldScript => {
+                const newScript = document.createElement("script");
+                if (oldScript.src) {
+                    newScript.src = oldScript.src;
+                } else {
+                    newScript.textContent = oldScript.textContent;
+                }
+                document.body.appendChild(newScript);
+                document.body.removeChild(newScript);
+            });
+        });
 }
+
+let filtrosSeleccionados = {};
+
+document.getElementById('btn-filtrar').addEventListener('click', function() {
+    const form = document.getElementById('filtros-form');
+    filtrosSeleccionados = {};
+    if (form.fecha_inicio.value) filtrosSeleccionados.fecha_inicio = form.fecha_inicio.value;
+    if (form.fecha_fin.value) filtrosSeleccionados.fecha_fin = form.fecha_fin.value;
+    if (form.clasificacion.value) filtrosSeleccionados.clasificacion = form.clasificacion.value;
+    const sucursalesSeleccionadas = Array.from(form.sucursales.selectedOptions).map(opt => opt.value);
+    if (sucursalesSeleccionadas.length > 0) filtrosSeleccionados.sucursales = sucursalesSeleccionadas;
+    if (form.personal.value) filtrosSeleccionados.personal = form.personal.value;
+    // Recargar el tab activo con los nuevos filtros
+    const activeTab = document.querySelector('.tablinks.active');
+    if (activeTab) {
+        openTab({currentTarget: activeTab}, activeTab.textContent.trim());
+    }
+});
 
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById("defaultOpen").click();

@@ -11,23 +11,6 @@ import plotly.graph_objects as go
 def index(request):
     reportes = Reporte.objects.all()
     df = pd.DataFrame(list(reportes.values()))
-
-    # Filtros
-    if request.method == 'POST':
-        fecha_inicio = request.POST.get('fecha_inicio')
-        fecha_fin = request.POST.get('fecha_fin')
-        clasificacion = request.POST.get('clasificacion')
-        sucursales = request.POST.getlist('sucursales')
-        personal = request.POST.get('personal')
-
-        if fecha_inicio and fecha_fin:
-            df = df[(df['fecha'] >= fecha_inicio) & (df['fecha'] <= fecha_fin)]
-        if clasificacion:
-            df = df[df['clasificacion'] == clasificacion]
-        if sucursales:
-            df = df[df['sucursal'].isin(sucursales)]
-        if personal:
-            df = df[df['personal'] == personal]
         
     context = {
         'clasificaciones': df['clasificacion'].unique(),
