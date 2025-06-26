@@ -168,27 +168,37 @@ def index(request):
     # Grafico 7: Comparativo de Costos - Forum GEEI vs Contratista
     df_gastos = df[df['personal'].isin(['Forum GEEI', 'Contratista'])]
 
-    # Agrupa por mes y personal, sumando el gasto
+    # Agrupa por mes y personal, sumando gasto y costo
     df_gastos['mes'] = df_gastos['fecha'].dt.to_period('M').astype(str)
-    gastos_mensuales = df_gastos.groupby(['mes', 'personal'])['gasto'].sum().reset_index()
+    gastos_mensuales = df_gastos.groupby(['mes', 'personal'])[['gasto', 'costo']].sum().reset_index()
+    gastos_mensuales['ahorro'] = gastos_mensuales['costo'] - gastos_mensuales['gasto']
 
     fig8 = go.Figure()
 
     for personal in ['Forum GEEI', 'Contratista']:
         datos = gastos_mensuales[gastos_mensuales['personal'] == personal]
+        # Línea de gasto
         fig8.add_trace(go.Scatter(
             x=datos['mes'],
             y=datos['gasto'],
             mode='lines+markers',
-            name=personal
+            name=f'Gasto {personal}'
+        ))
+        # Línea de ahorro
+        fig8.add_trace(go.Scatter(
+            x=datos['mes'],
+            y=datos['ahorro'],
+            mode='lines+markers',
+            name=f'Ahorro {personal}',
+            line=dict(dash='dash')  # Línea punteada para distinguir el ahorro
         ))
 
     fig8.update_layout(
         width=800,
         height=250,
-        title="Gastos Mensuales por Contratista y Forum GEEI",
+        title="Gastos y Ahorro Mensual por Contratista y Forum GEEI",
         xaxis_title="Mes",
-        yaxis_title="Gasto ($)",
+        yaxis_title="Monto ($)",
         template=template,
         margin=dict(l=10, r=10, t=35, b=5)
     )
