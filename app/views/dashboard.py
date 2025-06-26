@@ -108,93 +108,90 @@ def index(request):
                     template=template,
                     margin=dict(l=10, r=10, t=35, b=5))
     
-    # Grafico 7 y 8: Costos por Personal
+    # Grafico 7: Comparativo de Costos - Forum GEEI vs Contratista
     df = df[df['personal'] != 'En Proceso']
     df['personal'] = df['personal'].replace({'Técnico de Cuadrilla': 'Forum GEEI', 'Técnico de Infraestructura': 'Forum GEEI'})
 
-    # Grafico 7: Filtrar datos para Forum GEEI
-    df_forum = df[df['personal'] == 'Forum GEEI']
-    df_agrupado_forum = df_forum.groupby('personal').agg({'costo': 'sum', 'gasto': 'sum'}).reset_index()
-    df_agrupado_forum['ahorro'] = df_agrupado_forum['costo'] - df_agrupado_forum['gasto']
+    df_costos = df[df['personal'].isin(['Forum GEEI', 'Contratista'])]
+    df_agrupado = df_costos.groupby('personal').agg({'costo': 'sum', 'gasto': 'sum'}).reset_index()
+    df_agrupado['ahorro'] = df_agrupado['costo'] - df_agrupado['gasto']
+
     fig7 = go.Figure(
         data=[
+            # Barra de referencia: Costo (paralela)
             go.Bar(
-                x=df_agrupado_forum['costo'],
-                y=df_agrupado_forum['personal'],
+                x=df_agrupado['costo'],
+                y=df_agrupado['personal'],
                 name='Costo',
                 orientation='h',
-                text=df_agrupado_forum['costo'].apply(lambda a: f'Costo: {a} $')
+                text=df_agrupado['costo'].apply(lambda a: f'Costo: {a} $'),
+                textposition='auto',
+                offsetgroup='costo',  # Grupo separado
+                width=0.3
             ),
+            # Gasto (apilado)
             go.Bar(
-                x=df_agrupado_forum['gasto'],
-                y=df_agrupado_forum['personal'],
+                x=df_agrupado['gasto'],
+                y=df_agrupado['personal'],
                 name='Gasto',
                 orientation='h',
-                text=df_agrupado_forum['gasto'].apply(lambda a: f'Gasto: {a} $')
+                text=df_agrupado['gasto'].apply(lambda a: f'Gasto: {a} $'),
+                textposition='auto',
+                offsetgroup='ga',  # Grupo para apilar gasto+ahorro
+                width=0.3
             ),
+            # Ahorro (apilado sobre Gasto)
             go.Bar(
-                x=df_agrupado_forum['ahorro'],
-                y=df_agrupado_forum['personal'],
+                x=df_agrupado['ahorro'],
+                y=df_agrupado['personal'],
                 name='Ahorro',
                 orientation='h',
-                base=df_agrupado_forum['gasto'],  # Ajustar la base para que comience donde termina la barra de gasto
-                marker={'color': 'lightgreen'},
-                text=df_agrupado_forum['ahorro'].apply(lambda a: f'Ahorro: {a} $'),
-                textposition='auto'
+                text=df_agrupado['ahorro'].apply(lambda a: f'Ahorro: {a} $'),
+                textposition='auto',
+                offsetgroup='ga',
+                base=df_agrupado['gasto'],  # Apilar sobre gasto
+                width=0.3
             )
-        ],
+        ]
     )
-    fig7.update_layout(width=800, 
-                    height=250,
-                    title="Grafico de costos - Forum GEEI",
-                    barmode='group',
-                    xaxis_title="Costo",
-                    yaxis_title="Personal",
-                    template=template,
-                    margin=dict(l=10, r=10, t=35, b=5))
-
-    # Grafico 8: Filtrar datos para Contratista
-    df_contratista = df[df['personal'] == 'Contratista']
-    df_agrupado_contratista = df_contratista.groupby('personal').agg({'costo': 'sum', 'gasto': 'sum'}).reset_index()
-    df_agrupado_contratista['ahorro'] = df_agrupado_contratista['costo'] - df_agrupado_contratista['gasto']
-    fig8 = go.Figure(
-        data=[
-            go.Bar(
-                x=df_agrupado_contratista['costo'],
-                y=df_agrupado_contratista['personal'],
-                name='Costo',
-                orientation='h',
-                text=df_agrupado_contratista['costo'].apply(lambda a: f'Costo: {a} $')
-            ),
-            go.Bar(
-                x=df_agrupado_contratista['gasto'],
-                y=df_agrupado_contratista['personal'],
-                name='Gasto',
-                orientation='h',
-                text=df_agrupado_contratista['gasto'].apply(lambda a: f'Gasto: {a} $')
-            ),
-            go.Bar(
-                x=df_agrupado_contratista['ahorro'],
-                y=df_agrupado_contratista['personal'],
-                name='Ahorro',
-                orientation='h',
-                base=df_agrupado_contratista['gasto'], 
-                marker={'color': 'lightgreen'},
-                text=df_agrupado_contratista['ahorro'].apply(lambda a: f'Ahorro: {a} $'),
-                textposition='auto'
-            )
-        ],
+    fig7.update_layout(
+        width=800,
+        height=250,
+        title="Comparativo de Costo, Gasto y Ahorro - GEEI vs Contratista",
+        barmode='relative', 
+        xaxis_title="Monto ($)",
+        yaxis_title="Personal",
+        template=template,
+        margin=dict(l=10, r=10, t=35, b=5)
     )
-    fig8.update_layout(width=800, 
-                    height=250,
-                    title="Grafico de costos - Contratista",
-                    barmode='group',
-                    xaxis_title="Costo",
-                    yaxis_title="Personal",
-                    template=template,
-                    margin=dict(l=10, r=10, t=35, b=5))
 
+    # Grafico 7: Comparativo de Costos - Forum GEEI vs Contratista
+    df_gastos = df[df['personal'].isin(['Forum GEEI', 'Contratista'])]
 
+    # Agrupa por mes y personal, sumando el gasto
+    df_gastos['mes'] = df_gastos['fecha'].dt.to_period('M').astype(str)
+    gastos_mensuales = df_gastos.groupby(['mes', 'personal'])['gasto'].sum().reset_index()
+
+    fig8 = go.Figure()
+
+    for personal in ['Forum GEEI', 'Contratista']:
+        datos = gastos_mensuales[gastos_mensuales['personal'] == personal]
+        fig8.add_trace(go.Scatter(
+            x=datos['mes'],
+            y=datos['gasto'],
+            mode='lines+markers',
+            name=personal
+        ))
+
+    fig8.update_layout(
+        width=800,
+        height=250,
+        title="Gastos Mensuales por Contratista y Forum GEEI",
+        xaxis_title="Mes",
+        yaxis_title="Gasto ($)",
+        template=template,
+        margin=dict(l=10, r=10, t=35, b=5)
+    )
         
     context = {
         'fig1': fig1.to_html(),
