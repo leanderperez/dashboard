@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from app.models import Material
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from app.forms.forms import MaterialForm, SolicitudMaterialForm
 from django.contrib.admin.views.decorators import staff_member_required
+from app.views.login import is_coordinador
 
 @login_required
+@user_passes_test(is_coordinador, login_url='/acceso-denegado/')
 def lista_materiales(request):
     materiales = Material.objects.all()
     sucursales = SolicitudMaterialForm.base_fields['sucursal'].choices  # Obtener las opciones de SUCURSALES

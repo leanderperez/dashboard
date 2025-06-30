@@ -136,6 +136,7 @@ def crear_solicitud_material(request):
         return JsonResponse({'message': 'Solicitud creada exitosamente.'})
     return JsonResponse({'error': 'Método no permitido.'}, status=405)
 
+'''
 def enviar_correo_aprobacion(request, solicitud, supervisor_emails):
     aprobar_url = reverse('cambiar_estado_solicitud', args=[solicitud.token, 'aprobar'])
     rechazar_url = reverse('cambiar_estado_solicitud', args=[solicitud.token, 'rechazar'])
@@ -185,6 +186,7 @@ def enviar_correo_aprobacion(request, solicitud, supervisor_emails):
     )
     email.content_subtype = 'html'  # Indicar que el contenido es HTML
     email.send()
+'''
 
 @csrf_exempt
 @login_required
