@@ -3,8 +3,6 @@ from django.http import JsonResponse, HttpResponse
 from app.models import Material, SolicitudMaterial, DetalleSolicitud
 from django.contrib.auth.decorators import login_required
 import json
-from django.core.mail import EmailMessage
-from django.urls import reverse
 from django.conf import settings
 
 from reportlab.lib.pagesizes import letter
@@ -20,9 +18,15 @@ from django.utils import timezone
 
 @login_required
 def lista_solicitudes(request):
+    user = request.user
+    if user.groups.filter(name='Supervisores').exists():
+        sucursal = user.perfil.sucursal
+        solicitudes = SolicitudMaterial.objects.filter(sucursal=sucursal, completado=False)
+    else:
+        solicitudes = SolicitudMaterial.objects.all()
+
     usuarios_autorizados = ['Analee', 'Leander', 'Yunuary']
     usuario_autorizado = request.user.username in usuarios_autorizados
-    solicitudes = SolicitudMaterial.objects.all()
     return render(request, 'requisiciones/lista_solicitudes.html', {
         'solicitudes': solicitudes,
         'usuario_autorizado': usuario_autorizado,

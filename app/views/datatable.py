@@ -8,7 +8,7 @@ def datatable(request):
     user = request.user
     if user.groups.filter(name='Supervisores').exists():
         sucursal = user.perfil.sucursal
-        reportes = Reporte.objects.filter(sucursal=sucursal)
+        reportes = Reporte.objects.filter(sucursal=sucursal, estatus=False)
     else:
         reportes = Reporte.objects.all()
     contexto = {'reportes': reportes}
