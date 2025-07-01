@@ -1,6 +1,12 @@
 {% extends 'app/formulario.html' %}
 
 {% block admin_form %}
+
+    <div class="form-check">
+        {{form.estatus}}
+        <label class="form-check-label">Caso Cerrado</label>
+    </div>
+
     <div class="col-md-12">
         {{form.referencia}}
         <div class="valid-feedback"></div>

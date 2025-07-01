@@ -195,7 +195,7 @@ URGENCIAS = (
 class ReporteForm(forms.ModelForm):
     class Meta:
         model = Reporte
-        fields = ['usuario', 'fecha', 'sucursal', 'clasificacion', 'equipo', 'reporte', 'falla', 'coordinador', 'estatus', 'observaciones', 'urgencia']  # Campos que puede rellenar el usuario
+        fields = ['usuario', 'fecha', 'sucursal', 'clasificacion', 'equipo', 'reporte', 'falla', 'coordinador', 'observaciones', 'urgencia']  # Campos que puede rellenar el usuario
 
     fecha = forms.DateField(label='Sucursal',
         widget=forms.DateInput(attrs={'type': 'date', 
@@ -234,12 +234,6 @@ class ReporteForm(forms.ModelForm):
     urgencia = forms.ChoiceField(choices=URGENCIAS, label='Urgencia', 
                                     widget=forms.RadioSelect(attrs={
                                         'class': 'btn-check'}))
-    
-    estatus = forms.BooleanField(label='Estatus',
-                                 required=False, 
-                                 widget=forms.CheckboxInput(attrs={
-                                     'class': 'form-check-input', 
-                                     'id': 'estatus'}))
     
     observaciones = forms.CharField(label='Observaciones',
                                     required=False,
