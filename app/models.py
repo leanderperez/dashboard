@@ -65,3 +65,10 @@ class DetalleSolicitud(models.Model):
 
     def __str__(self):
         return f"{self.material.nombre} - {self.cantidad}"
+
+class Perfil(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    sucursal = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.sucursal}"
