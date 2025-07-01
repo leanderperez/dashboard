@@ -23,7 +23,7 @@ def lista_solicitudes(request):
         sucursal = user.perfil.sucursal
         solicitudes = SolicitudMaterial.objects.filter(sucursal=sucursal, completado=False)
     elif user.groups.filter(name='Analistas').exists():
-        solicitudes = SolicitudMaterial.objects.filter(analista=user.username, completado=False)
+        solicitudes = SolicitudMaterial.objects.filter(completado=False)
     else:
         solicitudes = SolicitudMaterial.objects.all()
 
