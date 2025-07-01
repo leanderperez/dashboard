@@ -22,6 +22,8 @@ def lista_solicitudes(request):
     if user.groups.filter(name='Supervisores').exists():
         sucursal = user.perfil.sucursal
         solicitudes = SolicitudMaterial.objects.filter(sucursal=sucursal, completado=False)
+    elif user.groups.filter(name='Analistas').exists():
+        solicitudes = SolicitudMaterial.objects.filter(analista=user.username, completado=False)
     else:
         solicitudes = SolicitudMaterial.objects.all()
 
