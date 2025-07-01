@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
+from app.views.login import is_coordinador
 from app.forms.forms import ReporteForm, ReporteAdminForm
 from app.models import Reporte
 from datetime import datetime
@@ -7,26 +8,16 @@ from datetime import datetime
 @login_required
 def crear_reporte(request):
     if request.method == 'POST':
-        form = ReporteAdminForm(request.POST)
+        form = ReporteForm(request.POST)
         if form.is_valid():
-            form.save(commit=False) 
-            form.instance.usuario = request.user  
-            form.instance.save()
-            if form.instance.personal in ['Técnico de Cuadrilla', 'Técnico de Infraestructura']:
-                # Construir el código de referencia
-                year = datetime.now().year % 100
-                referencia = f"GEEI{year:02d}-{form.instance.id:04d}"
-                form.instance.referencia = referencia
-                form.instance.save() 
-            elif not form.instance.referencia:
-                form.instance.referencia = 'S/R'
-                form.instance.save()  
-            return redirect('datatable')
+            form.save()
+            return redirect('datatable')  # Redirige después de guardar
     else:
-        form = ReporteAdminForm()
-    return render(request, 'app/formulario_admin.html', {'form': form})
+        form = ReporteForm()
+    return render(request, 'app/formulario.html', {'form': form})
 
 @login_required
+@user_passes_test(is_coordinador, login_url='/acceso-denegado/')
 def modificar_reporte(request, pk):
     reporte = Reporte.objects.get(pk=pk)
     if request.method == 'POST':
@@ -36,12 +27,12 @@ def modificar_reporte(request, pk):
             personal = form.cleaned_data.get('personal')
             if personal in ['Técnico de Cuadrilla', 'Técnico de Infraestructura']:
                 # Construir el código de referencia
-                year = datetime.now().year % 100  # Obtener los dos últimos dígitos del año en curso
+                year = datetime.now().year % 100 
                 referencia = f"GEEI{year:02d}-{reporte.id:04d}"
-                # Asignar el código de referencia al campo correspondiente
+                # Asignar el código de referencia 
                 form.instance.referencia = referencia
             form.save()
-            return redirect('datatable')  # Redirige a datatable
+            return redirect('datatable')
     else:
         form = ReporteAdminForm(instance=reporte)
     return render(request, 'app/formulario_admin.html', {'form': form, 'objeto': form})

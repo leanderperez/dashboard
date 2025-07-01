@@ -40,7 +40,7 @@ CLASIFICACIONES = (
     ('Refrigeración', 'Refrigeración'),
     ('Climatización', 'Climatización'),
     ('Perecederos', 'Perecederos'),
-    ('Lavandería', 'Lavandería'),
+    ('Línea Blanca', 'Línea Blanca'),
     ('Carga y Transporte', 'Carga y Transporte'),
     ('Hidráulica', 'Hidráulica')
 )
@@ -52,7 +52,8 @@ FALLAS = (
     ('Eléctrica', 'Eléctrica'),
     ('Control', 'Control'),
     ('Mantenimiento', 'Mantenimiento'),
-    ('Preventivo', 'Preventivo')
+    ('Preventivo', 'Preventivo'),
+    ('Instalación', 'Instalación')
 )
 COORDINADORES = (
     ('', 'Coordiador'),
@@ -114,6 +115,7 @@ EQUIPOS = (
 
     ('Lavadora','Lavadora'),
     ('Secadora','Secadora'),
+    ('Microondas','Microondas'),
 
     ('Ascensor','Ascensor'),
     ('Carretilla','Carretilla'),

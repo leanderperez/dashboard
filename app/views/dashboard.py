@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
+from app.views.login import is_coordinador
 from app.models import Reporte
 from django.http import JsonResponse
 from django.template.loader import render_to_string
@@ -8,6 +9,7 @@ import plotly.graph_objects as go
 
 
 @login_required
+@user_passes_test(is_coordinador, login_url='/acceso-denegado/')
 def index(request):
     reportes = Reporte.objects.all()
     df = pd.DataFrame(list(reportes.values()))
