@@ -7,6 +7,7 @@ urlpatterns = [
     path('accounts/login/', login.CustomLoginView.as_view(), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='home'), name='logout'),
     path('acceso-denegado/', login.acceso_denegado, name='acceso_denegado'),
+    
     path('crear/', reportes.crear_reporte, name='crear_reporte'),
     path('modificar/<int:pk>/', reportes.modificar_reporte, name='modificar_reporte'),
     path('datatable/', datatable.datatable, name='datatable'),

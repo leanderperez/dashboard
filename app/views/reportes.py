@@ -7,14 +7,22 @@ from datetime import datetime
 
 @login_required
 def crear_reporte(request):
+    # Verifica si el usuario es coordinador
+    if is_coordinador(request.user):
+        FormClass = ReporteAdminForm
+        template = 'app/formulario_admin.html'
+    else:
+        FormClass = ReporteForm
+        template = 'app/formulario.html'
+
     if request.method == 'POST':
-        form = ReporteForm(request.POST)
+        form = FormClass(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return redirect('datatable')  # Redirige después de guardar
+            return redirect('datatable')
     else:
-        form = ReporteForm()
-    return render(request, 'app/formulario.html', {'form': form})
+        form = FormClass()
+    return render(request, template, {'form': form})
 
 @login_required
 @user_passes_test(is_coordinador, login_url='/acceso-denegado/')
