@@ -7,7 +7,6 @@ from datetime import datetime
 
 @login_required
 def crear_reporte(request):
-    # Verifica si el usuario es coordinador
     if is_coordinador(request.user):
         FormClass = ReporteAdminForm
         template = 'app/formulario_admin.html'
@@ -18,6 +17,9 @@ def crear_reporte(request):
     if request.method == 'POST':
         form = FormClass(request.POST, request.FILES)
         if form.is_valid():
+            reporte = form.save(commit=False)
+            if request.user.groups.filter(name='Supervisores').exists():
+                reporte.referencia = "Nuevo ⚠"
             form.save()
             return redirect('datatable')
     else:
