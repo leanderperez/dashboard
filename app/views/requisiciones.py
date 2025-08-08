@@ -5,12 +5,11 @@ from django.contrib.auth.decorators import login_required
 import json
 from django.conf import settings
 
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak
 from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
-from reportlab.lib import colors
-from reportlab.platypus import Table, TableStyle, Paragraph, Frame
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.units import inch
+
 from io import BytesIO
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
@@ -39,77 +38,64 @@ def lista_solicitudes(request):
 
 @login_required
 def detalle_solicitud(request, pk):
-    # Obtener la solicitud
+    from reportlab.lib import colors
+
     solicitud = get_object_or_404(SolicitudMaterial, pk=pk)
     detalles = solicitud.detallesolicitud_set.all()
 
-    # Crear un buffer para el PDF
     buffer = BytesIO()
-
-    # Crear el canvas de ReportLab
-    pdf = canvas.Canvas(buffer, pagesize=letter)
-    pdf.setTitle(f"Solicitud #{solicitud.id}")
-
-    # Ruta del logo
-    logo_path = f"{settings.BASE_DIR}/app/static/images/logo.png"
-
-    # Dibujar el logo en el encabezado
-    pdf.drawImage(logo_path, 50, 710, width=100, height=50, preserveAspectRatio=True, mask='auto')
-
-    # Encabezado
-    pdf.setFont("Helvetica-Bold", 16)
-    pdf.drawString(200, 730, f"  Solicitud de Materiales #{solicitud.id}")
-    pdf.setFont("Helvetica-Bold", 10)
-    pdf.drawString(500, 730, f"{solicitud.fecha_solicitud}")
-    pdf.setFont("Helvetica-Bold", 14)
-    pdf.drawString(60, 680, f"{solicitud.sucursal}")
-    pdf.setFont("Helvetica", 10)
-    pdf.drawString(60, 665, f"Solicitante: {solicitud.usuario.username}")
-    pdf.drawString(60, 650, "Aprobada: ")
-    pdf.setFont("Helvetica-Bold", 10)
-    pdf.drawString(110, 650, "Sí" if solicitud.estado == 'aprobada' else "No")
-    pdf.setFont("Helvetica", 10)
-    pdf.drawString(130, 650, f"Completada: ")
-    pdf.setFont("Helvetica-Bold", 10)
-    pdf.drawString(190, 650, "Sí" if solicitud.completado else "No")
-
-    # Manejar observaciones largas
-    pdf.setFont("Helvetica", 10)
+    doc = SimpleDocTemplate(buffer, pagesize=letter, leftMargin=50, rightMargin=50, topMargin=160, bottomMargin=50)
+    elements = []
     styles = getSampleStyleSheet()
     style_normal = styles['Normal']
 
-    observaciones_paragraph = Paragraph(f"Observaciones: {solicitud.observaciones or 'N/A'}", style_normal)
-    frame = Frame(60, 580, 480, 50, showBoundary=0)  # Ajusta las coordenadas y el tamaño del área
-    frame.addFromList([observaciones_paragraph], pdf)
+    # Membrete (logo y encabezado) - función para cada página
+    def membrete(canvas, doc):
+        logo_path = f"{settings.BASE_DIR}/app/static/images/logo.png"
+        canvas.drawImage(logo_path, 50, 710, width=100, height=50, preserveAspectRatio=True, mask='auto')
+        canvas.setFont("Helvetica-Bold", 16)
+        canvas.drawString(200, 730, f"  Solicitud de Materiales #{solicitud.id}")
+        canvas.setFont("Helvetica-Bold", 10)
+        canvas.drawString(500, 730, f"{solicitud.fecha_solicitud}")
+        canvas.setFont("Helvetica-Bold", 14)
+        canvas.drawString(60, 680, f"{solicitud.sucursal}")
+        canvas.setFont("Helvetica", 10)
+        canvas.drawString(60, 665, f"Solicitante: {solicitud.usuario.username}")
+        canvas.drawString(60, 650, "Aprobada: ")
+        canvas.setFont("Helvetica-Bold", 10)
+        canvas.drawString(110, 650, "Sí" if solicitud.estado == 'aprobada' else "No")
+        canvas.setFont("Helvetica", 10)
+        canvas.drawString(130, 650, f"Completada: ")
+        canvas.setFont("Helvetica-Bold", 10)
+        canvas.drawString(190, 650, "Sí" if solicitud.completado else "No")
 
-    # Crear la tabla de materiales con texto ajustable
+    # Observaciones
+    observaciones_paragraph = Paragraph(f"Observaciones: {solicitud.observaciones or 'N/A'}", style_normal)
+    elements.append(observaciones_paragraph)
+    elements.append(Spacer(1, 60))
+
+    # Tabla de materiales
     data = [["Material", "Cantidad", "Unidad de Medida"]]
     for detalle in detalles:
         material_paragraph = Paragraph(detalle.material.nombre, style_normal)
         data.append([material_paragraph, detalle.cantidad, detalle.material.unidad_medida])
 
-    # Configurar la tabla con anchos fijos
-    col_widths = [250, 100, 150]  # Anchos fijos para las columnas
-    table = Table(data, colWidths=col_widths)
+    col_widths = [250, 100, 150]
+    table = Table(data, colWidths=col_widths, repeatRows=1)
     table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),  # Fondo de la fila del encabezado
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),  # Color del texto del encabezado
-        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),  # Centrar horizontalmente
-        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),  # Centrar verticalmente
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),  # Fuente del encabezado
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),  # Espaciado inferior en el encabezado
-        ('LINEBELOW', (0, 0), (-1, 0), 1, colors.black),  # Línea debajo del encabezado
-        ('LINEBELOW', (0, 1), (-1, -1), 0.5, colors.black),  # Líneas horizontales entre las filas
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('LINEBELOW', (0, 0), (-1, 0), 1, colors.black),
+        ('LINEBELOW', (0, 1), (-1, -1), 0.5, colors.black),
     ]))
+    elements.append(table)
 
-    # Dibujar la tabla en el PDF
-    table.wrapOn(pdf, 50, 560)
-    table.drawOn(pdf, 50, 560 - len(data) * 20)
+    doc.build(elements, onFirstPage=membrete, onLaterPages=membrete)
 
-    # Finalizar el PDF
-    pdf.save()
-
-    # Enviar el PDF como respuesta HTTP
     buffer.seek(0)
     response = HttpResponse(buffer, content_type='application/pdf')
     response['Content-Disposition'] = f'inline; filename="Solicitud_{solicitud.id}.pdf"'
