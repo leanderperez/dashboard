@@ -403,7 +403,7 @@ class MaterialForm(forms.ModelForm):
 class SolicitudMaterialForm(forms.ModelForm):
     class Meta:
         model = SolicitudMaterial
-        fields = ['sucursal', 'observaciones']
+        fields = ['sucursal', 'observaciones', 'urgencia']  # agrega urgencia aquí
 
     sucursal = forms.ChoiceField(choices=SUCURSALES, label='Sucursal', 
                                  widget=forms.Select(attrs={
@@ -416,6 +416,10 @@ class SolicitudMaterialForm(forms.ModelForm):
                                         'class': 'form-control mt-3',
                                         'id': 'observaciones',
                                         'placeholder': 'Ingrese su observación de forma concisa'}))
+
+    urgencia = forms.ChoiceField(choices=URGENCIAS, label='Urgencia', 
+                                    widget=forms.RadioSelect(attrs={
+                                        'class': 'btn-check'}))
 
 DetalleSolicitudFormSet = inlineformset_factory(SolicitudMaterial, DetalleSolicitud, 
                                                 fields=('material', 'cantidad'), 

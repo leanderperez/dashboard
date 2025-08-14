@@ -72,6 +72,14 @@
                         <textarea id="observaciones" class="form-control" rows="3"></textarea>
                     </div>
                     <div class="mb-3">
+                        <label for="urgencia" class="form-label">Urgencia</label>
+                        <select id="urgencia" class="form-select">
+                            <option value="baja">Baja</option>
+                            <option value="media" selected>Media</option>
+                            <option value="alta">Alta</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
                         <h5>Materiales seleccionados:</h5>
                         <table class="table table-bordered">
                             <thead>
@@ -179,6 +187,7 @@
             $('#confirmar-solicitud').on('click', function() {
                 const sucursal = $('#sucursal').val();
                 const observaciones = $('#observaciones').val();
+                const urgencia = $('#urgencia').val();
                 const selectedMaterials = [];
                 $('.cantidad-input').each(function() {
                     const cantidad = parseInt($(this).val());
@@ -203,7 +212,8 @@
                     data: {
                         materiales: JSON.stringify(selectedMaterials),
                         sucursal: sucursal,
-                        observaciones: observaciones
+                        observaciones: observaciones,
+                        urgencia: urgencia
                     },
                     success: function(response) {
                         alert('Solicitud generada exitosamente.');

@@ -107,12 +107,14 @@ def crear_solicitud_material(request):
         materiales_data = json.loads(request.POST.get('materiales', '[]'))
         sucursal = request.POST.get('sucursal')
         observaciones = request.POST.get('observaciones')
+        urgencia = request.POST.get('urgencia', 'media')
 
         # Crear la solicitud de materiales
         solicitud = SolicitudMaterial.objects.create(
             usuario=request.user,
             sucursal=sucursal,
-            observaciones=observaciones
+            observaciones=observaciones,
+            urgencia=urgencia,
         )
 
         # Agregar los materiales seleccionados a la solicitud
